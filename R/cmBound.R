@@ -11,7 +11,7 @@
 #' @examples
 #' sensitivity <- cmBound(p=0.25, lambda.hat=0.6385, N=310, dq=0.073)
 #' @export
-#' @importFrom ggplot2
+#' @importFrom tidyverse scales
 
 cmBound = function(lambda.hat, p, N, dq){
 

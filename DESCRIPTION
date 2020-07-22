@@ -13,5 +13,6 @@ Suggests:
 VignetteBuilder:
     knitr
 Encoding: UTF-8
+Language: en-US
 LazyData: true
 RoxygenNote: 7.1.1
