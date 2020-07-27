@@ -1,0 +1,19 @@
+---
+title: "cWise_UserGuide"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{cWise_UserGuide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+#library(cWise)
+```

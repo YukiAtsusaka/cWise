@@ -4,16 +4,20 @@
 \alias{bc.est}
 \title{bc.est}
 \usage{
-bc.est(Y, A, p, p2, data)
+bc.est(Y, A, p, p2, w = 1, data)
 }
 \arguments{
-\item{Y}{explain}
+\item{Y}{A binary response in the crosswise question}
 
-\item{A}{explain}
+\item{A}{A binary response in the anchor question}
 
-\item{p}{explain}
+\item{p}{An auxiliary probability for the crosswise question}
 
-\item{p.prime}{explain}
+\item{w}{A string for indicating sample weights in data (default is set to 1)}
+
+\item{data}{A dataset containing information from the crosswise model}
+
+\item{p.prime}{An auxiliary probaility for the anchor question}
 }
 \value{
 ggplot object

@@ -2,33 +2,40 @@
 #'
 #' @description Apply a bias-corrected crosswise estimator to survey data
 #'
-#' @param Y explain
-#' @param A explain
-#' @param p explain
-#' @param p.prime explain
+#' @param Y A binary response in the crosswise question
+#' @param A A binary response in the anchor question
+#' @param p An auxiliary probability for the crosswise question
+#' @param p.prime An auxiliary probaility for the anchor question
+#' @param w A string for indicating sample weights in data (default is set to 1)
+#' @param data A dataset containing information from the crosswise model
 #'
 #' @return ggplot object
 #' @examples
-#' sensitivity <- cmBound(p=0.25, lambda.hat=0.6385, N=310, dq=0.073)
+#' bc.est(Y=cross, A=anchor, p=p.cross, p.prime=p.anchor, data=cmdata)
 #' @export
 #' @importFrom dplyr
 
+bc.est <- function(Y, A, p, p.prime, w=1, data){
 
-bc.est <- function(Y, A, p, p2, data){
-
+library(tidyverse)
 Yquo <- enquo(Y)        # QUoting variable name for Y
 Aquo <- enquo(A)        # Quoting variable name for A
-data <- data %>% dplyr::select(!!Yquo, !!Aquo)
-data <- data[complete.cases(data),]
+if(is.null(w)) w <- rep(x=1/dim(data)[1], times=dim(data)[1])
+data <- data %>% mutate(weight=w)
+
+data <- data %>% dplyr::select(!!Yquo, !!Aquo, weight)
+data <- data[complete.cases(data),] # Just in case (but weight needs to be calculated after dropping NAs)
 
 N = dim(data)[1]        # Number of obs
 data <- data %>% as_tibble()
 Y = data %>% dplyr::select(!!Yquo) %>% pull()
 A = data %>% dplyr::select(!!Aquo) %>% pull()
+weight = data %>% dplyr::select(weight) %>% pull()
 
 
 # NAIVE CROSSWISE MODEL
-  lambda.hat = mean(Y)                         # Observed proportion of YESYES or NONO
+  lambda.hat = sum(w*Y)/N                        # Weighted proportion of YESYES or NONO
+
   pi.hat.naive = (lambda.hat+p-1)/(2*p-1)
   pi.hat.naive = min(1, max(pi.hat.naive, 0))  # Logical bound restrain
 
@@ -41,9 +48,8 @@ A = data %>% dplyr::select(!!Aquo) %>% pull()
   naive.high = pi.hat.naive+1.96*pi.hat.naive.sd; naive.high = ifelse(naive.high < 1, naive.high, 1)
 
 
-
 # BIAS CORRECTED CROSSWISE MODEL
-  gamma.hat = (mean(A)-0.5)/(0.5-p2) # Estimated level of inattentiveness
+  gamma.hat = (sum(w*A)/N-0.5)/(0.5-p2) # Estimated level of inattentiveness
   Bias.hat = (1/2)*((lambda.hat-0.5)/(p-0.5)) - (1/(2*gamma.hat))*((lambda.hat-0.5)/(p-0.5))
   Bias.hat
 
@@ -52,24 +58,26 @@ A = data %>% dplyr::select(!!Aquo) %>% pull()
 
 
 # BOOTSTRAPPING (200 TIMES)
-  set.seed(123456)
-  bs <- NA
+ set.seed(123456)
+ bs <- NA
   for(i in 1:200){
     index <- sample(1:nrow(data), size=dim(data), replace=TRUE)   # RESAMPLE WITH REPLACEMENT
     bs.dat <- data[index,]                                        # BOOTSTRAPPED DATA
 
     Y.bs = bs.dat %>% dplyr::select(!!Yquo) %>% pull()  # First column must be Y
     A.bs = bs.dat %>% dplyr::select(!!Aquo) %>% pull()  # Second column must be A
+    w.bs = bs.dat %>% dplyr::select(weight) %>% pull()  # weight variable
+    w.bs = w.bs/sum(w.bs)                               # normalize the weight
 
-    bs.lambda.hat = mean(Y.bs)                    # Observed proportion of YESYES or NONO
+    bs.lambda.hat = sum(w.bs*Y.bs)/dim(data)                    # Observed proportion of YESYES or NONO
     bs.pi.hat.naive = (bs.lambda.hat+p-1)/(2*p-1)
-    bs.gamma.hat = (mean(A.bs)-0.5)/(0.5-p2) # Estimated level of inattentiveness
+    bs.gamma.hat = (sum(w.bs*A.bs)/dim(data)-0.5)/(0.5-p2)      # Estimated level of inattentiveness
     bs.bias.hat = (1/2)*((bs.lambda.hat-0.5)/(p-0.5)) - (1/(2*bs.gamma.hat))*((bs.lambda.hat-0.5)/(p-0.5))
 
-    bs[i] = bs.pi.hat.naive - bs.bias.hat # Bias Correction within Bootstrapping
-    bs[i] = min(1, max(bs[i], 0))  # Logical bound restrain
+    bs[i] = bs.pi.hat.naive - bs.bias.hat         # Bias Correction within Bootstrapping
+    bs[i] = min(1, max(bs[i], 0))                 # Logical bound restrain
+}
 
-  }
 
   pi.hat.bc.var = var(bs)
   pi.hat.bc.sd = sqrt(pi.hat.bc.var)
