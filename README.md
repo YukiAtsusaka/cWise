@@ -36,7 +36,7 @@ head(cmdata)
 #> 6 1 1 0.15    0.15
 ```
 
-## `bc.est`
+## Estimate the Prevalence of Sensitive Attributes via `bc.est`
 Generate a bias-corrected crosswise estimate using a crosswise data.
 
 ```r
@@ -44,13 +44,16 @@ bc.est(Y=cross, A=anchor, p=p.cross, p.prime=p.anchor, data=cmdata)
 
 ```
 
-## `cmBound`
+## Apply a Sensitivity Analysis via `cmBound`
 Apply sensitivity analysis and generate sensitivity bounds for naive crosswise estimates.
 
 ```r
 sensitivity <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073)
 ```
 
+## Using the Latent Sensitive Trait as an Outcome in Regress via `cmreg`
+
+## Using the Latent Sensitive Trait as a Predictor in Regress via `cmreg.p`
 
 
 
