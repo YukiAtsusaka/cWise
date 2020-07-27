@@ -5,7 +5,7 @@ This package implements the methods proposed by Atsusaka and Stevenson (2020) "B
 
 
 ## Instllation
-To install the latest development version of `overviewR` directly from
+To install the latest development version of `cWise` directly from
 [GitHub](https://github.com/YukiAtsusaka/cWise) use:
 
 ``` r
