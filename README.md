@@ -1,6 +1,6 @@
 # cWise: A (Cross)Wise Method to Analyze Sensitive Survey Questions
 
-This package implements the methods proposed by Atsusaka and Stevenson (2020) "Bias-Corrected Crosswise Estimators for Sensitive Inquiries" (Working Paper). Our workhorse function is `bc.est` which generates a bias-corrected crosswise estimate of the proportion of individuals with sensitive attributes. `cmBound` produces applies our sensitivity analysis to crosswise data without the anchor question. `cmreg` and `cmreg.p` implement crosswise regressions in which the latent sensitive trait can be used as an outcome or as a predictor, respectively. A simulated crosswise data is saved as `cmdata`.
+This package implements the methods proposed by Atsusaka and Stevenson (2020) "Bias-Corrected Crosswise Estimators for Sensitive Inquiries" (Working Paper). Our workhorse function is `bc.est` which generates a bias-corrected crosswise estimate of the proportion of individuals with sensitive attributes. `cmBound` applies our sensitivity analysis to crosswise data without the anchor question. `cmreg` and `cmreg.p` implement crosswise regressions in which the latent sensitive trait can be used as an outcome or as a predictor, respectively. A simulated crosswise data is saved as `cmdata`.
 
 
 
@@ -27,11 +27,31 @@ the package. This data contains artificially generated information in a survey u
 ``` r
 data(cmdata)
 head(cmdata)
-#>   ccode year month      gdp population
-#> 1   RWA 1990   Jan 24180.77  14969.988
-#> 2   RWA 1990   Feb 23650.53  11791.464
-#> 3   RWA 1990   Mar 21860.14  30047.979
-#> 4   RWA 1990   Apr 20801.06  19853.556
-#> 5   RWA 1990   May 18702.84   5148.118
-#> 6   RWA 1990   Jun 30272.37  48625.140
+#> cross anchor    p.cross p.anchor
+#> 1 1 1 0.15    0.15
+#> 2 0 0 0.15    0.15
+#> 3 0 0 0.15    0.15
+#> 4 1 0 0.15    0.15
+#> 5 0 1 0.15    0.15
+#> 6 1 1 0.15    0.15
 ```
+
+## `bc.est`
+Generate a bias-corrected crosswise estimate using a crosswise data.
+
+```r
+bc.est(Y=cross, A=anchor, p=p.cross, p.prime=p.anchor, data=cmdata)
+
+```
+
+## `cmBound`
+Apply sensitivity analysis and generate sensitivity bounds for naive crosswise estimates.
+
+```r
+sensitivity <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073)
+```
+
+
+
+
+
