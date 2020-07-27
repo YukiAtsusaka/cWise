@@ -11,7 +11,7 @@
 #' @examples
 #' sensitivity <- cmBound(p=0.25, lambda.hat=0.6385, N=310, dq=0.073)
 #' @export
-#' @importFrom
+#' @importFrom ggplot2
 
 
 cmBound = function(lambda.hat, p, N, dq){
@@ -43,22 +43,21 @@ cmBound = function(lambda.hat, p, N, dq){
   perinat = (1-gamma.hat)*100
   ggdata <- as.data.frame(cbind(mean, low, high, perinat, dq))
 
-  # cmBound <- ggplot(ggdata, aes(x=perinat, y=mean)) +
-  #   geom_hline(yintercept=dq, col="dimgray", size=1.2) +
-  #   geom_hline(yintercept=dq.upper, linetype="dashed", col="dimgray", size=1.2) +
-  #   geom_hline(yintercept=dq.lower, linetype="dashed", col="dimgray", size=1.2) +
-  #   geom_line(col="firebrick", size=2) +
-  #   geom_ribbon(aes(ymin=low, ymax=high),linetype=2)+
-  #   geom_point(x=0, y=mean[1], shape=4, size=6, color="navy")+
-  #   xlab("Inattentive Respondents (%)")+
-  #   ylab("Estimated Proportion")+ ylim(0,0.5)+
-  #   theme_bw()+
-  #   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-  #         plot.title = element_text(size = 10, face = "bold"),
-  #         axis.text.x = element_text(size = 18),
-  #         axis.title.x = element_text(size = 18),
-  #         axis.text.y = element_text(size = 15),
-  #         axis.title.y = element_text(size = 15))
-
-  return(ggdata)
+  p <- ggplot(ggdata, aes(x=perinat, y=mean)) +
+       geom_hline(yintercept=dq, col="dimgray", size=1.2) +
+       geom_hline(yintercept=dq.upper, linetype="dashed", col="dimgray", size=1.2) +
+       geom_hline(yintercept=dq.lower, linetype="dashed", col="dimgray", size=1.2) +
+       geom_line(col="firebrick", size=2) +
+       geom_ribbon(aes(ymin=low, ymax=high),linetype=2)+
+       geom_point(x=0, y=mean[1], shape=4, size=6, color="navy")+
+       xlab("Inattentive Respondents (%)")+
+       ylab("Estimated Proportion")+ ylim(0,0.5)+
+       theme_bw()+
+       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+             plot.title = element_text(size = 10, face = "bold"),
+             axis.text.x = element_text(size = 18),
+             axis.title.x = element_text(size = 18),
+             axis.text.y = element_text(size = 15),
+             axis.title.y = element_text(size = 15))
+  return(p)
 }

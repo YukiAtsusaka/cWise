@@ -3,7 +3,7 @@
 \docType{data}
 \name{cmdata}
 \alias{cmdata}
-\title{CSimulated Crosswise Survey Data}
+\title{Simulated Crosswise Survey Data}
 \format{
 An object of class \code{"data.frame"}
 \describe{
