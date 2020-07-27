@@ -41,8 +41,16 @@ Generate a bias-corrected crosswise estimate using a crosswise data.
 
 ```r
 bc.est(Y=cross, A=anchor, p=p.cross, p.prime=p.anchor, data=cmdata)
-
 ```
+
+
+Sample weights can be easily incorporated in our bias-corrected estimator.
+
+```r
+bc.est(Y=cross, A=anchor, p=p.cross, p.prime=p.anchor, w=sweight, data=cmdata)
+```
+
+
 
 ## Apply a Sensitivity Analysis via `cmBound`
 Apply sensitivity analysis and generate sensitivity bounds for naive crosswise estimates.
