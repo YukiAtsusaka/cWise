@@ -27,6 +27,7 @@ the package. This data contains artificially generated information in a survey u
 ``` r
 data(cmdata)
 head(cmdata)
+
 #> cross anchor    p.cross p.anchor
 #> 1 1 1 0.15    0.15
 #> 2 0 0 0.15    0.15
