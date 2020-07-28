@@ -101,9 +101,15 @@ p
 
 
 
-## Using the Latent Sensitive Trait as an Outcome in Regress via `cmreg`
+## Using the Latent Sensitive Trait as an Outcome in Regression via `cmreg`
 
-## Using the Latent Sensitive Trait as a Predictor in Regress via `cmreg.p`
+```r
+m <-  cmreg(Y~female+age+A, p=0.1, p2=0.15, init=rep(0.02,6), data=dat)
+m
+
+```
+
+## Using the Latent Sensitive Trait as a Predictor in Regression via `cmreg.p`
 
 
 
