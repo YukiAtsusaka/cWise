@@ -42,14 +42,14 @@ Generate a bias-corrected crosswise estimate using a crosswise data.
 ```r
 bc.est(Y=cross, A=anchor, p=p.cross, p.prime=p.anchor, data=cmdata)
 
-$Results
-                Point Est. Std. Error Est 95%CI(Lower) 95%CI(Upper)
-Naive Crosswise  0.1950000     0.01444624   0.16668537    0.2233146
-Bias-Corrected   0.1053604     0.02080597   0.06486523    0.1394343
-
-$Stats
- Attentive Rate Est. Sample Size
-           0.7728571        2000
+>$Results
+>                Point Est. Std. Error Est 95%CI(Lower) 95%CI(Upper)
+>Naive Crosswise  0.1950000     0.01444624   0.16668537    0.2233146
+>Bias-Corrected   0.1053604     0.02080597   0.06486523    0.1394343
+>
+>$Stats
+> Attentive Rate Est. Sample Size
+>           0.7728571        2000
 ```
 
 
@@ -71,6 +71,7 @@ p
 
 <img src="man/figures/bounds.png" width="50%" style="display: block; margin: auto;" />
 
+Since the output is a ggplot object, one can easily add additional information by using "+". For example, to add a title with a specific font:
 
 ```r
 p <- p + ggtitle("Sensitivity Analysis") + 
