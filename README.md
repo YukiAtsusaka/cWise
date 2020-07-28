@@ -68,6 +68,8 @@ Apply sensitivity analysis and generate sensitivity bounds for naive crosswise e
 sensitivity <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073)
 ```
 
+<img src="man/figures/bounds.png" width="50%" style="display: block; margin: auto;" />
+
 ## Using the Latent Sensitive Trait as an Outcome in Regress via `cmreg`
 
 ## Using the Latent Sensitive Trait as a Predictor in Regress via `cmreg.p`
