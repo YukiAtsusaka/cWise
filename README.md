@@ -114,6 +114,6 @@ m
 
 
 ```r
-m2 <- cmreg.p(V ~ age+female+Y+A, p=0.1, p2=0.15, data=dat)
+m2 <- cmpred(V ~ age+female+Y+A, p=0.1, p2=0.15, data=dat)
 m2
 ```
