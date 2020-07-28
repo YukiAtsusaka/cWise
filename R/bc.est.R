@@ -1,37 +1,37 @@
 #' @title bc.est
 #'
-#' @description Apply a bias-corrected crosswise estimator to survey data
+#' @description  \code{bc.est} is used to apply a bias-corrected crosswise estimator to survey data.
 #'
-#' @param Y A binary response in the crosswise question
-#' @param A A binary response in the anchor question
-#' @param p An auxiliary probability for the crosswise question
-#' @param p.prime An auxiliary probaility for the anchor question
-#' @param w A string for indicating sample weights in data (default is set to 1)
-#' @param data A dataset containing information from the crosswise model
+#' @param Y A vector of binary responses in the crosswise question
+#' @param A A vector of binary responses in the anchor question
+#' @param p An auxiliary probability for the crosswise question (scalar)
+#' @param p.prime An auxiliary probability for the anchor question (scalar)
+#' @param w An optional vector specifying sample weights in data (default is set to 1)
+#' @param data A dataset containing information from the crosswise model (Y, A, w)
 #'
 #' @return ggplot object
 #' @examples
-#' bc.est(Y=cross, A=anchor, p=p.cross, p.prime=p.anchor, data=cmdata)
+#' bc.est(Y=cross, A=anchor, p=0.15, p.prime=0.15, data=cmdata)
 #' @export
-#' @importFrom dplyr
+#' @importFrom tidyverse
 
 bc.est <- function(Y, A, p, p.prime, w=1, data){
 
-library(tidyverse)
 Yquo <- enquo(Y)        # QUoting variable name for Y
 Aquo <- enquo(A)        # Quoting variable name for A
-if(is.null(w)) w <- rep(x=1/dim(data)[1], times=dim(data)[1])
-data <- data %>% mutate(weight=w)
-
-data <- data %>% dplyr::select(!!Yquo, !!Aquo, weight)
+# if(is.null(w)) w <- rep(x=1/dim(data)[1], times=dim(data)[1])
+# data <- data %>% mutate(weight=w)
+# data <- data %>% dplyr::select(!!Yquo, !!Aquo, weight)
 data <- data[complete.cases(data),] # Just in case (but weight needs to be calculated after dropping NAs)
 
 N = dim(data)[1]        # Number of obs
 data <- data %>% as_tibble()
 Y = data %>% dplyr::select(!!Yquo) %>% pull()
 A = data %>% dplyr::select(!!Aquo) %>% pull()
-weight = data %>% dplyr::select(weight) %>% pull()
+#weight = data %>% dplyr::select(weight) %>% pull()
 
+p = p
+p2 = p.prime
 
 # NAIVE CROSSWISE MODEL
   lambda.hat = sum(w*Y)/N                        # Weighted proportion of YESYES or NONO
@@ -63,15 +63,16 @@ weight = data %>% dplyr::select(weight) %>% pull()
   for(i in 1:200){
     index <- sample(1:nrow(data), size=dim(data), replace=TRUE)   # RESAMPLE WITH REPLACEMENT
     bs.dat <- data[index,]                                        # BOOTSTRAPPED DATA
+    N.bs = dim(data)
 
     Y.bs = bs.dat %>% dplyr::select(!!Yquo) %>% pull()  # First column must be Y
     A.bs = bs.dat %>% dplyr::select(!!Aquo) %>% pull()  # Second column must be A
-    w.bs = bs.dat %>% dplyr::select(weight) %>% pull()  # weight variable
-    w.bs = w.bs/sum(w.bs)                               # normalize the weight
-
-    bs.lambda.hat = sum(w.bs*Y.bs)/dim(data)                    # Observed proportion of YESYES or NONO
+#    w.bs = bs.dat %>% dplyr::select(weight) %>% pull()  # weight variable
+#    w.bs = w.bs/sum(w.bs)                               # normalize the weight
+    w.bs=1
+    bs.lambda.hat = sum(w.bs*Y.bs)/N.bs                  # Observed proportion of YESYES or NONO
     bs.pi.hat.naive = (bs.lambda.hat+p-1)/(2*p-1)
-    bs.gamma.hat = (sum(w.bs*A.bs)/dim(data)-0.5)/(0.5-p2)      # Estimated level of inattentiveness
+    bs.gamma.hat = (sum(w.bs*A.bs)/N.bs-0.5)/(0.5-p2)      # Estimated level of inattentiveness
     bs.bias.hat = (1/2)*((bs.lambda.hat-0.5)/(p-0.5)) - (1/(2*bs.gamma.hat))*((bs.lambda.hat-0.5)/(p-0.5))
 
     bs[i] = bs.pi.hat.naive - bs.bias.hat         # Bias Correction within Bootstrapping
@@ -85,9 +86,18 @@ weight = data %>% dplyr::select(weight) %>% pull()
   bc.low  = quantile(bs, prob=0.025); bc.low  = ifelse(bc.low > 0,  bc.low, 0)
   bc.high = quantile(bs, prob=0.975); bc.high = ifelse(bc.high < 1, bc.high, 1)
 
+# Output
+  result <- list()
 
-result <-   rbind(cbind(pi.hat.naive, pi.hat.naive.sd, naive.low, naive.high, N),
-                  cbind(pi.hat.bc, pi.hat.bc.sd, bc.low, bc.high, N))
+  result[[1]] <-   rbind(cbind(pi.hat.naive, pi.hat.naive.sd, naive.low, naive.high),
+                         cbind(pi.hat.bc, pi.hat.bc.sd, bc.low, bc.high))
+  colnames(result[[1]]) <- c("Point Est.", "Std. Error Est", "95%CI(Lower)", "95%CI(Upper)")
+  rownames(result[[1]]) <- c("Naive Crosswise", "Bias-Corrected")
+
+  result[[2]] <- cbind(gamma.hat, N)
+  colnames(result[[2]]) <- c("Attentive Rate Est.", "Sample Size")
+  rownames(result[[2]]) <- ""
+  names(result) <- c("Results", "Stats")
 
 return(result)
 }

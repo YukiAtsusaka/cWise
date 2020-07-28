@@ -4,27 +4,27 @@
 \alias{bc.est}
 \title{bc.est}
 \usage{
-bc.est(Y, A, p, p2, w = 1, data)
+bc.est(Y, A, p, p.prime, w = 1, data)
 }
 \arguments{
-\item{Y}{A binary response in the crosswise question}
+\item{Y}{A vector of binary responses in the crosswise question}
 
-\item{A}{A binary response in the anchor question}
+\item{A}{A vector of binary responses in the anchor question}
 
-\item{p}{An auxiliary probability for the crosswise question}
+\item{p}{An auxiliary probability for the crosswise question (scalar)}
 
-\item{w}{A string for indicating sample weights in data (default is set to 1)}
+\item{p.prime}{An auxiliary probability for the anchor question (scalar)}
 
-\item{data}{A dataset containing information from the crosswise model}
+\item{w}{An optional vector specifying sample weights in data (default is set to 1)}
 
-\item{p.prime}{An auxiliary probaility for the anchor question}
+\item{data}{A dataset containing information from the crosswise model (Y, A, w)}
 }
 \value{
 ggplot object
 }
 \description{
-Apply a bias-corrected crosswise estimator to survey data
+\code{bc.est} is used to apply a bias-corrected crosswise estimator to survey data.
 }
 \examples{
-sensitivity <- cmBound(p=0.25, lambda.hat=0.6385, N=310, dq=0.073)
+bc.est(Y=cross, A=anchor, p=0.15, p.prime=0.15, data=cmdata)
 }
