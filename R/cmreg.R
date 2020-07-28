@@ -10,13 +10,15 @@
 #'
 #' @return ggplot object
 #' @examples
-#' sensitivity <- cmBound(p=0.25, lambda.hat=0.6385, N=310, dq=0.073)
+#' m <-  cmreg(Y~female+age+A, p=0.1, p2=0.15, data=cmdata2)
+#' m
 #' @export
 #' @importFrom dplyr
 
 
 cmreg <- function(formula, p, p2, data, init){
-i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
+
+  i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
 
   df <- model.frame(formula, data, na.action = na.omit)
   X0 <- model.matrix.default(formula, df) # Data matrix including A
@@ -29,7 +31,7 @@ i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
   k.t <- k + 1         # Start of theta parameters
   k.t.e <- 2*k         # End of theta parameters
 
-  init <- init         # Initial values for optim
+  init <- rep(0.01, k.t.e)         # Initial values for optim
 
   # LOG-LIKELIHOOD FUNCTION
   log.L <- function(par) {
@@ -42,7 +44,7 @@ i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
 
 
   # MAXIMIZATION
-  MLE = optim(par=init,                   # initial values for beta and theta
+  MLE = optim(par=init,                      # initial values for beta and theta
               fn = log.L,                    # function to maximize
               method = "BFGS",               # this method lets set lower bounds (Modified Newton method)
               control = list(maxit=800, fnscale = -1),  # maximize the function
@@ -53,12 +55,26 @@ i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
   SE = sqrt(Var.hat)                         # Standard errors
 
 
+# OUTPUT
+
   Mlist <- list()
-  Mlist[[1]] <- MLE$par
-  Mlist[[2]] <- SE
+
+  n.var = dim(df)[2] - 1
+
+  Mlist[[1]] <- formula
+  Mlist[[2]] <- t(rbind(MLE$par[1:n.var], SE[1:n.var]))
+  Mlist[[3]] <- t(rbind(MLE$par[(n.var+1):(2*n.var)], SE[(n.var+1):(2*n.var)]))
+  colnames(Mlist[[2]]) <- c("Estimate", "Std. Error")
+  colnames(Mlist[[3]]) <- c("Estimate", "Std. Error")
+
+  varnam <- c("(intercept)", colnames(df)[2:n.var])
+  rownames(Mlist[[2]]) <- varnam
+  rownames(Mlist[[3]]) <- varnam
+
+    names(Mlist) <- c("Call", "Coefficients", "AuxiliaryCoef")
+
 
   return(Mlist)
 
-  # Next: make pretty summary
 }
 

@@ -24,11 +24,11 @@
 #' @export
 #' @importFrom tidyverse
 
-bc.est <- function(Y, A, p, p.prime, w=1, data){
+bc.est <- function(Y, A, p, p.prime, w, data){
 
 Yquo <- enquo(Y)        # QUoting variable name for Y
 Aquo <- enquo(A)        # Quoting variable name for A
-# if(is.null(w)) w <- rep(x=1/dim(data)[1], times=dim(data)[1])
+if(is.null(w)) w <- 1
 # data <- data %>% mutate(weight=w)
 # data <- data %>% dplyr::select(!!Yquo, !!Aquo, weight)
 data <- data[complete.cases(data),] # Just in case (but weight needs to be calculated after dropping NAs)
@@ -43,7 +43,7 @@ p = p
 p2 = p.prime
 
 # NAIVE CROSSWISE MODEL
-  lambda.hat = sum(w*Y)/N                        # Weighted proportion of YESYES or NONO
+  lambda.hat = sum(w*Y)/N                      # Weighted proportion of YESYES or NONO
 
   pi.hat.naive = (lambda.hat+p-1)/(2*p-1)
   pi.hat.naive = min(1, max(pi.hat.naive, 0))  # Logical bound restrain
@@ -101,7 +101,7 @@ p2 = p.prime
 
   result[[1]] <-   rbind(cbind(pi.hat.naive, pi.hat.naive.sd, naive.low, naive.high),
                          cbind(pi.hat.bc, pi.hat.bc.sd, bc.low, bc.high))
-  colnames(result[[1]]) <- c("Point Est.", "Std. Error Est", "95%CI(Lower)", "95%CI(Upper)")
+  colnames(result[[1]]) <- c("Estimate", "Std. Error", "95%CI(Lower)", "95%CI(Upper)")
   rownames(result[[1]]) <- c("Naive Crosswise", "Bias-Corrected")
 
   result[[2]] <- cbind(gamma.hat, N)

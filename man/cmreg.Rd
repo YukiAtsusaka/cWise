@@ -24,5 +24,6 @@ ggplot object
 Run a regression with the latent sensitive trait as an outcome
 }
 \examples{
-sensitivity <- cmBound(p=0.25, lambda.hat=0.6385, N=310, dq=0.073)
+m <-  cmreg(Y~female+age+A, p=0.1, p2=0.15, data=dat)
+m
 }
