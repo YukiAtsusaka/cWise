@@ -71,7 +71,8 @@ p
 
 <img src="man/figures/bounds.png" width="50%" style="display: block; margin: auto;" />
 
-Since the output is a ggplot object, one can easily add additional information by using "+". For example, to add a title with a specific font:
+Since the output is a ggplot object, one can easily add additional information by using "+". 
+For example, to add a title with a specific font:
 
 ```r
 p <- p + ggtitle("Sensitivity Analysis") + 
