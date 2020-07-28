@@ -9,9 +9,18 @@
 #' @param w An optional vector specifying sample weights in data (default is set to 1)
 #' @param data A dataset containing information from the crosswise model (Y, A, w)
 #'
-#' @return ggplot object
+#' @return A list containing main results ($Results) and related statistics ($Stats).
 #' @examples
 #' bc.est(Y=cross, A=anchor, p=0.15, p.prime=0.15, data=cmdata)
+#'
+#' #> $Results
+#' #>                Point Est. Std. Error Est 95%CI(Lower) 95%CI(Upper)
+#' #> Naive Crosswise  0.1950000     0.01444624   0.16668537    0.2233146
+#' #> Bias-Corrected   0.1053604     0.02080597   0.06486523    0.1394343
+#' #>
+#' #> $Stats
+#' #> Attentive Rate Est. Sample Size
+#' #>           0.7728571        2000
 #' @export
 #' @importFrom tidyverse
 
@@ -85,6 +94,7 @@ p2 = p.prime
 
   bc.low  = quantile(bs, prob=0.025); bc.low  = ifelse(bc.low > 0,  bc.low, 0)
   bc.high = quantile(bs, prob=0.975); bc.high = ifelse(bc.high < 1, bc.high, 1)
+
 
 # Output
   result <- list()

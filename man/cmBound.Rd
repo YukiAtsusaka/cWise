@@ -4,7 +4,7 @@
 \alias{cmBound}
 \title{cmBound}
 \usage{
-cmBound(lambda.hat, p, N, dq)
+cmBound(lambda.hat, p, N, dq = NULL, N.dq = NULL)
 }
 \arguments{
 \item{lambda.hat}{observed crosswise proportion: Prop(TRUE-TRUE or FALSE-FALSE)}
@@ -16,11 +16,15 @@ cmBound(lambda.hat, p, N, dq)
 \item{dq}{Point estimate from direct questioning (if available)}
 }
 \value{
-ggplot object
+A ggplot object.
 }
 \description{
 Visualize the sensitivity bounds for naive crosswise estimates
 }
 \examples{
-sensitivity <- cmBound(p=0.25, lambda.hat=0.6385, N=310, dq=0.073)
+p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073)
+p
+
+p <- p + ggtitle("Sensitivity Analysis") +
+         theme(plot.title = element_text(size=20, face="bold"))
 }

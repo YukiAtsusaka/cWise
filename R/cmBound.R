@@ -7,14 +7,18 @@
 #' @param N Number of survey respondens in direct questioning (if available)
 #' @param dq Point estimate from direct questioning (if available)
 #'
-#' @return ggplot object
+#' @return A ggplot object.
 #' @examples
-#' sensitivity <- cmBound(p=0.25, lambda.hat=0.6385, N=310, dq=0.073)
+#' p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073)
+#' p
+#'
+#' p <- p + ggtitle("Sensitivity Analysis") +
+#'          theme(plot.title = element_text(size=20, face="bold"))
 #' @export
 #' @importFrom ggplot2
 
 
-cmBound = function(lambda.hat, p, N, dq){
+cmBound = function(lambda.hat, p, N, dq=NULL, N.dq=NULL){
 
   pi.hat.naive = (lambda.hat+p-1)/(2*p-1)
   pi.hat.naive.var = (pi.hat.naive*(1-pi.hat.naive))/(N-1) + (p*(1-p))/((N-1)*((2*p-1)^2))
@@ -35,7 +39,7 @@ cmBound = function(lambda.hat, p, N, dq){
   low  = pi.hat.bc-1.96*pi.hat.bc.sd; low  = ifelse(low > 0, low, 0)
   high = pi.hat.bc+1.96*pi.hat.bc.sd; high = ifelse(high < 1, high, 1)
 
-  dq.var = dq*(1-dq)/(N-1)
+  dq.var = dq*(1-dq)/(N.dq-1)
   dq.sd = sqrt(dq.var)
   dq.upper = min(dq+1.96*dq.sd,1)
   dq.lower = max(dq-1.96*dq.sd,0)
@@ -48,7 +52,7 @@ cmBound = function(lambda.hat, p, N, dq){
        geom_hline(yintercept=dq.upper, linetype="dashed", col="dimgray", size=1.2) +
        geom_hline(yintercept=dq.lower, linetype="dashed", col="dimgray", size=1.2) +
        geom_line(col="firebrick", size=2) +
-       geom_ribbon(aes(ymin=low, ymax=high),linetype=2)+
+       geom_ribbon(aes(ymin=low, ymax=high),linetype=2, alpha=0.5)+
        geom_point(x=0, y=mean[1], shape=4, size=6, color="navy")+
        xlab("Inattentive Respondents (%)")+
        ylab("Estimated Proportion")+ ylim(0,0.5)+
