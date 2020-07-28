@@ -136,7 +136,7 @@ m
 #> (intercept) -1.65085102 0.42681118
 #> female       0.28162406 0.14267305
 #> age          0.03264242 0.01332295
-
+#>
 #> $AuxiliaryCoef
 #>               Estimate Std. Error
 #> (intercept)  0.13868287 1.13470799
