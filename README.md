@@ -65,10 +65,22 @@ bc.est(Y=cross, A=anchor, p=p.cross, p.prime=p.anchor, w=sweight, data=cmdata)
 Apply sensitivity analysis and generate sensitivity bounds for naive crosswise estimates.
 
 ```r
-sensitivity <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073)
+p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073, N.dq=310)
+p
 ```
 
 <img src="man/figures/bounds.png" width="50%" style="display: block; margin: auto;" />
+
+
+```r
+p <- p + ggtitle("Sensitivity Analysis") + 
+         theme(plot.title = element_text(size=20, face="bold"))       
+p         
+```
+
+<img src="man/figures/bounds2.png" width="50%" style="display: block; margin: auto;" />
+
+
 
 ## Using the Latent Sensitive Trait as an Outcome in Regress via `cmreg`
 
