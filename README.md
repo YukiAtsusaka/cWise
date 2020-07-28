@@ -18,7 +18,17 @@ badge](https://img.shields.io/badge/Build%20with-🔥%20and%20R-blue)](https://g
 
 This R package implements the methods proposed by Atsusaka and Stevenson (2020) ["Bias-Corrected Crosswise Estimators for Sensitive Inquiries"](https://github.com/YukiAtsusaka/working-paper/blob/master/WP_BiasCorrectedCM.pdf). Our workhorse function is `bc.est` which generates a bias-corrected crosswise estimate of the proportion of individuals with sensitive attributes. `cmBound` applies our sensitivity analysis to crosswise data without the anchor question. `cmreg` and `cmreg.p` implement crosswise regressions in which the latent sensitive trait can be used as an outcome or as a predictor, respectively. A simulated crosswise data is saved as `cmdata`.
 
+<details>
+<summary>Cite this software✒️</summary>
 
+@Manual{,
+    title = {cWise: A (Cross)Wise Method to Analyze Sensitive Survey Questions},
+    author = {Yuki Atsusaka},
+    year = {2020},
+    note = {R package version 0.0.0},
+    url = {https://CRAN.R-project.org/package=cWise},
+  }
+</details>
 
 ## Instllation
 To install the latest development version of `cWise` directly from
