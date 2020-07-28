@@ -114,9 +114,34 @@ p
 ## Using the Latent Sensitive Trait as an Outcome in Regression via `cmreg`
 
 ```r
-m <-  cmreg(Y~female+age+A, p=0.1, p2=0.15, init=rep(0.02,6), data=dat)
+data(cmdata2)
+head(cmdata2)
+
+#>   Y A   p   p2 female age  
+#> 1 1 1 0.1 0.15      0  23 
+#> 2 1 1 0.1 0.15      1  31 
+#> 3 0 1 0.1 0.15      1  32 
+#> 4 1 0 0.1 0.15      1  19 
+#> 5 0 1 0.1 0.15      1  19 
+#> 6 0 1 0.1 0.15      1  25 
+
+m <-  cmreg(Y~female+age+A, p=0.1, p2=0.15, data=cmdata2)
 m
 
+#> $Call
+#> Y ~ female + age + A
+#>
+#> $Coefficients
+#>                Estimate Std. Error
+#> (intercept) -1.65085102 0.42681118
+#> female       0.28162406 0.14267305
+#> age          0.03264242 0.01332295
+
+#> $AuxiliaryCoef
+#>               Estimate Std. Error
+#> (intercept)  0.13868287 1.13470799
+#> female      -0.20436648 0.41193379
+#> age          0.05945707 0.03935859
 ```
 
 ## Using the Latent Sensitive Trait as a Predictor in Regression via `cmreg.p`
