@@ -119,16 +119,16 @@ For an illustration, let's load and see `cmdata2` that contains the main and anc
 data(cmdata2)
 head(cmdata2)
 
-#>   Y A   p   p2 female age  
-#> 1 1 1 0.1 0.15      0  23 
-#> 2 1 1 0.1 0.15      1  31 
-#> 3 0 1 0.1 0.15      1  32 
-#> 4 1 0 0.1 0.15      1  19 
-#> 5 0 1 0.1 0.15      1  19 
-#> 6 0 1 0.1 0.15      1  25 
+#>   Y A female age   p   p2
+#> 1 1 1      0  23 0.1 0.15
+#> 2 1 1      1  31 0.1 0.15
+#> 3 0 1      1  32 0.1 0.15
+#> 4 1 0      1  19 0.1 0.15
+#> 5 0 1      1  19 0.1 0.15
+#> 6 0 1      1  25 0.1 0.15
 ```
 
-
+To run a crosswise regression, one can specify the model by writing a formula: `Crosswise Response ~ var1 + ... + varN + Anchor Response` as follow:
 
 ```r
 m <-  cmreg(Y~female+age+A, p=0.1, p2=0.15, data=cmdata2)
