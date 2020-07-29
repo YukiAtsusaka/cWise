@@ -113,6 +113,8 @@ p
 
 ## Using the Latent Sensitive Trait as an Outcome in Regression via `cmreg`
 
+For an illustration, let's load and see `cmdata2` that contains the main and anchor response variables along with two covariates.
+
 ```r
 data(cmdata2)
 head(cmdata2)
@@ -124,7 +126,11 @@ head(cmdata2)
 #> 4 1 0 0.1 0.15      1  19 
 #> 5 0 1 0.1 0.15      1  19 
 #> 6 0 1 0.1 0.15      1  25 
+```
 
+
+
+```r
 m <-  cmreg(Y~female+age+A, p=0.1, p2=0.15, data=cmdata2)
 m
 
@@ -149,6 +155,41 @@ m
 
 
 ```r
-m2 <- cmpred(V ~ age+female+Y+A, p=0.1, p2=0.15, data=dat)
+data(cmdata3)
+head(cmdata3)
+
+#>             V Y female age A   p   p2
+#> 1 -0.38350925 1      0  23 1 0.1 0.15
+#> 2 -0.05965305 1      1  31 1 0.1 0.15
+#> 3  0.72655660 0      1  32 1 0.1 0.15
+#> 4  0.79845870 1      1  19 0 0.1 0.15
+#> 5 -0.19410532 0      1  19 1 0.1 0.15
+#> 6 -0.34926673 0      1  25 1 0.1 0.15
+```
+
+```r
+m2 <- cmreg.p(V ~ age + female + Y +A, p=0.1, p2=0.15, data=cmdata3)
 m2
+
+#> $Call
+#> V ~ age + newvar + Y + A
+#>
+#> $Coefficients
+#>                Estimate  Std. Error
+#> (intercept) 0.023517624 0.147752825
+#> age         0.009642705 0.004806593
+#> newvar      0.247318563 0.052038635
+#> Y           0.985775066 0.075624764
+#>
+#> $AuxiliaryCoef
+#>               Estimate Std. Error
+#> (intercept) -1.7338112 0.40093115
+#> age          0.0351617 0.01258319
+#> female       0.2878427 0.13560686
+#> 
+#> $AuxiliaryCoef2
+#>                Estimate Std. Error
+#> (intercept)  0.24805722 1.06797382
+#> age          0.05479166 0.03699454
+#> female      -0.10749144 0.37791738
 ```
