@@ -168,17 +168,17 @@ head(cmdata3)
 ```
 
 ```r
-m2 <- cmreg.p(V ~ age + female + Y +A, p=0.1, p2=0.15, data=cmdata3)
+m2 <- cmreg.p(V~age+female+Y+A, p=0.1, p2=0.15, data=cmdata3)
 m2
 
 #> $Call
-#> V ~ age + newvar + Y + A
+#> V ~ age + female + Y + A
 #>
 #> $Coefficients
 #>                Estimate  Std. Error
 #> (intercept) 0.023517624 0.147752825
 #> age         0.009642705 0.004806593
-#> newvar      0.247318563 0.052038635
+#> female      0.247318563 0.052038635
 #> Y           0.985775066 0.075624764
 #>
 #> $AuxiliaryCoef
