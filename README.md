@@ -90,7 +90,7 @@ prev
 Sample weights can be easily incorporated in our bias-corrected estimator.
 
 ```r
-bc.est(Y=cross, A=anchor, p=p.cross, p.prime=p.anchor, w=sweight, data=cmdata)
+bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, w=weight, data=cmdata)
 ```
 
 
