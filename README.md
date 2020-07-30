@@ -211,3 +211,18 @@ hist(pred.female, main="Among Female", xlab="Proportion w/ Sensitive Traits")
 ```
 
 <img src="man/figures/pred.png" width="80%" style="display: block; margin: auto;" />
+
+
+##  `cmpredict2`: Predicted Values of the Outcome Variable
+
+```r
+pr2 <- cmpredict2(m2, typical=c(1,30))
+
+par(mfrow=c(1,2))
+hist(pr2[1,], main="No Sensitive Trait", xlab="Outcome Value", breaks=40)
+hist(pr2[2,], main="With Sensitive Trait", xlab="Outcome Value", breaks=40)
+```
+
+<img src="man/figures/pred3.png" width="80%" style="display: block; margin: auto;" />
+
+
