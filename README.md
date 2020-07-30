@@ -126,7 +126,7 @@ For an illustration, let's load and see `cmdata2` that contains the main and anc
 data(cmdata2)
 head(cmdata2)
 
-#>   Y A female age   p   p2
+#>   Y A female age   p  p.prime
 #> 1 1 1      0  23 0.1 0.15
 #> 2 1 1      1  31 0.1 0.15
 #> 3 0 1      1  32 0.1 0.15
@@ -138,23 +138,23 @@ head(cmdata2)
 To run a crosswise regression, one can specify the model by writing a formula: `Crosswise Response ~ var1 + ... + varN + Anchor Response` as follow:
 
 ```r
-m <-  cmreg(Y~female+age+A, p=0.1, p2=0.15, data=cmdata2)
+m <-  cmreg(Y~female+age+A, p=0.1, p.prime=0.15, data=cmdata2)
 m
 
 #> $Call
 #> Y ~ female + age + A
-#>
+#> 
 #> $Coefficients
-#>                Estimate Std. Error
-#> (intercept) -1.65085102 0.42681118
-#> female       0.28162406 0.14267305
-#> age          0.03264242 0.01332295
-#>
+#>             Estimate Std. Error
+#> (intercept)  -1.6509     0.4268
+#> female        0.2816     0.1427
+#> age           0.0326     0.0133
+#> 
 #> $AuxiliaryCoef
-#>               Estimate Std. Error
-#> (intercept)  0.13868287 1.13470799
-#> female      -0.20436648 0.41193379
-#> age          0.05945707 0.03935859
+#>             Estimate Std. Error
+#> (intercept)   0.1387     1.1347
+#> female       -0.2044     0.4119
+#> age           0.0595     0.0394
 ```
 
 ##  `cmreg.p`: Run a Regression with the Latent Sensitive Trait as a Predictor
