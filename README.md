@@ -145,13 +145,13 @@ m
 #> Y ~ female + age + A
 #> 
 #> $Coefficients
-#>             Estimate Std. Error z stat Pr(>|z|)
+#>             Estimate Std. Error z score Pr(>|z|)
 #> (intercept)  -1.6509     0.4268 -3.868   0.000
 #> female        0.2816     0.1427  1.974   0.048
 #> age           0.0326     0.0133  2.450   0.014
 #> 
 #> $AuxiliaryCoef
-#>             Estimate Std. Error z stat Pr(>|z|)
+#>             Estimate Std. Error z score Pr(>|z|)
 #> (intercept)   0.1387     1.1347  0.122   0.903
 #> female       -0.2044     0.4119 -0.496   0.620
 #> age           0.0595     0.0394  1.511   0.131
@@ -180,20 +180,20 @@ m2
 #> V ~ age + female + Y + A
 #> 
 #> $Coefficients
-#>             Estimate Std. Error Z score Pr(>|z|)
+#>             Estimate Std. Error z score Pr(>|z|)
 #> (intercept)   0.0235     0.1478   0.159   0.874
 #> age           0.0096     0.0048   2.006   0.045
 #> female        0.2473     0.0520   4.753   0.000
 #> Y             0.9858     0.0756  13.035   0.000
 #> 
 #> $AuxiliaryCoef
-#>             Estimate Std. Error Z score Pr(>|z|)
+#>             Estimate Std. Error z score Pr(>|z|)
 #> (intercept)  -1.7338     0.4009  -4.324   0.000
 #> age           0.0352     0.0126   2.794   0.005
 #> female        0.2878     0.1356   2.123   0.034
 #> 
 #> $AuxiliaryCoef2
-#>             Estimate Std. Error Z score Pr(>|z|)
+#>             Estimate Std. Error z score Pr(>|z|)
 #> (intercept)   0.2481     1.0680   0.232   0.816
 #> age           0.0548     0.0370   1.481   0.139
 #> female       -0.1075     0.3779  -0.284   0.776
