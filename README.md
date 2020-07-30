@@ -206,8 +206,8 @@ pred.nonfemale = cmpredict(cmreg_out=m, typical=30, zval=0)
 pred.female = cmpredict(cmreg_out=m, typical=30, zval=1)
 
 par(mmfrow=c(1,2))
-hist(p, main="Among non-Female", xlab="Proportion w/ Sensitive Traits")
-hist(p2, main="Among Female", xlab="Proportion w/ Sensitive Traits")
+hist(pred.nonfemale, main="Among non-Female", xlab="Proportion w/ Sensitive Traits")
+hist(pred.female, main="Among Female", xlab="Proportion w/ Sensitive Traits")
 ```
 
-<img src="man/figures/pred.png" width="50%" style="display: block; margin: auto;" />
+<img src="man/figures/pred.png" width="80%" style="display: block; margin: auto;" />
