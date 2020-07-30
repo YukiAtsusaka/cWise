@@ -159,8 +159,6 @@ m
 
 ##  `cmreg.p`: Run a Regression with the Latent Sensitive Trait as a Predictor
 
-
-
 ```r
 data(cmdata3)
 head(cmdata3)
@@ -200,3 +198,16 @@ m2
 #> age           0.0548     0.0370
 #> female       -0.1075     0.3779
 ```
+
+##  `cmpredict`: Simulate a Predicted Probability via Parametric Bootstrapping
+
+```r
+pred.nonfemale = cmpredict(cmreg_out=m, typical=30, zval=0)
+pred.female = cmpredict(cmreg_out=m, typical=30, zval=1)
+
+par(mmfrow=c(1,2))
+hist(p, main="Among non-Female", xlab="Proportion w/ Sensitive Traits")
+hist(p2, main="Among Female", xlab="Proportion w/ Sensitive Traits")
+```
+
+<img src="man/figures/pred.png" width="50%" style="display: block; margin: auto;" />
