@@ -138,7 +138,7 @@ head(cmdata2)
 To run a crosswise regression, one can specify the model by writing a formula: `Crosswise Response ~ var1 + ... + varN + Anchor Response` as follow:
 
 ```r
-m <-  cmreg(Y~female+age+A, p=0.1, p.prime=0.15, data=cmdata2)
+m <- cmreg(Y~female+age+A, p=0.1, p.prime=0.15, data=cmdata2)
 m
 
 #> $Call
@@ -175,28 +175,28 @@ head(cmdata3)
 ```
 
 ```r
-m2 <- cmreg.p(V~age+female+Y+A, p=0.1, p2=0.15, data=cmdata3)
+m2 <- cmreg.p(V~age+female+Y+A, p=0.1, p.prime=0.15, data=cmdata3)
 m2
 
 #> $Call
 #> V ~ age + female + Y + A
-#>
+#> 
 #> $Coefficients
-#>                Estimate  Std. Error
-#> (intercept) 0.023517624 0.147752825
-#> age         0.009642705 0.004806593
-#> female      0.247318563 0.052038635
-#> Y           0.985775066 0.075624764
-#>
+#>             Estimate Std. Error
+#> (intercept)   0.0235     0.1478
+#> age           0.0096     0.0048
+#> female        0.2473     0.0520
+#> Y             0.9858     0.0756
+#> 
 #> $AuxiliaryCoef
-#>               Estimate Std. Error
-#> (intercept) -1.7338112 0.40093115
-#> age          0.0351617 0.01258319
-#> female       0.2878427 0.13560686
+#>             Estimate Std. Error
+#> (intercept)  -1.7338     0.4009
+#> age           0.0352     0.0126
+#> female        0.2878     0.1356
 #> 
 #> $AuxiliaryCoef2
-#>                Estimate Std. Error
-#> (intercept)  0.24805722 1.06797382
-#> age          0.05479166 0.03699454
-#> female      -0.10749144 0.37791738
+#>             Estimate Std. Error
+#> (intercept)   0.2481     1.0680
+#> age           0.0548     0.0370
+#> female       -0.1075     0.3779
 ```
