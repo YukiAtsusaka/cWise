@@ -145,16 +145,16 @@ m
 #> Y ~ female + age + A
 #> 
 #> $Coefficients
-#>             Estimate Std. Error
-#> (intercept)  -1.6509     0.4268
-#> female        0.2816     0.1427
-#> age           0.0326     0.0133
+#>             Estimate Std. Error z stat Pr(>|z|)
+#> (intercept)  -1.6509     0.4268 -3.868   0.0001
+#> female        0.2816     0.1427  1.974   0.0484
+#> age           0.0326     0.0133  2.450   0.0143
 #> 
 #> $AuxiliaryCoef
-#>             Estimate Std. Error
-#> (intercept)   0.1387     1.1347
-#> female       -0.2044     0.4119
-#> age           0.0595     0.0394
+#>             Estimate Std. Error z stat Pr(>|z|)
+#> (intercept)   0.1387     1.1347  0.122   0.9027
+#> female       -0.2044     0.4119 -0.496   0.6198
+#> age           0.0595     0.0394  1.511   0.1309
 ```
 
 ##  `cmreg.p`: Run a Regression with the Latent Sensitive Trait as a Predictor
