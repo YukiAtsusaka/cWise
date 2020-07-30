@@ -165,7 +165,7 @@ m
 data(cmdata3)
 head(cmdata3)
 
-#>             V Y female age A   p   p2
+#>             V Y female age A   p  p.prime
 #> 1 -0.38350925 1      0  23 1 0.1 0.15
 #> 2 -0.05965305 1      1  31 1 0.1 0.15
 #> 3  0.72655660 0      1  32 1 0.1 0.15
