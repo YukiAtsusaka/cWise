@@ -24,7 +24,7 @@
 #' @export
 #' @importFrom tidyverse
 
-bc.est <- function(Y, A, p, p.prime, w, data){
+bc.est <- function(Y, A, p, p.prime, w=NULL, data){
 
 Yquo <- enquo(Y)        # QUoting variable name for Y
 Aquo <- enquo(A)        # Quoting variable name for A
@@ -39,8 +39,6 @@ Y = data %>% dplyr::select(!!Yquo) %>% pull()
 A = data %>% dplyr::select(!!Aquo) %>% pull()
 #weight = data %>% dplyr::select(weight) %>% pull()
 
-p = p
-p2 = p.prime
 
 # NAIVE CROSSWISE MODEL
   lambda.hat = sum(w*Y)/N                      # Weighted proportion of YESYES or NONO
@@ -101,11 +99,13 @@ p2 = p.prime
 
   result[[1]] <-   rbind(cbind(pi.hat.naive, pi.hat.naive.sd, naive.low, naive.high),
                          cbind(pi.hat.bc, pi.hat.bc.sd, bc.low, bc.high))
-  colnames(result[[1]]) <- c("Estimate", "Std. Error", "95%CI(Lower)", "95%CI(Upper)")
+  result[[1]] <- round(result[[1]], d=4)
+  colnames(result[[1]]) <- c("Estimate", "Std. Error", "95%CI(Low)", "95%CI(Up)")
   rownames(result[[1]]) <- c("Naive Crosswise", "Bias-Corrected")
 
   result[[2]] <- cbind(gamma.hat, N)
-  colnames(result[[2]]) <- c("Attentive Rate Est.", "Sample Size")
+  result[[2]] <- round(result[[2]], d=4)
+  colnames(result[[2]]) <- c("Attentive Rate", "Sample Size")
   rownames(result[[2]]) <- ""
   names(result) <- c("Results", "Stats")
 

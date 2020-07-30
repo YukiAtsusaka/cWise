@@ -16,7 +16,7 @@
 #' @importFrom dplyr
 
 
-cmreg <- function(formula, p, p2, data, init){
+cmreg <- function(formula, p, p.prime, data){
 
   i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
 
@@ -25,8 +25,6 @@ cmreg <- function(formula, p, p2, data, init){
   X1 <- X0[, -dim(X0)[2]]                 # Matrix with 1 and predictors
   A <- df[, dim(X0)[2]]
   Y <- df[,1]
-  p <- p
-  p2 <- p2
   k <- dim(X1)[2]      # Number of beta parameters
   k.t <- k + 1         # Start of theta parameters
   k.t.e <- 2*k         # End of theta parameters
@@ -37,8 +35,8 @@ cmreg <- function(formula, p, p2, data, init){
   log.L <- function(par) {
     sum(   Y*log(            ((2*p-1)*(i.logit(X1 %*% par[1:k])) + (0.5-p) )*i.logit(X1 %*% par[k.t:k.t.e]) + 0.5)
            + (1-Y)*log( 1 - (((2*p-1)*(i.logit(X1 %*% par[1:k])) + (0.5-p) )*i.logit(X1 %*% par[k.t:k.t.e]) + 0.5))
-           + A*log(        (0.5-p2)*i.logit(X1 %*% par[k.t:k.t.e]) + 0.5 )
-           + (1-A)*log(1- ((0.5-p2)*i.logit(X1 %*% par[k.t:k.t.e]) + 0.5 ))
+           + A*log(        (0.5-p.prime)*i.logit(X1 %*% par[k.t:k.t.e]) + 0.5 )
+           + (1-A)*log(1- ((0.5-p.prime)*i.logit(X1 %*% par[k.t:k.t.e]) + 0.5 ))
     )
   }
 
@@ -64,6 +62,9 @@ cmreg <- function(formula, p, p2, data, init){
   Mlist[[1]] <- formula
   Mlist[[2]] <- t(rbind(MLE$par[1:n.var], SE[1:n.var]))
   Mlist[[3]] <- t(rbind(MLE$par[(n.var+1):(2*n.var)], SE[(n.var+1):(2*n.var)]))
+  Mlist[[2]] <- round(Mlist[[2]], d=4)
+  Mlist[[3]] <- round(Mlist[[3]], d=4)
+  Mlist[[4]] <- Var.hat # Estimated Variance-Covariance Matrix
   colnames(Mlist[[2]]) <- c("Estimate", "Std. Error")
   colnames(Mlist[[3]]) <- c("Estimate", "Std. Error")
 
@@ -71,7 +72,7 @@ cmreg <- function(formula, p, p2, data, init){
   rownames(Mlist[[2]]) <- varnam
   rownames(Mlist[[3]]) <- varnam
 
-    names(Mlist) <- c("Call", "Coefficients", "AuxiliaryCoef")
+  names(Mlist) <- c("Call", "Coefficients", "AuxiliaryCoef")
 
 
   return(Mlist)
