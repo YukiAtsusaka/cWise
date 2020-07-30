@@ -63,11 +63,17 @@ head(cmdata)
 #> 6 1 1 0.15    0.15
 ```
 
+Here, `Y` is a binary response in the crosswise question (TRUE-TRUE or FALSE-FALSE), and `A` is a binary response in the anchor question. 
+`p` and `p.prime` are auxiliary probabilities in the crosswise and anchor questions, respectively.
+While researchers can simply remember the values of `p` and `p.prime` (without including them in data), we include them for an illustrative purpose.
+Note that `P` and `p.prime` must be (by construction) identical for all respondents.
+
+
 ## `bc.est`: Estimate the Prevalence of Sensitive Attributes
 Generate a bias-corrected crosswise estimate using a crosswise data.
 
 ```r
-prev <- bc.est(Y=Y, A=A, p=p, p.prime=p.prime, data=cmdata)
+prev <- bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
 prev
 
 #> $Results
