@@ -77,13 +77,13 @@ prev <- bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
 prev
 
 #> $Results
-#>                  Estimate Std. Error 95%CI(Low) 95%CI(Up)
-#> Naive Crosswise 0.2331250 0.01264046  0.2083497 0.2579003
-#> Bias-Corrected  0.1546904 0.01820522  0.1192571 0.1845050
+#>                 Estimate Std. Error 95%CI(Low) 95%CI(Up)
+#> Naive Crosswise   0.2331     0.0126     0.2083    0.2579
+#> Bias-Corrected    0.1547     0.0182     0.1193    0.1845
 #> 
 #> $Stats
-#>  Attentive Rate Est. Sample Size
-#>            0.7728571        2000
+#>  Attentive Rate Sample Size
+#>          0.7729        2000
 ```
 
 
