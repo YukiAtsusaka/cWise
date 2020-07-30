@@ -6,7 +6,6 @@
 #' @param p explain
 #' @param p.prime explain
 #' @param data explain
-#' @param init explain
 #'
 #' @return ggplot object
 #' @examples
@@ -40,3 +39,6 @@ cmpredict <- function(cmreg_obj, typical, zval){
   return(pi.sim)
 }
 
+
+#> hist(p, main="Among non-Female", xlab="Proportion w/ Sensitive Traits")
+#> hist(p2, main="Among Female", xlab="Proportion w/ Sensitive Traits")
