@@ -54,7 +54,7 @@ the package. This data contains artificially generated information in a survey u
 data(cmdata)
 head(cmdata)
 
-#> cross anchor    p.cross p.anchor
+#>   Y A  p      p.prime
 #> 1 1 1 0.15    0.15
 #> 2 0 0 0.15    0.15
 #> 3 0 0 0.15    0.15
@@ -63,20 +63,21 @@ head(cmdata)
 #> 6 1 1 0.15    0.15
 ```
 
-## Estimate the Prevalence of Sensitive Attributes via `bc.est`
+## `bc.est`: Estimate the Prevalence of Sensitive Attributes
 Generate a bias-corrected crosswise estimate using a crosswise data.
 
 ```r
-bc.est(Y=cross, A=anchor, p=p.cross, p.prime=p.anchor, data=cmdata)
+prev <- bc.est(Y=Y, A=A, p=p, p.prime=p.prime, data=cmdata)
+prev
 
 #> $Results
-#>                Point Est. Std. Error Est 95%CI(Lower) 95%CI(Upper)
-#> Naive Crosswise  0.1950000     0.01444624   0.16668537    0.2233146
-#> Bias-Corrected   0.1053604     0.02080597   0.06486523    0.1394343
-#>
+#>                  Estimate Std. Error 95%CI(Low) 95%CI(Up)
+#> Naive Crosswise 0.2331250 0.01264046  0.2083497 0.2579003
+#> Bias-Corrected  0.1546904 0.01820522  0.1192571 0.1845050
+#> 
 #> $Stats
-#> Attentive Rate Est. Sample Size
-#>           0.7728571        2000
+#>  Attentive Rate Est. Sample Size
+#>            0.7728571        2000
 ```
 
 
@@ -88,7 +89,7 @@ bc.est(Y=cross, A=anchor, p=p.cross, p.prime=p.anchor, w=sweight, data=cmdata)
 
 
 
-## Apply a Sensitivity Analysis via `cmBound`
+##  `cmBound`: Apply a Sensitivity Analysis
 Apply sensitivity analysis and generate sensitivity bounds for naive crosswise estimates.
 
 ```r
@@ -111,7 +112,7 @@ p
 
 
 
-## Using the Latent Sensitive Trait as an Outcome in Regression via `cmreg`
+##  `cmreg`: Run a Regression with the Latent Sensitive Trait as an Outcome
 
 For an illustration, let's load and see `cmdata2` that contains the main and anchor response variables along with two covariates.
 
@@ -150,7 +151,7 @@ m
 #> age          0.05945707 0.03935859
 ```
 
-## Using the Latent Sensitive Trait as a Predictor in Regression via `cmreg.p`
+##  `cmreg.p`: Run a Regression with the Latent Sensitive Trait as a Predictor
 
 
 
