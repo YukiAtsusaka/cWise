@@ -6,7 +6,6 @@
 #' @param p explain
 #' @param p.prime explain
 #' @param data explain
-#' @param init explain
 #'
 #' @return ggplot object
 #' @examples
@@ -64,7 +63,7 @@ cmreg <- function(formula, p, p.prime, data){
   Mlist[[3]] <- t(rbind(MLE$par[(n.var+1):(2*n.var)], SE[(n.var+1):(2*n.var)]))
   Mlist[[2]] <- round(Mlist[[2]], d=4)
   Mlist[[3]] <- round(Mlist[[3]], d=4)
-  Mlist[[4]] <- Var.hat # Estimated Variance-Covariance Matrix
+  Mlist[[4]] <- -solve(H) # Estimated Variance-Covariance Matrix
   colnames(Mlist[[2]]) <- c("Estimate", "Std. Error")
   colnames(Mlist[[3]]) <- c("Estimate", "Std. Error")
 
@@ -72,7 +71,7 @@ cmreg <- function(formula, p, p.prime, data){
   rownames(Mlist[[2]]) <- varnam
   rownames(Mlist[[3]]) <- varnam
 
-  names(Mlist) <- c("Call", "Coefficients", "AuxiliaryCoef")
+  names(Mlist) <- c("Call", "Coefficients", "AuxiliaryCoef", "VCV")
 
 
   return(Mlist)

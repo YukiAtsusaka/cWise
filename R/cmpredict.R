@@ -2,20 +2,19 @@
 #'
 #' @description Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap
 #'
-#' @param formula explain
-#' @param p explain
-#' @param p.prime explain
-#' @param data explain
+#' @param cmreg_out An output of \code{cmreg} or \code{cmreg.p}
+#' @param zval A value for the explanatory variable of interest (the first listed variable in cmreg_out$Call)
+#' @param typical A vector of typical values for other covariates
 #'
-#' @return ggplot object
+#' @return A vector of predicted probabilities given the input covariatevalues
 #' @examples
-#' m <-  cmreg(Y~female+age+A, p=0.1, p.prime=0.15, data=cmdata2)
+#' m <- cmpredict(m, zval=0, typical=30)
 #' m
 #' @export
 #' @importFrom dplyr
 
 
-cmpredict <- function(cmreg_obj, typical, zval){
+cmpredict <- function(cmreg_out, zval, typical){
 
 # GRAB COEFFICIENTS
   coef.beta = cmreg_obj$Coefficients[,1]
@@ -25,7 +24,6 @@ cmpredict <- function(cmreg_obj, typical, zval){
 
 # TYPICAL VALUE MATRIX
   typ.vec = cbind(1, zval, typical)
-
 
 # PARAMETRIC BOOTSTRAP
   k = 1 + length(typical) + 1

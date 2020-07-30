@@ -4,18 +4,16 @@
 \alias{cmreg}
 \title{cmreg}
 \usage{
-cmreg(formula, p, p2, data, init)
+cmreg(formula, p, p.prime, data)
 }
 \arguments{
 \item{formula}{explain}
 
 \item{p}{explain}
 
-\item{data}{explain}
-
-\item{init}{explain}
-
 \item{p.prime}{explain}
+
+\item{data}{explain}
 }
 \value{
 ggplot object
@@ -24,6 +22,6 @@ ggplot object
 Run a regression with the latent sensitive trait as an outcome
 }
 \examples{
-m <-  cmreg(Y~female+age+A, p=0.1, p2=0.15, data=dat)
+m <-  cmreg(Y~female+age+A, p=0.1, p2=0.15, data=cmdata2)
 m
 }

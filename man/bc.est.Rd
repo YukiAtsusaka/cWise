@@ -4,7 +4,7 @@
 \alias{bc.est}
 \title{bc.est}
 \usage{
-bc.est(Y, A, p, p.prime, w, data)
+bc.est(Y, A, p, p.prime, w = NULL, data)
 }
 \arguments{
 \item{Y}{A vector of binary responses in the crosswise question}
