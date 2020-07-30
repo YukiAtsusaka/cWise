@@ -118,7 +118,7 @@ p
 
 
 
-##  `cmreg`: Run a Regression with the Latent Sensitive Trait as an Outcome
+##  `cmreg`: Regression with the Latent Sensitive Trait as an Outcome
 
 For an illustration, let's load and see `cmdata2` that contains the main and anchor response variables along with two covariates.
 
@@ -157,7 +157,7 @@ m
 #> age           0.0595     0.0394  1.511   0.131
 ```
 
-##  `cmreg.p`: Run a Regression with the Latent Sensitive Trait as a Predictor
+##  `cmreg.p`: Regression with the Latent Sensitive Trait as a Predictor
 
 ```r
 data(cmdata3)
@@ -199,7 +199,7 @@ m2
 #> female       -0.1075     0.3779  -0.284   0.776
 ```
 
-##  `cmpredict`: Simulate a Predicted Probability with Uncertainty Quantifications
+##  `cmpredict`: Predicted Probabilities with Uncertainty Quantifications
 
 ```r
 pred.nonfemale = cmpredict(cmreg_out=m, typical=30, zval=0)
