@@ -76,26 +76,39 @@ SE = sqrt(Var.hat)                         # Standard errors
 
   Mlist <- list()
   n.var = dim(df)[2] - 2
+  z = MLE$par / SE
+  pv = 2*(1- pnorm(abs(z)))
+  z = round(z, d=3)
+  pv = round(pv, d=3)
+
 
   Mlist[[1]] <- formula
-  Mlist[[2]] <- t(rbind(MLE$par[(2*n.var+1):(3*n.var+1)], SE[(2*n.var+1):(3*n.var+1)]))
-  Mlist[[3]] <- t(rbind(MLE$par[1:n.var], SE[1:n.var]))
-  Mlist[[4]] <- t(rbind(MLE$par[(n.var+1):(2*n.var)], SE[(n.var+1):(2*n.var)]))
+  Mlist[[2]] <- t(rbind(MLE$par[(2*n.var+1):(3*n.var+1)],
+                             SE[(2*n.var+1):(3*n.var+1)],
+                              z[(2*n.var+1):(3*n.var+1)],
+                             pv[(2*n.var+1):(3*n.var+1)]))
+  Mlist[[3]] <- t(rbind(MLE$par[1:n.var], SE[1:n.var],
+                               z[1:n.var], pv[1:n.var]))
+  Mlist[[4]] <- t(rbind(MLE$par[(n.var+1):(2*n.var+1)],
+                             SE[(n.var+1):(2*n.var+1)],
+                              z[(n.var+1):(2*n.var+1)],
+                             pv[(n.var+1):(2*n.var+1)]))
   Mlist[[2]] <- round(Mlist[[2]], d=4)
   Mlist[[3]] <- round(Mlist[[3]], d=4)
   Mlist[[4]] <- round(Mlist[[4]], d=4)
 
-  colnames(Mlist[[2]]) <- c("Estimate", "Std. Error")
-  colnames(Mlist[[3]]) <- c("Estimate", "Std. Error")
-  colnames(Mlist[[4]]) <- c("Estimate", "Std. Error")
+  colnames(Mlist[[2]]) <- c("Estimate", "Std. Error", "Z score", "Pr(>|z|)")
+  colnames(Mlist[[3]]) <- c("Estimate", "Std. Error", "Z score", "Pr(>|z|)")
+  colnames(Mlist[[4]]) <- c("Estimate", "Std. Error", "Z score", "Pr(>|z|)")
+  Mlist[[5]] <- -solve(H) # Estimated Variance-Covariance Matrix
 
   varnam   <- c("(intercept)", colnames(df)[2:(n.var+1)])
   varnam.s <- c("(intercept)", colnames(df)[2:(n.var)])
   rownames(Mlist[[2]]) <- varnam
   rownames(Mlist[[3]]) <- varnam.s
-  rownames(Mlist[[4]]) <- varnam.s
+  rownames(Mlist[[4]]) <- c(varnam.s, "sigma")
 
-names(Mlist) <- c("Call", "Coefficients", "AuxiliaryCoef", "AuxiliaryCoef2")
+names(Mlist) <- c("Call", "Coefficients", "AuxiliaryCoef", "AuxiliaryCoef2", "VCV")
 
 return(Mlist)
 }

@@ -3,6 +3,7 @@
 export(bc.est)
 export(cmBound)
 export(cmpredict)
+export(cmpredict2)
 export(cmreg)
 export(cmreg.p)
 importFrom(dplyr,)

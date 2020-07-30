@@ -1,4 +1,4 @@
-#' @title cmpredict
+#' @title cmpredict2
 #'
 #' @description Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap
 #'
@@ -8,22 +8,21 @@
 #'
 #' @return A vector of predicted probabilities given the input covariatevalues
 #' @examples
-#' m <- cmpredict(m, zval=0, typical=30)
-#' m
+#' pr2 <- cmpredict2(m2, typical=c(1,30))
+#' pr2
 #' @export
 #' @importFrom dplyr
 
 
-cmpredict <- function(cmreg_out, zval, typical){
+cmpredict2 <- function(cmreg_out, typical){
 
 # GRAB COEFFICIENTS
-  coef.beta = cmreg_obj$Coefficients[,1]
-  coef.theta = cmreg_obj$AuxiliaryCoef[,1]
-  coefs = c(coef.beta, coef.theta)
+  coef.gamma = cmreg_obj$Coefficients[,1]
+  coef.beta = cmreg_obj$AuxiliaryCoef[,1]
+  coef.theta = cmreg_obj$AuxiliaryCoef2[,1]
+  coefs = c(coef.gamma, coef.beta, coef.theta)
   vcovs = cmreg_obj$VCV
 
-# TYPICAL VALUE MATRIX
-  typ.vec = cbind(1, zval, typical)
 
 # PARAMETRIC BOOTSTRAP
   k = 1 + length(typical) + 1
@@ -31,8 +30,22 @@ cmpredict <- function(cmreg_out, zval, typical){
   coef.sim <- rmvnorm(n=10000, mean=coefs, sigma=vcovs) # from mvtnorm
   coef.sim <- coef.sim[,1:k]
 
-  lin.agg <- as.matrix(typ.vec) %*% t(coef.sim) # Linear aggregator
-  pi.sim = i.logit(lin.agg) # Inverse logit
 
-  return(pi.sim)
+  # TYPICAL VALUE MATRIX
+  typ.vec = rbind(c(1, typical, 0),
+                  c(1, typical, 1))
+
+
+  lin.agg <- as.matrix(typ.vec) %*% t(coef.sim) # Linear aggregator
+
+  return(lin.agg)
 }
+
+#
+pr2 <- cmpredict2(m2, typical=c(1,30))
+#
+par(mfrow=c(1,2))
+hist(pr2[1,], main="No Sensitive Trait", xlab="Outcome Value", breaks=40)
+hist(pr2[2,], main="With Sensitive Trait", xlab="Outcome Value", breaks=40)
+
+

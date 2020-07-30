@@ -9,7 +9,7 @@
 #'
 #' @return ggplot object
 #' @examples
-#' m <-  cmreg(Y~female+age+A, p=0.1, p2=0.15, data=cmdata2)
+#' m <-  cmreg(Y~female+age+A, p=0.1, p.prime=0.15, data=cmdata2)
 #' m
 #' @export
 #' @importFrom dplyr
@@ -57,15 +57,21 @@ cmreg <- function(formula, p, p.prime, data){
   Mlist <- list()
 
   n.var = dim(df)[2] - 1
+  z = MLE$par / SE
+  pv = 2*(1- pnorm(abs(z)))
+  z = round(z, d=3)
+  pv = round(pv, d=3)
+
 
   Mlist[[1]] <- formula
-  Mlist[[2]] <- t(rbind(MLE$par[1:n.var], SE[1:n.var]))
-  Mlist[[3]] <- t(rbind(MLE$par[(n.var+1):(2*n.var)], SE[(n.var+1):(2*n.var)]))
+  Mlist[[2]] <- t(rbind(MLE$par[1:n.var], SE[1:n.var], z[1:n.var], pv[1:n.var]))
+  Mlist[[3]] <- t(rbind(MLE$par[(n.var+1):(2*n.var)], SE[(n.var+1):(2*n.var)],
+                        z[(n.var+1):(2*n.var)], pv[(n.var+1):(2*n.var)]))
   Mlist[[2]] <- round(Mlist[[2]], d=4)
   Mlist[[3]] <- round(Mlist[[3]], d=4)
   Mlist[[4]] <- -solve(H) # Estimated Variance-Covariance Matrix
-  colnames(Mlist[[2]]) <- c("Estimate", "Std. Error")
-  colnames(Mlist[[3]]) <- c("Estimate", "Std. Error")
+  colnames(Mlist[[2]]) <- c("Estimate", "Std. Error", "z score", "Pr(>|z|)")
+  colnames(Mlist[[3]]) <- c("Estimate", "Std. Error", "z score", "Pr(>|z|)")
 
   varnam <- c("(intercept)", colnames(df)[2:n.var])
   rownames(Mlist[[2]]) <- varnam
