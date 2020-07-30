@@ -199,7 +199,7 @@ m2
 #> female       -0.1075     0.3779  -0.284   0.776
 ```
 
-##  `cmpredict`: Simulate a Predicted Probability via Parametric Bootstrapping
+##  `cmpredict`: Simulate a Predicted Probability with Uncertainty Quantifications
 
 ```r
 pred.nonfemale = cmpredict(cmreg_out=m, typical=30, zval=0)
