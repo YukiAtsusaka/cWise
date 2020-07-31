@@ -76,6 +76,8 @@ Generate a bias-corrected crosswise estimate using a crosswise data.
 prev <- bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
 prev
 
+FIX HERE LATER
+
 #> $Results
 #>                 Estimate Std. Error 95%CI(Low) 95%CI(Up)
 #> Naive Crosswise   0.1950     0.0144     0.1667    0.2233
@@ -94,6 +96,8 @@ Sample weights can be easily incorporated in our bias-corrected estimator by spe
 ```r
 bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
 
+
+FIX HERE LATER
 
 #> $Results
 #>                 Estimate Std. Error 95%CI(Low) 95%CI(Up)
