@@ -8,20 +8,20 @@
 #'
 #' @return A vector of predicted probabilities given the input covariatevalues
 #' @examples
-#' pr2 <- cmpredict2(m2, typical=c(1,30))
+#' pr2 <- cmpredict2(out=m2, typical=c(1,30))
 #' pr2
 #' @export
 #' @importFrom dplyr
 
 
-cmpredict2 <- function(cmreg_out, typical){
+cmpredict2 <- function(out, typical){
 
 # GRAB COEFFICIENTS
-  coef.gamma = cmreg_obj$Coefficients[,1]
-  coef.beta = cmreg_obj$AuxiliaryCoef[,1]
-  coef.theta = cmreg_obj$AuxiliaryCoef2[,1]
+  coef.gamma = out$Coefficients[,1]
+  coef.beta  = out$AuxiliaryCoef[,1]
+  coef.theta = out$AuxiliaryCoef2[,1]
   coefs = c(coef.gamma, coef.beta, coef.theta)
-  vcovs = cmreg_obj$VCV
+  vcovs = out$VCV
 
 
 # PARAMETRIC BOOTSTRAP
@@ -42,10 +42,10 @@ cmpredict2 <- function(cmreg_out, typical){
 }
 
 #
-pr2 <- cmpredict2(m2, typical=c(1,30))
-#
-par(mfrow=c(1,2))
-hist(pr2[1,], main="No Sensitive Trait", xlab="Outcome Value", breaks=40)
-hist(pr2[2,], main="With Sensitive Trait", xlab="Outcome Value", breaks=40)
+# pr2 <- cmpredict2(m2, typical=c(1,30))
+# #
+# par(mfrow=c(1,2))
+# hist(pr2[1,], main="No Sensitive Trait", xlab="Outcome Value", breaks=40)
+# hist(pr2[2,], main="With Sensitive Trait", xlab="Outcome Value", breaks=40)
 
 
