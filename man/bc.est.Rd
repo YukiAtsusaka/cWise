@@ -4,7 +4,7 @@
 \alias{bc.est}
 \title{bc.est}
 \usage{
-bc.est(Y, A, p, p.prime, weight = NULL, data)
+bc.est(Y, A, p, p.prime, weight, data)
 }
 \arguments{
 \item{Y}{A vector of binary responses in the crosswise question}
@@ -26,7 +26,7 @@ A list containing main results ($Results) and related statistics ($Stats).
 \code{bc.est} is used to apply a bias-corrected crosswise estimator to survey data.
 }
 \examples{
-bc.est(Y=cross, A=anchor, p=0.15, p.prime=0.15, data=cmdata)
+bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
 
 #> $Results
 #>                Point Est. Std. Error Est 95\%CI(Lower) 95\%CI(Upper)
