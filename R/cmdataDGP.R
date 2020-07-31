@@ -33,7 +33,7 @@ head(dat) # See the D
 
 
 female = rbinom(n=N, size=1, prob=0.8) # 50% Male, 50% Female --> But oversample female
-w = ifelse(female==1, 1/4, 1)
+w = ifelse(female==1, 1/(0.8), 1/(0.2))
 
 #For package
 cmdata <- dat %>% as_tibble %>%
