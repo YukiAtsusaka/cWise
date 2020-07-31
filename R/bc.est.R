@@ -11,7 +11,7 @@
 #'
 #' @return A list containing main results ($Results) and related statistics ($Stats).
 #' @examples
-#' bc.est(Y=cross, A=anchor, p=0.15, p.prime=0.15, data=cmdata)
+#' bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
 #'
 #' #> $Results
 #' #>                Point Est. Std. Error Est 95%CI(Lower) 95%CI(Upper)
@@ -24,24 +24,26 @@
 #' @export
 #' @importFrom tidyverse
 
-bc.est <- function(Y, A, p, p.prime, w=NULL, data){
+bc.est <- function(Y, A, p, p.prime, weight, data){
 
 Yquo <- enquo(Y)        # QUoting variable name for Y
 Aquo <- enquo(A)        # Quoting variable name for A
-if(is.null(w)) w <- 1
-# data <- data %>% mutate(weight=w)
-# data <- data %>% dplyr::select(!!Yquo, !!Aquo, weight)
 data <- data[complete.cases(data),] # Just in case (but weight needs to be calculated after dropping NAs)
 
 N = dim(data)[1]        # Number of obs
 data <- data %>% as_tibble()
 Y = data %>% dplyr::select(!!Yquo) %>% pull()
 A = data %>% dplyr::select(!!Aquo) %>% pull()
-#weight = data %>% dplyr::select(weight) %>% pull()
 
+if(missing(weight)){
+  weight <- rep(1, N)    # If weight is not specified
+}else{
+Wquo <- enquo(weight)   # Quoting variable name for weight
+weight = data %>% dplyr::select(!!Wquo) %>% pull()
+}
 
 # NAIVE CROSSWISE MODEL
-  lambda.hat = sum(w*Y)/N                      # Weighted proportion of YESYES or NONO
+  lambda.hat = sum(weight*Y)/ sum(weight)                      # Weighted proportion of YESYES or NONO
 
   pi.hat.naive = (lambda.hat+p-1)/(2*p-1)
   pi.hat.naive = min(1, max(pi.hat.naive, 0))  # Logical bound restrain
@@ -56,7 +58,7 @@ A = data %>% dplyr::select(!!Aquo) %>% pull()
 
 
 # BIAS CORRECTED CROSSWISE MODEL
-  gamma.hat = (sum(w*A)/N-0.5)/(0.5-p2) # Estimated level of inattentiveness
+  gamma.hat = (sum(weight*A) / sum(weight)-0.5)/(0.5-p2) # Estimated level of inattentiveness
   Bias.hat = (1/2)*((lambda.hat-0.5)/(p-0.5)) - (1/(2*gamma.hat))*((lambda.hat-0.5)/(p-0.5))
   Bias.hat
 
@@ -77,9 +79,9 @@ A = data %>% dplyr::select(!!Aquo) %>% pull()
 #    w.bs = bs.dat %>% dplyr::select(weight) %>% pull()  # weight variable
 #    w.bs = w.bs/sum(w.bs)                               # normalize the weight
     w.bs=1
-    bs.lambda.hat = sum(w.bs*Y.bs)/N.bs                  # Observed proportion of YESYES or NONO
+    bs.lambda.hat = sum(w.bs*Y.bs)/sum(w.bs)                  # Observed proportion of YESYES or NONO
     bs.pi.hat.naive = (bs.lambda.hat+p-1)/(2*p-1)
-    bs.gamma.hat = (sum(w.bs*A.bs)/N.bs-0.5)/(0.5-p2)      # Estimated level of inattentiveness
+    bs.gamma.hat = (sum(w.bs*A.bs)/sum(w.bs)-0.5)/(0.5-p2)      # Estimated level of inattentiveness
     bs.bias.hat = (1/2)*((bs.lambda.hat-0.5)/(p-0.5)) - (1/(2*bs.gamma.hat))*((bs.lambda.hat-0.5)/(p-0.5))
 
     bs[i] = bs.pi.hat.naive - bs.bias.hat         # Bias Correction within Bootstrapping
