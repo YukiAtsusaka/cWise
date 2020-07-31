@@ -78,8 +78,8 @@ prev
 
 #> $Results
 #>                 Estimate Std. Error 95%CI(Low) 95%CI(Up)
-#> Naive Crosswise   0.2331     0.0126     0.2083    0.2579
-#> Bias-Corrected    0.1547     0.0182     0.1193    0.1845
+#> Naive Crosswise   0.1950     0.0144     0.1667    0.2233
+#> Bias-Corrected    0.1054     0.0077     0.0227    0.0504
 #> 
 #> $Stats
 #>  Attentive Rate Sample Size
@@ -89,10 +89,20 @@ prev
 The output is a list containing two elements. `$Results` is a matrix containing the point estimate, (estimated) standard error, the lower and upper bounds of 95% confidence intervals for the naive crosswise estimate and bias-corrected estimate, respectively. `$Stats` is a vector containing the estimated attentive rate and sample size used for estimation. In this example, it is estimated that about 77% of respondents are attentive and followed the instruction under the design.
 
 
-Sample weights can be easily incorporated in our bias-corrected estimator.
+Sample weights can be easily incorporated in our bias-corrected estimator by specifying `weight` optional argument as follows:
 
 ```r
-bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, w=weight, data=cmdata)
+bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
+
+
+#> $Results
+#>                 Estimate Std. Error 95%CI(Low) 95%CI(Up)
+#> Naive Crosswise   0.1921     0.0144     0.1639    0.2204
+#> Bias-Corrected    0.1097     0.0077     0.0227    0.0504
+#> 
+#> $Stats
+#>  Attentive Rate Sample Size
+#>          0.7888        2000
 ```
 
 
