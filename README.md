@@ -86,6 +86,8 @@ prev
 #>          0.7729        2000
 ```
 
+The output is a list containing two elements. `$Results` is a matrix containing the point estimate, (estimated) standard error, the lower and upper bounds of 95% confidence intervals for the naive crosswise estimate and bias-corrected estimate, respectively. `$Stats` is a vector containing the estimated attentive rate and sample size used for estimation. In this example, it is estimated that about 77% of respondents are attentive and followed the instruction under the design.
+
 
 Sample weights can be easily incorporated in our bias-corrected estimator.
 
