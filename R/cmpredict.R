@@ -14,13 +14,13 @@
 #' @importFrom dplyr
 
 
-cmpredict <- function(cmreg_out, zval, typical){
+cmpredict <- function(out, zval, typical){
 
 # GRAB COEFFICIENTS
-  coef.beta = cmreg_obj$Coefficients[,1]
-  coef.theta = cmreg_obj$AuxiliaryCoef[,1]
+  coef.beta  = out$Coefficients[,1]
+  coef.theta = out$AuxiliaryCoef[,1]
   coefs = c(coef.beta, coef.theta)
-  vcovs = cmreg_obj$VCV
+  vcovs = out$VCV
 
 # TYPICAL VALUE MATRIX
   typ.vec = cbind(1, zval, typical)
