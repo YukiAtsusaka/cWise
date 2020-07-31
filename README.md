@@ -202,8 +202,8 @@ m2
 ##  `cmpredict`: Predicted Probabilities with Uncertainty Quantifications
 
 ```r
-pred.nonfemale = cmpredict(cmreg_out=m, typical=30, zval=0)
-pred.female = cmpredict(cmreg_out=m, typical=30, zval=1)
+pred.nonfemale = cmpredict(out=m, typical=30, zval=0)
+pred.female = cmpredict(out=m, typical=30, zval=1)
 
 par(mmfrow=c(1,2))
 hist(pred.nonfemale, main="Among non-Female", xlab="Proportion w/ Sensitive Traits")
@@ -216,7 +216,7 @@ hist(pred.female, main="Among Female", xlab="Proportion w/ Sensitive Traits")
 ##  `cmpredict2`: Predicted Values of the Outcome Variable
 
 ```r
-pr2 <- cmpredict2(m2, typical=c(1,30))
+pr2 <- cmpredict2(out=m2, typical=c(1,30))
 
 par(mfrow=c(1,2))
 hist(pr2[1,], main="No Sensitive Trait", xlab="Outcome Value", breaks=40)
