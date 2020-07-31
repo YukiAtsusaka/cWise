@@ -66,7 +66,7 @@ weight = data %>% dplyr::select(!!Wquo) %>% pull()
   pi.hat.bc = min(1, max(pi.hat.bc, 0))  # Logical bound restrain
 
 
-# BOOTSTRAPPING (200 TIMES)
+# BOOTSTRAPPING FOR UNCERTAINTY ESTIMATE (200 TIMES)
  set.seed(123456)
  bs <- NA
   for(i in 1:200){
@@ -76,9 +76,14 @@ weight = data %>% dplyr::select(!!Wquo) %>% pull()
 
     Y.bs = bs.dat %>% dplyr::select(!!Yquo) %>% pull()  # First column must be Y
     A.bs = bs.dat %>% dplyr::select(!!Aquo) %>% pull()  # Second column must be A
-#    w.bs = bs.dat %>% dplyr::select(weight) %>% pull()  # weight variable
-#    w.bs = w.bs/sum(w.bs)                               # normalize the weight
-    w.bs=1
+
+if(missing(weight)){
+  w.bs <- rep(1, N.bs)    # If weight is not specified
+}else{
+Wquo <- enquo(weight)   # Quoting variable name for weight
+w.bs = bs.dat %>% dplyr::select(!!Wquo) %>% pull()
+}
+
     bs.lambda.hat = sum(w.bs*Y.bs)/sum(w.bs)                  # Observed proportion of YESYES or NONO
     bs.pi.hat.naive = (bs.lambda.hat+p-1)/(2*p-1)
     bs.gamma.hat = (sum(w.bs*A.bs)/sum(w.bs)-0.5)/(0.5-p2)      # Estimated level of inattentiveness
@@ -86,7 +91,7 @@ weight = data %>% dplyr::select(!!Wquo) %>% pull()
 
     bs[i] = bs.pi.hat.naive - bs.bias.hat         # Bias Correction within Bootstrapping
     bs[i] = min(1, max(bs[i], 0))                 # Logical bound restrain
-}
+} # END OF BOOTSTRAPPING
 
 
   pi.hat.bc.var = var(bs)
