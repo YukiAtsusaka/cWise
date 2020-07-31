@@ -4,7 +4,7 @@
 \alias{bc.est}
 \title{bc.est}
 \usage{
-bc.est(Y, A, p, p.prime, w = NULL, data)
+bc.est(Y, A, p, p.prime, weight = NULL, data)
 }
 \arguments{
 \item{Y}{A vector of binary responses in the crosswise question}
@@ -15,9 +15,9 @@ bc.est(Y, A, p, p.prime, w = NULL, data)
 
 \item{p.prime}{An auxiliary probability for the anchor question (scalar)}
 
-\item{w}{An optional vector specifying sample weights in data (default is set to 1)}
-
 \item{data}{A dataset containing information from the crosswise model (Y, A, w)}
+
+\item{w}{An optional vector specifying sample weights in data (default is set to 1)}
 }
 \value{
 A list containing main results ($Results) and related statistics ($Stats).

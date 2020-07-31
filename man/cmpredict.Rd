@@ -4,14 +4,14 @@
 \alias{cmpredict}
 \title{cmpredict}
 \usage{
-cmpredict(cmreg_out, zval, typical)
+cmpredict(out, zval, typical)
 }
 \arguments{
-\item{cmreg_out}{An output of \code{cmreg} or \code{cmreg.p}}
-
 \item{zval}{A value for the explanatory variable of interest (the first listed variable in cmreg_out$Call)}
 
 \item{typical}{A vector of typical values for other covariates}
+
+\item{cmreg_out}{An output of \code{cmreg} or \code{cmreg.p}}
 }
 \value{
 A vector of predicted probabilities given the input covariatevalues

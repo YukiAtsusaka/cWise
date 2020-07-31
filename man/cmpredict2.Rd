@@ -4,14 +4,14 @@
 \alias{cmpredict2}
 \title{cmpredict2}
 \usage{
-cmpredict2(cmreg_out, zval, typical)
+cmpredict2(out, typical)
 }
 \arguments{
+\item{typical}{A vector of typical values for other covariates}
+
 \item{cmreg_out}{An output of \code{cmreg} or \code{cmreg.p}}
 
 \item{zval}{A value for the explanatory variable of interest (the first listed variable in cmreg_out$Call)}
-
-\item{typical}{A vector of typical values for other covariates}
 }
 \value{
 A vector of predicted probabilities given the input covariatevalues
@@ -20,6 +20,6 @@ A vector of predicted probabilities given the input covariatevalues
 Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap
 }
 \examples{
-m <- cmpredict(m, zval=0, typical=30)
-m
+pr2 <- cmpredict2(out=m2, typical=c(1,30))
+pr2
 }
