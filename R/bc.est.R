@@ -70,19 +70,20 @@ weight = data %>% dplyr::select(!!Wquo) %>% pull()
  set.seed(123456)
  bs <- NA
   for(i in 1:200){
-    index <- sample(1:nrow(data), size=dim(data), replace=TRUE)   # RESAMPLE WITH REPLACEMENT
+    index <- sample(1:nrow(data), size=dim(data)[1], replace=TRUE)   # RESAMPLE WITH REPLACEMENT
     bs.dat <- data[index,]                                        # BOOTSTRAPPED DATA
-    N.bs = dim(data)
+    N.bs = dim(data)[1]
 
     Y.bs = bs.dat %>% dplyr::select(!!Yquo) %>% pull()  # First column must be Y
     A.bs = bs.dat %>% dplyr::select(!!Aquo) %>% pull()  # Second column must be A
 
-if(missing(weight)){
-  w.bs <- rep(1, N.bs)    # If weight is not specified
-}else{
-Wquo <- enquo(weight)   # Quoting variable name for weight
-w.bs = bs.dat %>% dplyr::select(!!Wquo) %>% pull()
-}
+    w.bs = weight[index] # Carefully see if this is working
+# if(missing(weight)){
+# w.bs <- rep(1, N.bs)    # If weight is not specified
+# }else{
+# Wquo <- enquo(weight)   # Quoting variable name for weight
+# w.bs = bs.dat %>% dplyr::select(!!Wquo) %>% pull()
+# }
 
     bs.lambda.hat = sum(w.bs*Y.bs)/sum(w.bs)                  # Observed proportion of YESYES or NONO
     bs.pi.hat.naive = (bs.lambda.hat+p-1)/(2*p-1)
