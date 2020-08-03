@@ -66,7 +66,6 @@ head(cmdata)
 Here, `Y` is a binary response in the crosswise question (`Y`=1 if TRUE-TRUE or FALSE-FALSE), and `A` is a binary response in the anchor question. 
 `p` and `p.prime` are auxiliary probabilities in the crosswise and anchor questions, respectively.
 While researchers can directly input the values of `p` and `p.prime` in the function below (without including them in data), we include them for an illustrative purpose.
-Note that `p` and `p.prime` must be (by construction) identical for all respondents.
 
 
 ## `bc.est`: Estimate the Prevalence of Sensitive Attributes
@@ -170,6 +169,9 @@ m
 #> female       -0.2044     0.4119 -0.496   0.620
 #> age           0.0595     0.0394  1.511   0.131
 ```
+
+`$Coefficients` show main restuls. They suggest that female and older respondents are more likely to possess the sensitive trait of interest. `$AuxiliaryCoef` list esimated coefficients for being attentive in the crosswise model.
+
 
 ##  `cmreg.p`: Regression with the Latent Sensitive Trait as a Predictor
 
