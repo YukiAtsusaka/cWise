@@ -38,6 +38,7 @@ To install the latest development version of `cWise` directly from
 library(devtools)
 devtools::install_github("YukiAtsusaka/cWise")
 ```
+<br>
 
 ## Example
 
@@ -67,6 +68,7 @@ Here, `Y` is a binary response in the crosswise question (`Y`=1 if TRUE-TRUE or 
 `p` and `p.prime` are auxiliary probabilities in the crosswise and anchor questions, respectively.
 While researchers can directly input the values of `p` and `p.prime` in the function below (without including them in data), we include them for an illustrative purpose.
 
+<br>
 
 ## `bc.est`: Estimate the Prevalence of Sensitive Attributes
 Generate a bias-corrected crosswise estimate using a crosswise data.
@@ -106,7 +108,7 @@ bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
 #>          0.7888        2000
 ```
 
-
+<br>
 
 ##  `cmBound`: Apply a Sensitivity Analysis
 Apply a sensitivity analysis and generate sensitivity bounds for naive crosswise estimates.
@@ -129,7 +131,7 @@ p
 
 <img src="man/figures/bounds2.png" width="50%" style="display: block; margin: auto;" />
 
-
+<br>
 
 ##  `cmreg`: Regression with the Latent Sensitive Trait as an Outcome
 
@@ -172,6 +174,7 @@ m
 
 `$Coefficients` shows main restuls. They suggest that female and older respondents are more likely to possess the sensitive trait of interest. `$AuxiliaryCoef` lists esimated coefficients for being attentive in the crosswise model.
 
+<br>
 
 ##  `cmreg.p`: Regression with the Latent Sensitive Trait as a Predictor
 
@@ -224,7 +227,7 @@ m2
 #> Y             0.9858     0.0756  13.035   0.000
 ```
 
-
+<br>
 
 ##  `cmpredict`: Predicted Probabilities with Uncertainty Quantifications
 
@@ -242,6 +245,7 @@ hist(pred.female, main="Among Female", xlab="Proportion w/ Sensitive Traits")
 
 <img src="man/figures/pred.png" width="80%" style="display: block; margin: auto;" />
 
+<br>
 
 ##  `cmpredict.p`: Predicted Values of the Outcome Variable
 
