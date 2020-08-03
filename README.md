@@ -90,7 +90,7 @@ The output is a list containing two elements. `$Results` is a matrix containing 
 
 `$Stats` is a vector containing the estimated attentive rate and sample size used for estimation. In this example, it is estimated that about 77% of respondents are attentive and followed the instructions under the design.
 
-
+### With Weighting
 Sample weights can be easily incorporated in our bias-corrected estimator by specifying the optional argument `weight` as follows:
 
 ```r
