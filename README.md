@@ -63,10 +63,10 @@ head(cmdata)
 #> 6 1 1 0.15    0.15
 ```
 
-Here, `Y` is a binary response in the crosswise question (TRUE-TRUE or FALSE-FALSE), and `A` is a binary response in the anchor question. 
+Here, `Y` is a binary response in the crosswise question (`Y`=1 if TRUE-TRUE or FALSE-FALSE), and `A` is a binary response in the anchor question. 
 `p` and `p.prime` are auxiliary probabilities in the crosswise and anchor questions, respectively.
-While researchers can simply remember the values of `p` and `p.prime` (without including them in data), we include them for an illustrative purpose.
-Note that `P` and `p.prime` must be (by construction) identical for all respondents.
+While researchers can directly input the values of `p` and `p.prime` in the function below (without including them in data), we include them for an illustrative purpose.
+Note that `p` and `p.prime` must be (by construction) identical for all respondents.
 
 
 ## `bc.est`: Estimate the Prevalence of Sensitive Attributes
@@ -76,33 +76,31 @@ Generate a bias-corrected crosswise estimate using a crosswise data.
 prev <- bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
 prev
 
-FIX HERE LATER
-
 #> $Results
 #>                 Estimate Std. Error 95%CI(Low) 95%CI(Up)
 #> Naive Crosswise   0.1950     0.0144     0.1667    0.2233
-#> Bias-Corrected    0.1054     0.0077     0.0227    0.0504
+#> Bias-Corrected    0.1054     0.0208     0.0649    0.1394
 #> 
 #> $Stats
 #>  Attentive Rate Sample Size
 #>          0.7729        2000
 ```
 
-The output is a list containing two elements. `$Results` is a matrix containing the point estimate, (estimated) standard error, the lower and upper bounds of 95% confidence intervals for the naive crosswise estimate and bias-corrected estimate, respectively. `$Stats` is a vector containing the estimated attentive rate and sample size used for estimation. In this example, it is estimated that about 77% of respondents are attentive and followed the instruction under the design.
+The output is a list containing two elements. `$Results` is a matrix containing the point estimate, (estimated) standard error, the lower and upper bounds of 95% confidence intervals for the naive crosswise estimate and bias-corrected estimate, respectively.
+
+`$Stats` is a vector containing the estimated attentive rate and sample size used for estimation. In this example, it is estimated that about 77% of respondents are attentive and followed the instructions under the design.
 
 
-Sample weights can be easily incorporated in our bias-corrected estimator by specifying `weight` optional argument as follows:
+Sample weights can be easily incorporated in our bias-corrected estimator by specifying the optional argument `weight` as follows:
 
 ```r
 bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
 
 
-FIX HERE LATER
-
 #> $Results
 #>                 Estimate Std. Error 95%CI(Low) 95%CI(Up)
 #> Naive Crosswise   0.1921     0.0144     0.1639    0.2204
-#> Bias-Corrected    0.1097     0.0077     0.0227    0.0504
+#> Bias-Corrected    0.1097     0.0250     0.0596    0.1503
 #> 
 #> $Stats
 #>  Attentive Rate Sample Size
@@ -151,7 +149,7 @@ head(cmdata2)
 #> 6 0 1      1  25 0.1 0.15
 ```
 
-To run a crosswise regression, one can specify the model by writing a formula: `Crosswise Response ~ var1 + ... + varN + Anchor Response` as follow:
+To run a crosswise regression, one can specify the model by writing a formula: `Crosswise Response ~ var1 + ... + varN + Anchor Response` as follows:
 
 ```r
 m <- cmreg(Y~female+age+A, p=0.1, p.prime=0.15, data=cmdata2)
