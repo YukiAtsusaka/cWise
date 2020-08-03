@@ -2,10 +2,12 @@
 #'
 #' @description Visualize the sensitivity bounds for naive crosswise estimates
 #'
-#' @param lambda.hat observed crosswise proportion: Prop(TRUE-TRUE or FALSE-FALSE)
-#' @param p Known proportion for the non-sensitive statement
-#' @param N Number of survey respondens in direct questioning (if available)
-#' @param dq Point estimate from direct questioning (if available)
+#' @param lambda.hat observed crosswise proportion: Prop(TRUE-TRUE or FALSE-FALSE).
+#' @param p Known proportion for the non-sensitive statement.
+#' @param N Number of survey respnodents in the croswise (anc anchor) question.
+#' @param kappa The probability with which inattentive respondents choose the crosswise item in both the crosswise and anchor questions.
+#' @param dq Point estimate from direct questioning (if available).
+#' @param N.dq Number of survey respondents in direct questioning (if available).
 #'
 #' @return A ggplot object.
 #' @examples
@@ -18,7 +20,7 @@
 #' @importFrom ggplot2
 
 
-cmBound = function(lambda.hat, p, N, dq=NULL, N.dq=NULL){
+cmBound = function(lambda.hat, p, N, kappa=0.5, dq=NULL, N.dq=NULL){
 
   pi.hat.naive = (lambda.hat+p-1)/(2*p-1)
   pi.hat.naive.var = (pi.hat.naive*(1-pi.hat.naive))/(N-1) + (p*(1-p))/((N-1)*((2*p-1)^2))
