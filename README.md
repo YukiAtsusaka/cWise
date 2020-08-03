@@ -110,7 +110,7 @@ bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
 
 
 ##  `cmBound`: Apply a Sensitivity Analysis
-Apply sensitivity analysis and generate sensitivity bounds for naive crosswise estimates.
+Apply a sensitivity analysis and generate sensitivity bounds for naive crosswise estimates.
 
 ```r
 p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073, N.dq=310)
