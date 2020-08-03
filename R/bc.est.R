@@ -2,25 +2,17 @@
 #'
 #' @description  \code{bc.est} is used to apply a bias-corrected crosswise estimator to survey data.
 #'
-#' @param Y A vector of binary responses in the crosswise question
-#' @param A A vector of binary responses in the anchor question
-#' @param p An auxiliary probability for the crosswise question (scalar)
-#' @param p.prime An auxiliary probability for the anchor question (scalar)
-#' @param w An optional vector specifying sample weights in data (default is set to 1)
-#' @param data A dataset containing information from the crosswise model (Y, A, w)
+#' @param Y a vector of binary responses in the crosswise question (Y=1 if TRUE-TRUE or FALSE-FALSE, Y=0 otherwise).
+#' @param A a vector of binary responses in the anchor question (A=1 if TRUE-TRUE or FALSE-FALSE, A=0 otherwise).
+#' @param p an auxiliary probability for the crosswise question.
+#' @param p.prime an auxiliary probability for the anchor question.
+#' @param weight an optional vector specifying sample weights in data.
+#' @param data a data frame containing information from the crosswise model (Y, A, weight).
 #'
 #' @return A list containing main results ($Results) and related statistics ($Stats).
 #' @examples
 #' bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
-#'
-#' #> $Results
-#' #>                Point Est. Std. Error Est 95%CI(Lower) 95%CI(Upper)
-#' #> Naive Crosswise  0.1950000     0.01444624   0.16668537    0.2233146
-#' #> Bias-Corrected   0.1053604     0.02080597   0.06486523    0.1394343
-#' #>
-#' #> $Stats
-#' #> Attentive Rate Est. Sample Size
-#' #>           0.7728571        2000
+#' bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
 #' @export
 #' @importFrom tidyverse
 

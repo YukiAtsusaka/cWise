@@ -4,22 +4,26 @@
 \alias{cmBound}
 \title{cmBound}
 \usage{
-cmBound(lambda.hat, p, N, dq = NULL, N.dq = NULL)
+cmBound(lambda.hat, p, N, kappa = 0.5, dq = NULL, N.dq = NULL)
 }
 \arguments{
-\item{lambda.hat}{observed crosswise proportion: Prop(TRUE-TRUE or FALSE-FALSE)}
+\item{lambda.hat}{a value for the observed crosswise proportion: Prop(TRUE-TRUE or FALSE-FALSE).}
 
-\item{p}{Known proportion for the non-sensitive statement}
+\item{p}{an auxiliary probability for the non-sensitive statement.}
 
-\item{N}{Number of survey respondens in direct questioning (if available)}
+\item{N}{a value for the number of survey respondents in the crosswise (and anchor) question.}
 
-\item{dq}{Point estimate from direct questioning (if available)}
+\item{kappa}{an optional value specifying the probability with which inattentive respondents choose the crosswise item in both the crosswise and anchor questions (default is 0.5.}
+
+\item{dq}{a value for a point estimate from direct questioning (if available).}
+
+\item{N.dq}{a value for the number of survey respondents in direct questioning (if available).}
 }
 \value{
-A ggplot object.
+A ggplot object visualizing the result of sensitivity analysis.
 }
 \description{
-Visualize the sensitivity bounds for naive crosswise estimates
+\code{cmBound} is used to apply a sensitivity analysis and visualize the sensitivity bounds for naive crosswise estimates.
 }
 \examples{
 p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073)

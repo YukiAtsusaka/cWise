@@ -7,17 +7,17 @@
 bc.est(Y, A, p, p.prime, weight, data)
 }
 \arguments{
-\item{Y}{A vector of binary responses in the crosswise question}
+\item{Y}{a vector of binary responses in the crosswise question (Y=1 if TRUE-TRUE or FALSE-FALSE, Y=0 otherwise).}
 
-\item{A}{A vector of binary responses in the anchor question}
+\item{A}{a vector of binary responses in the anchor question (A=1 if TRUE-TRUE or FALSE-FALSE, A=0 otherwise).}
 
-\item{p}{An auxiliary probability for the crosswise question (scalar)}
+\item{p}{an auxiliary probability for the crosswise question.}
 
-\item{p.prime}{An auxiliary probability for the anchor question (scalar)}
+\item{p.prime}{an auxiliary probability for the anchor question.}
 
-\item{data}{A dataset containing information from the crosswise model (Y, A, w)}
+\item{weight}{an optional vector specifying sample weights in data.}
 
-\item{w}{An optional vector specifying sample weights in data (default is set to 1)}
+\item{data}{a data frame containing information from the crosswise model (Y, A, weight).}
 }
 \value{
 A list containing main results ($Results) and related statistics ($Stats).
@@ -27,13 +27,5 @@ A list containing main results ($Results) and related statistics ($Stats).
 }
 \examples{
 bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
-
-#> $Results
-#>                Point Est. Std. Error Est 95\%CI(Lower) 95\%CI(Upper)
-#> Naive Crosswise  0.1950000     0.01444624   0.16668537    0.2233146
-#> Bias-Corrected   0.1053604     0.02080597   0.06486523    0.1394343
-#>
-#> $Stats
-#> Attentive Rate Est. Sample Size
-#>           0.7728571        2000
+bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
 }

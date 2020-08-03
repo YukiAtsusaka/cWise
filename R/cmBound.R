@@ -1,15 +1,15 @@
 #' @title cmBound
 #'
-#' @description Visualize the sensitivity bounds for naive crosswise estimates
+#' @description \code{cmBound} is used to apply a sensitivity analysis and visualize the sensitivity bounds for naive crosswise estimates.
 #'
-#' @param lambda.hat observed crosswise proportion: Prop(TRUE-TRUE or FALSE-FALSE).
-#' @param p Known proportion for the non-sensitive statement.
-#' @param N Number of survey respnodents in the croswise (anc anchor) question.
-#' @param kappa The probability with which inattentive respondents choose the crosswise item in both the crosswise and anchor questions.
-#' @param dq Point estimate from direct questioning (if available).
-#' @param N.dq Number of survey respondents in direct questioning (if available).
+#' @param lambda.hat a value for the observed crosswise proportion: Prop(TRUE-TRUE or FALSE-FALSE).
+#' @param p an auxiliary probability for the non-sensitive statement.
+#' @param N a value for the number of survey respondents in the crosswise (and anchor) question.
+#' @param kappa an optional value specifying the probability with which inattentive respondents choose the crosswise item in both the crosswise and anchor questions (default is 0.5.
+#' @param dq a value for a point estimate from direct questioning (if available).
+#' @param N.dq a value for the number of survey respondents in direct questioning (if available).
 #'
-#' @return A ggplot object.
+#' @return A ggplot object visualizing the result of sensitivity analysis.
 #' @examples
 #' p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073)
 #' p
