@@ -1,4 +1,4 @@
-#' @title cmpredict2
+#' @title cmpredict.p
 #'
 #' @description Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap
 #'
@@ -11,7 +11,7 @@
 #' pr2 <- cmpredict2(out=m2, typical=c(1,30))
 #' pr2
 #' @export
-#' @importFrom dplyr
+#' @importFrom
 
 
 cmpredict2 <- function(out, typical){
@@ -31,21 +31,12 @@ cmpredict2 <- function(out, typical){
   coef.sim <- coef.sim[,1:k]
 
 
-  # TYPICAL VALUE MATRIX
+# TYPICAL VALUE MATRIX
   typ.vec = rbind(c(1, typical, 0),
                   c(1, typical, 1))
-
 
   lin.agg <- as.matrix(typ.vec) %*% t(coef.sim) # Linear aggregator
 
   return(lin.agg)
 }
-
-#
-# pr2 <- cmpredict2(m2, typical=c(1,30))
-# #
-# par(mfrow=c(1,2))
-# hist(pr2[1,], main="No Sensitive Trait", xlab="Outcome Value", breaks=40)
-# hist(pr2[2,], main="With Sensitive Trait", xlab="Outcome Value", breaks=40)
-
 

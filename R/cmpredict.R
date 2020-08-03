@@ -2,8 +2,8 @@
 #'
 #' @description Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap
 #'
-#' @param cmreg_out An output of \code{cmreg} or \code{cmreg.p}
-#' @param zval A value for the explanatory variable of interest (the first listed variable in cmreg_out$Call)
+#' @param out An output of \code{cmreg}
+#' @param zval A value for the main explanatory variable of interest (the first listed variable in cmreg_out$Call)
 #' @param typical A vector of typical values for other covariates
 #'
 #' @return A vector of predicted probabilities given the input covariatevalues
@@ -11,7 +11,7 @@
 #' m <- cmpredict(m, zval=0, typical=30)
 #' m
 #' @export
-#' @importFrom dplyr
+#' @importFrom
 
 
 cmpredict <- function(out, zval, typical){

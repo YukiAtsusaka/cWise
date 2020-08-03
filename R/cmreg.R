@@ -30,7 +30,7 @@ cmreg <- function(formula, p, p.prime, data){
   k.t <- k + 1         # Start of theta parameters
   k.t.e <- 2*k         # End of theta parameters
 
-  init <- rep(0.01, k.t.e)         # Initial values for optim
+  init <- rep(0.01, k.t.e) # Initial values for optim
 
   # LOG-LIKELIHOOD FUNCTION
   log.L <- function(par) {

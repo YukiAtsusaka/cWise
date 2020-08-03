@@ -7,19 +7,21 @@
 cmreg.p(formula, p, p.prime, data)
 }
 \arguments{
-\item{formula}{explain}
+\item{formula}{an object of class "formula":
+a symbolic description of the model to be fitted.
+Ex. Outcome ~ Covariates + Crosswise Response + Anchor response.}
 
-\item{p}{explain}
+\item{p}{an auxiliary probability for the crosswise question.}
 
-\item{p.prime}{explain}
+\item{p.prime}{an auxiliary probability for the anchor question.}
 
-\item{data}{explain}
+\item{data}{a data frame containing information from the crosswise model, the outcome variable, and covariates.}
 }
 \value{
-ggplot object
+A list containing the estimated results and related statistics.
 }
 \description{
-Run a regression with the latent sensitive trait as a predictor
+\code{cmreg} is used to run a regression with the latent sensitive trait as a predictor.
 }
 \examples{
 m2 <- cmreg.p(V~age+female+Y+A, p=0.1, p.prime=0.15, data=cmdata3)

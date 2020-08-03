@@ -1,18 +1,20 @@
 #' @title cmreg.p
 #'
-#' @description Run a regression with the latent sensitive trait as a predictor
+#' @description \code{cmreg} is used to run a regression with the latent sensitive trait as a predictor.
 #'
-#' @param formula explain
-#' @param p explain
-#' @param p.prime explain
-#' @param data explain
+#' @param formula an object of class "formula":
+#' a symbolic description of the model to be fitted.
+#' Ex. Outcome ~ Covariates + Crosswise Response + Anchor response.
+#' @param p an auxiliary probability for the crosswise question.
+#' @param p.prime an auxiliary probability for the anchor question.
+#' @param data a data frame containing information from the crosswise model, the outcome variable, and covariates.
 #'
-#' @return ggplot object
+#' @return A list containing the estimated results and related statistics.
 #' @examples
 #' m2 <- cmreg.p(V~age+female+Y+A, p=0.1, p.prime=0.15, data=cmdata3)
 #' m2
 #' @export
-#' @importFrom dplyr
+#' @importFrom
 
 
 cmreg.p <- function(formula, p, p.prime, data){
