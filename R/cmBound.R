@@ -3,7 +3,7 @@
 #' @description \code{cmBound} is used to apply a sensitivity analysis and visualize the sensitivity bounds for naive crosswise estimates.
 #'
 #' @param lambda.hat a value for the observed crosswise proportion: Prop(TRUE-TRUE or FALSE-FALSE).
-#' @param p an auxiliary probability for the non-sensitive statement.
+#' @param p an auxiliary probability for the crosswise question.
 #' @param N a value for the number of survey respondents in the crosswise (and anchor) question.
 #' @param kappa an optional value specifying the probability with which inattentive respondents choose the crosswise item in both the crosswise and anchor questions (default is 0.5.
 #' @param dq a value for a point estimate from direct questioning (if available).

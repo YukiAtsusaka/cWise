@@ -9,7 +9,7 @@ cmBound(lambda.hat, p, N, kappa = 0.5, dq = NULL, N.dq = NULL)
 \arguments{
 \item{lambda.hat}{a value for the observed crosswise proportion: Prop(TRUE-TRUE or FALSE-FALSE).}
 
-\item{p}{an auxiliary probability for the non-sensitive statement.}
+\item{p}{an auxiliary probability for the crosswise question.}
 
 \item{N}{a value for the number of survey respondents in the crosswise (and anchor) question.}
 
