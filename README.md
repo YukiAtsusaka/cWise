@@ -252,11 +252,11 @@ hist(pred.female, main="Among Female", xlab="Proportion w/ Sensitive Traits")
 `cmpredict.p` provides an easy way to compute the predicted values of the outcome variable after applying `cmreg.p`. One can only specify a vector of typical values.
 
 ```r
-pr2 <- cmpredict.p(out=m2, typical=c(1,30))
+pred <- cmpredict.p(out=m2, typical=c(1,30))
 
 par(mfrow=c(1,2))
-hist(pr2[1,], main="No Sensitive Trait", xlab="Outcome Value", breaks=40)
-hist(pr2[2,], main="With Sensitive Trait", xlab="Outcome Value", breaks=40)
+hist(pred[1,], main="No Sensitive Trait", xlab="Outcome Value", breaks=40)
+hist(pred[2,], main="With Sensitive Trait", xlab="Outcome Value", breaks=40)
 ```
 
 <img src="man/figures/pred3.png" width="80%" style="display: block; margin: auto;" />
