@@ -71,7 +71,7 @@ While researchers can directly input the values of `p` and `p.prime` in the func
 <br>
 
 ## `bc.est`: Estimate the Prevalence of Sensitive Attributes
-Generate a bias-corrected crosswise estimate using a crosswise data.
+Generate a bias-corrected crosswise estimate using a crosswise data as fololws:
 
 ```r
 prev <- bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
@@ -92,7 +92,7 @@ The output is a list containing two elements. `$Results` is a matrix containing 
 `$Stats` is a vector containing the estimated attentive rate and sample size used for estimation. In this example, it is estimated that about 77% of respondents are attentive and followed the instructions under the design.
 
 ### With Weighting
-Sample weights can be easily incorporated in our bias-corrected estimator by specifying the optional argument `weight` as follows:
+When using unrepresentative samples, it is crucial to consider weighting to estimate the prevalence of sensitive attributes at the (real) population of interest. Great news: sample weights can be easily incorporated in our bias-corrected estimator by specifying the optional argument `weight` as follows:
 
 ```r
 bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
