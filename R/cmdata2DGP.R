@@ -45,8 +45,9 @@ Obs.res.prime[Attentive==0] = rbinom(n=length(N[Attentive==0]),
 
 Y = Obs.res
 A = Obs.res.prime
+p.prime = p2
 
-dat <- cbind(Y, A, female, age, p, p2)                          # Observed data
+dat <- cbind(Y, female, age, A, p, p.prime)                          # Observed data
 cmdata2 <- as.data.frame(dat)
 save(cmdata2, file="cmdata2.RData")
 

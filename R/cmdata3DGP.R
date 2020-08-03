@@ -61,8 +61,10 @@ Z = StatementA                                    # Having a sensitive attribute
 V = gamma0*rep(1,N) + gamma1*female + gamma2*age + gamma.cm*Z + rnorm(mean=0, sd=SD, n=N)   # Outcome
 gamma <- c(gamma0, gamma1, gamma2, gamma.cm)
 
+p.prime = p2
 
-dat <- cbind(V, Y, female, age, A, p, p2)                          # Observed data
+
+dat <- cbind(V, female, age, Y, A, p, p.prime)                          # Observed data
 dat <- as.data.frame(dat) # Data Frame
 head(dat)
 
