@@ -3,7 +3,7 @@
 <!-- badges: start -->
 
 [![R
-badge](https://img.shields.io/badge/Build%20with-🔥%20and%20R-blue)](https://github.com/cosimameyer/overviewR)
+badge](https://img.shields.io/badge/Build%20with-🍚%20and%20R-blue)](https://github.com/YukiAtsusaka/cWise)
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/cWise)](https://cran.r-project.org/package=cWise)
 [![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)　<img src='man/figures/lisafotios.jpg' align="right" height="200" />
 <!-- [![Rdoc](https://www.rdocumentation.org/badges/version/overviewR)](https://www.rdocumentation.org/packages/overviewR) -->
@@ -16,7 +16,7 @@ badge](https://img.shields.io/badge/Build%20with-🔥%20and%20R-blue)](https://g
 
 
 
-This R package implements the methods proposed by Atsusaka and Stevenson (2020) ["Bias-Corrected Crosswise Estimators for Sensitive Inquiries"](https://github.com/YukiAtsusaka/working-paper/blob/master/WP_BiasCorrectedCM.pdf). Our workhorse function is `bc.est` which generates a bias-corrected crosswise estimate of the proportion of individuals with sensitive attributes. `cmBound` applies our sensitivity analysis to crosswise data without the anchor question. `cmreg` and `cmreg.p` implement crosswise regressions in which the latent sensitive trait can be used as an outcome or as a predictor, respectively. `cmpredict` generates predicted probabilities given specific covariate values with uncertainty estimates via parametric bootstrap. Simulated crosswise data are saved as `cmdata`, `cmdata2`, and `cmdata3`.
+This R package implements the methods proposed by Atsusaka and Stevenson (2020) ["Bias-Corrected Crosswise Estimators for Sensitive Inquiries"](https://github.com/YukiAtsusaka/working-paper/blob/master/WP_BiasCorrectedCM.pdf). Our workhorse function is `bc.est` which generates a bias-corrected crosswise estimate of the proportion of individuals with sensitive attributes. `cmBound` applies our sensitivity analysis to crosswise data without the anchor question. `cmreg` and `cmreg.p` implement crosswise regressions in which the latent sensitive trait can be used as an outcome or as a predictor, respectively. `cmpredict` generates predicted proportions of having sensitive traits given specific covariate values with uncertainty estimates via parametric bootstrap, whereas `cmpredict.p` yields predicted values for a given outcome variable and specific covariate values in the presence and absence of sensitive traits. Simulated crosswise data are saved as `cmdata`, `cmdata2`, and `cmdata3`.
 
 <details>
 <summary>Cite this software✒️</summary>
@@ -170,10 +170,12 @@ m
 #> age           0.0595     0.0394  1.511   0.131
 ```
 
-`$Coefficients` show main restuls. They suggest that female and older respondents are more likely to possess the sensitive trait of interest. `$AuxiliaryCoef` list esimated coefficients for being attentive in the crosswise model.
+`$Coefficients` shows main restuls. They suggest that female and older respondents are more likely to possess the sensitive trait of interest. `$AuxiliaryCoef` lists esimated coefficients for being attentive in the crosswise model.
 
 
 ##  `cmreg.p`: Regression with the Latent Sensitive Trait as a Predictor
+
+For a demonstration, let's load `cmdata3` that contains an outcome variable of interest (`V`), two covariates (`female` and `age`), and crosswise and anchor responses (`Y` and `A`).
 
 ```r
 data(cmdata3)
@@ -187,6 +189,8 @@ head(cmdata3)
 #> 5 -0.19410532 0      1  19 1 0.1 0.15
 #> 6 -0.34926673 0      1  25 1 0.1 0.15
 ```
+
+To run a regression with the sensitive trait as a predictor, one can specify the formula: `Outcome ~ Cov1 + ... + CovN + CrosswiseResponse + AnchorResponse` as follows:
 
 ```r
 m2 <- cmreg.p(V~age+female+Y+A, p=0.1, p.prime=0.15, data=cmdata3)
@@ -214,6 +218,13 @@ m2
 #> age           0.0548     0.0370   1.481   0.139
 #> female       -0.1075     0.3779  -0.284   0.776
 ```
+
+`$Coefficients` returns a list of coefficients that associte each covariate (including the sensitive trait of interest) and the outcome variable. Our primary quantities of interest are:
+```r
+#> Y             0.9858     0.0756  13.035   0.000
+```
+
+
 
 ##  `cmpredict`: Predicted Probabilities with Uncertainty Quantifications
 
