@@ -73,7 +73,7 @@ While researchers can directly input the values of `p` and `p.prime` in the func
 <br>
 
 ## `bc.est`: Estimate the Prevalence of Sensitive Attributes
-Generate a bias-corrected crosswise estimate using a crosswise data as fololws:
+Generate a bias-corrected crosswise estimate using a crosswise data as follows:
 
 ```r
 prev <- bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
