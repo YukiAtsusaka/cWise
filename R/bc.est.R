@@ -19,8 +19,8 @@
 
 bc.est <- function(Y, A, p, p.prime, weight, data){
 
-Yquo <- enquo(Y)        # QUoting variable name for Y
-Aquo <- enquo(A)        # Quoting variable name for A
+Yquo <- dplyr::enquo(Y)        # QUoting variable name for Y
+Aquo <- dplyr::enquo(A)        # Quoting variable name for A
 data <- data[complete.cases(data),] # Just in case (but weight needs to be calculated after dropping NAs)
 
 N = dim(data)[1]        # Number of obs
