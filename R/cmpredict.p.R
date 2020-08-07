@@ -11,7 +11,6 @@
 #' pr2 <- cmpredict2(out=m2, typical=c(1,30))
 #' pr2
 #' @export
-#' @importFrom
 
 
 cmpredict2 <- function(out, typical){

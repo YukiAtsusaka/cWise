@@ -14,7 +14,6 @@
 #' m <-  cmreg(Y~female+age+A, p=0.1, p.prime=0.15, data=cmdata2)
 #' m
 #' @export
-#' @importFrom
 
 
 cmreg <- function(formula, p, p.prime, data){

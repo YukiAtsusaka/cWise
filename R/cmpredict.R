@@ -11,7 +11,6 @@
 #' m <- cmpredict(m, zval=0, typical=30)
 #' m
 #' @export
-#' @importFrom
 
 
 cmpredict <- function(out, zval, typical){
