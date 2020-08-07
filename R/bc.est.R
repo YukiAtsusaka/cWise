@@ -14,7 +14,8 @@
 #' bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
 #' bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
 #' @export
-#' @importFrom tidyverse
+#' @importFrom dplyr "%>%" "select" "pull"
+#'             tibble "as_tibble"
 
 bc.est <- function(Y, A, p, p.prime, weight, data){
 
