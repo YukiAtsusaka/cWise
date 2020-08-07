@@ -51,7 +51,7 @@ weight = data %>% dplyr::select(!!Wquo) %>% pull()
 
 
 # BIAS CORRECTED CROSSWISE MODEL
-  gamma.hat = (sum(weight*A) / sum(weight)-0.5)/(0.5-p2) # Estimated level of inattentiveness
+  gamma.hat = (sum(weight*A) / sum(weight)-0.5)/(0.5-p.prime) # Estimated level of inattentiveness
   Bias.hat = (1/2)*((lambda.hat-0.5)/(p-0.5)) - (1/(2*gamma.hat))*((lambda.hat-0.5)/(p-0.5))
   Bias.hat
 
@@ -80,7 +80,7 @@ weight = data %>% dplyr::select(!!Wquo) %>% pull()
 
     bs.lambda.hat = sum(w.bs*Y.bs)/sum(w.bs)                  # Observed proportion of YESYES or NONO
     bs.pi.hat.naive = (bs.lambda.hat+p-1)/(2*p-1)
-    bs.gamma.hat = (sum(w.bs*A.bs)/sum(w.bs)-0.5)/(0.5-p2)      # Estimated level of inattentiveness
+    bs.gamma.hat = (sum(w.bs*A.bs)/sum(w.bs)-0.5)/(0.5-p.prime)      # Estimated level of inattentiveness
     bs.bias.hat = (1/2)*((bs.lambda.hat-0.5)/(p-0.5)) - (1/(2*bs.gamma.hat))*((bs.lambda.hat-0.5)/(p-0.5))
 
     bs[i] = bs.pi.hat.naive - bs.bias.hat         # Bias Correction within Bootstrapping
