@@ -39,8 +39,6 @@ To install the latest development version of `cWise` directly from
 ``` r
 library(devtools)
 devtools::install_github("YukiAtsusaka/cWise")
-
-## THIS STEP CURRENTLY CAUSES AN ERROR: 8/7/2020
 ```
 <br>
 
