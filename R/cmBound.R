@@ -17,7 +17,7 @@
 #' p <- p + ggtitle("Sensitivity Analysis") +
 #'          theme(plot.title = element_text(size=20, face="bold"))
 #' @export
-#' @importFrom tidyverse
+#' @importFrom ggplot2 "ggplot"
 
 
 cmBound = function(lambda.hat, p, N, kappa=0.5, dq=NULL, N.dq=NULL){
