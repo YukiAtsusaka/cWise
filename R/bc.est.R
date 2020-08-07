@@ -31,7 +31,7 @@ A = data %>% dplyr::select(!!Aquo) %>% pull()
 if(missing(weight)){
   weight <- rep(1, N)    # If weight is not specified
 }else{
-Wquo <- enquo(weight)   # Quoting variable name for weight
+Wquo <- dplyr::enquo(weight)   # Quoting variable name for weight
 weight = data %>% dplyr::select(!!Wquo) %>% pull()
 }
 
