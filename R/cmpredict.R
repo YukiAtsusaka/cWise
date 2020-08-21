@@ -11,6 +11,7 @@
 #' m <- cmpredict(m, zval=0, typical=30)
 #' m
 #' @export
+#' @importFrom mvtnorm "rmvnorm"
 
 
 cmpredict <- function(out, zval, typical){
