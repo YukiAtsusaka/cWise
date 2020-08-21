@@ -27,7 +27,7 @@ cmpredict <- function(out, zval, typical){
 # PARAMETRIC BOOTSTRAP
   k = 1 + length(typical) + 1
   set.seed(20200730)
-  coef.sim <- rmvnorm(n=10000, mean=coefs, sigma=vcovs) # from mvtnorm
+  coef.sim <- mvtnorm::rmvnorm(n=10000, mean=coefs, sigma=vcovs) # from mvtnorm
   coef.sim <- coef.sim[,1:k]
 
   lin.agg <- as.matrix(typ.vec) %*% t(coef.sim) # Linear aggregator
