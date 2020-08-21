@@ -11,9 +11,9 @@
 #' pr2 <- cmpredict2(out=m2, typical=c(1,30))
 #' pr2
 #' @export
+#' @importFrom mvtnorm "rmvnorm"
 
-
-cmpredict2 <- function(out, typical){
+cmpredict.p <- function(out, typical){
 
 # GRAB COEFFICIENTS
   coef.gamma = out$Coefficients[,1]
