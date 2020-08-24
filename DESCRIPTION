@@ -4,8 +4,6 @@ Title: A (Cross)Wise Method to Analyze Sensitive Survey Questions
 Version: 0.0.0.9000
 Author: person("Yuki", "Atsusaka", email = "atsusaka@rice.edu", role = c("cre","aut"))
 Description: This implements the bias-corrected crosswise estimator and its extensions introduced by Atsusaka and Stevenson (2020) in R.
-
-Depends: R (>= 3.2.0)
 License: GPL-3
 URL: https://github.com/YukiAtsusaka/cWise
 BugReports: https://github.com/YukiAtsusaka/cWise/issues
