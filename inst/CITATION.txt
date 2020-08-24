@@ -1,0 +1,10 @@
+citHeader("To cite cWise in publications use:")
+
+bibentry(bibtype = "article",
+         title = "Bias-Corrected Crosswise Estimators for Sensitive Inquiries",
+         journal = "Working Paper",
+         author = c(person("Yuki", "Atsusaka"),
+                    person("Randy", "Stevenson")),
+         url = "https://github.com/YukiAtsusaka/working-paper/blob/master/WP_BiasCorrectedCM.pdf",
+         year = 2020
+)
