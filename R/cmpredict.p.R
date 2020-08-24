@@ -2,7 +2,7 @@
 #'
 #' @description Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap
 #'
-#' @param cmreg_out An output of \code{cmreg} or \code{cmreg.p}
+#' @param out An output of \code{cmreg.p}
 #' @param zval A value for the explanatory variable of interest (the first listed variable in cmreg_out$Call)
 #' @param typical A vector of typical values for other covariates
 #'
