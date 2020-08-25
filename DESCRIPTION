@@ -13,6 +13,7 @@ Imports:
     rlang (>= 0.4.7),
     mvtnorm (>= 1.1-1)
 Suggests:
+    testthat
 VignetteBuilder:
     knitr
 Encoding: UTF-8
