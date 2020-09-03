@@ -16,6 +16,8 @@
 
 cmpredict <- function(out, zval, typical){
 
+i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
+
 # GRAB COEFFICIENTS
   coef.beta  = out$Coefficients[,1]
   coef.theta = out$AuxiliaryCoef[,1]
