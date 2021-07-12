@@ -30,7 +30,7 @@ This R package implements the methods proposed by Atsusaka and Stevenson (2020) 
   }
 </details>
 
-This R package is still under development. Please let me know ([atsusaka@rice.edu](atsusaka@rice.edu)) if you find any issue installing and using the software..!
+This R package is still under development. Please let me know ([atsusaka@rice.edu](atsusaka@rice.edu)) if you find any issue installing and using the software! **I am looking for a partner who can co-manage this R package with me. If you are interested in this methodology and have prior experience in developing R packages, please reach out to me!**
 
 ## Instllation
 To install the latest development version of `cWise` directly from
