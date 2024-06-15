@@ -18,19 +18,8 @@ badge](https://img.shields.io/badge/Build%20with-🍚%20and%20R-blue)](https://g
 
 This R package implements the methods proposed by Atsusaka and Stevenson (2021) ["A Bias-Corrected Estimator for the Crosswise Model with Inattentive Respondents"](https://doi.org/10.1017/pan.2021.43). Our workhorse function is `bc.est` which generates a bias-corrected crosswise estimate of the proportion of individuals with sensitive attributes. `cmBound` applies our sensitivity analysis to crosswise data without the anchor question. `cmreg` and `cmreg.p` implement crosswise regressions in which the latent sensitive trait can be used as an outcome or as a predictor, respectively. `cmpredict` generates predicted proportions of having sensitive traits given specific covariate values with uncertainty estimates via parametric bootstrap, whereas `cmpredict.p` yields predicted values for a given outcome variable and specific covariate values in the presence and absence of sensitive traits. Simulated crosswise data are saved as `cmdata`, `cmdata2`, and `cmdata3`.
 
-<details>
-<summary>Cite this software✒️</summary>
 
-@Manual{,
-    title = {cWise: A (Cross)Wise Method to Analyze Sensitive Survey Questions},
-    author = {Yuki Atsusaka},
-    year = {2020},
-    note = {R package version 0.0.0},
-    url = {https://CRAN.R-project.org/package=cWise},
-  }
-</details>
-
-This R package is still under development. Please let me know ([atsusaka@rice.edu](atsusaka@rice.edu)) if you find any issue installing and using the software! **I am looking for a partner who can co-manage this R package with me. If you are interested in this methodology and have prior experience in developing R packages, please reach out to me!**
+This R package is still under development. Please let me know ([yuki.atsusaka@gmail.com](yuki.atsusaka@gmail.com)) if you find any issue installing and using the software! **I am looking for a partner who can co-manage this R package with me. If you are interested in this methodology and have prior experience in developing R packages, please reach out to me!**
 
 ## Instllation
 To install the latest development version of `cWise` directly from
