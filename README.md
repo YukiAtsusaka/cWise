@@ -1,85 +1,49 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # cWise: A (Cross)Wise Method to Analyze Sensitive Survey Questions
 
 <!-- badges: start -->
 
-[![R
-badge](https://img.shields.io/badge/Build%20with-🍚%20and%20R-blue)](https://github.com/YukiAtsusaka/cWise)
-[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/cWise)](https://cran.r-project.org/package=cWise)
-[![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)　<img src="man/figures/lisafotios.jpg" align="right" height="200"/>
-<!-- [![Rdoc](https://www.rdocumentation.org/badges/version/overviewR)](https://www.rdocumentation.org/packages/overviewR) -->
-<!-- [![metacran downloads](https://cranlogs.r-pkg.org/badges/overviewR)](https://cran.r-project.org/package=overviewR) -->
-<!-- [![cran checks](https://cranchecks.info/badges/summary/overviewR)](https://cran.r-project.org/web/checks/check_results_overviewR.html) -->
-<!-- [![](https://cranlogs.r-pkg.org/badges/version/overviewR)](https://www.r-pkg.org/badges/version/overviewR) -->
-<!-- [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) -->
-<!-- [![Last-changedate](https://img.shields.io/badge/last%20change-2020--07--13-green.svg)](/commits/master) -->
+[![R badge](https://img.shields.io/badge/Build%20with-🍚%20and%20R-blue)](https://github.com/YukiAtsusaka/cWise) [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/cWise)](https://cran.r-project.org/package=cWise) [![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)　<img src="man/figures/lisafotios.jpg" align="right" height="200"/> <!-- [![Rdoc](https://www.rdocumentation.org/badges/version/overviewR)](https://www.rdocumentation.org/packages/overviewR) --> <!-- [![metacran downloads](https://cranlogs.r-pkg.org/badges/overviewR)](https://cran.r-project.org/package=overviewR) --> <!-- [![cran checks](https://cranchecks.info/badges/summary/overviewR)](https://cran.r-project.org/web/checks/check_results_overviewR.html) --> <!-- [![](https://cranlogs.r-pkg.org/badges/version/overviewR)](https://www.r-pkg.org/badges/version/overviewR) --> <!-- [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) --> <!-- [![Last-changedate](https://img.shields.io/badge/last%20change-2020--07--13-green.svg)](/commits/master) -->
 
 <!-- badges: end -->
 
-This R package implements the methods proposed by Atsusaka and Stevenson
-(2023) ["A Bias-Corrected Estimator for the Crosswise Model with
-Inattentive Respondents"](https://doi.org/10.1017/pan.2021.43). Our
-workhorse function is `bc.est` which generates a bias-corrected
-crosswise estimate of the proportion of individuals with sensitive
-attributes. `cmBound` applies our sensitivity analysis to crosswise data
-without the anchor question. `cmreg` and `cmreg.p` implement crosswise
-regressions in which the latent sensitive trait can be used as an
-outcome or as a predictor, respectively. `cmpredict` generates predicted
-proportions of having sensitive traits given specific covariate values
-with uncertainty estimates via parametric bootstrap, whereas
-`cmpredict.p` yields predicted values for a given outcome variable and
-specific covariate values in the presence and absence of sensitive
-traits. Simulated crosswise data are saved as `cmdata`, `cmdata2`, and
-`cmdata3`.
+This R package implements the methods proposed by Atsusaka and Stevenson (2023) ["A Bias-Corrected Estimator for the Crosswise Model with Inattentive Respondents"](https://doi.org/10.1017/pan.2021.43). Our workhorse function is `bc.est` which generates a bias-corrected crosswise estimate of the proportion of individuals with sensitive attributes. `cmBound` applies our sensitivity analysis to crosswise data without the anchor question. `cmreg` and `cmreg.p` implement crosswise regressions in which the latent sensitive trait can be used as an outcome or as a predictor, respectively. `cmpredict` generates predicted proportions of having sensitive traits given specific covariate values with uncertainty estimates via parametric bootstrap, whereas `cmpredict.p` yields predicted values for a given outcome variable and specific covariate values in the presence and absence of sensitive traits. Simulated crosswise data are saved as `cmdata`, `cmdata2`, and `cmdata3`.
 
 ## Installation
 
-To install the latest development version of `cWise` directly from
-[GitHub](https://github.com/YukiAtsusaka/cWise) use:
+To install the latest development version of `cWise` directly from [GitHub](https://github.com/YukiAtsusaka/cWise) use:
 
 ``` r
 library(devtools)
 devtools::install_github("YukiAtsusaka/cWise")
 ```
 
-<br>
-
 ## Design and Notation
 
-The goal of our procedure is to (1) estimate the proportion of people
-who have sensitive attributes and behavior and (2) correct for bias
-based on inattentive survey takers.\
+The goal of our procedure is to (1) estimate the proportion of people who have sensitive attributes and behavior and (2) correct for bias based on inattentive survey takers.\
 \
-Our design-based method requires two survey questions just like the
-following:
+Our design-based method requires two survey questions as follows:
 
 <img src="man/figures/ex_main.png" width="80%" style="display: block; margin: auto;"/>
 
 <img src="man/figures/ex_anchor.png" width="80%" style="display: block; margin: auto;"/>
 
--   Statement A: this is the **sensitive** item of interest
+Based on the four statements,
 
--   Statement B: this is a non-sensitive item (whose prevalence is known
-    to users)
+-   Statement A: the **sensitive** item of interest
+-   Statement B: a non-sensitive item (whose prevalence is known to users)
+-   Statement C: an anchoring sensitive item (whose prevalence is set to 0)
+-   Statement D: an anchoring non-sensitive item (whose prevalence is known to users)
 
--   Statement C: this is an anchoring sensitive item (whose prevalence
-    is set to 0)
+analysts will observe two outcome variables
 
--   Statement D: this is an anchoring non-sensitive item (whose
-    prevalence is known to users)
+-   $Y_i$: person $i$ chooses the first option in the main question (Both or Neither)
+-   $A_{i}$: person $i$ chooses the first option in the anchor question (Both or Neither)
 
 \
-To use our method, users only need to understand the following
-quantities. Among the four quantities, $p$ and $p\prime$ are called
-**design parameters** because users have full control over their values.
+To use our method, users only need to understand the following quantities. Among the four quantities, $p$ and $p\prime$ are called **design parameters** because users have full control over their values.
 
 | cWise | Notation | Description |
-|-------------------|-------------------|----------------------------------|
+|----|----|----|
 | --- | $\pi$ | The proportion that the sensitive item applies in the target question or **Prob(A = Yes). This is our quantity of interest.** |
 | p | $p$ | The probability that the non-sensitive item is selected or **Prob(B = Yes)** |
 | --- | $\pi\prime (=0)$ | The proportion that the sensitive item applies in the anchor question or **Prob(D = Yes). This is set to 0 by default.** |
@@ -93,9 +57,7 @@ First, load the package.
 library(cWise)
 ```
 
-The following examples use a toy data set (`cmdata`) that comes with the
-package. This data contains artificially generated information in a
-survey using the crosswise model.
+The following examples use a toy data set (`cmdata`) that comes with the package. This data contains artificially generated information in a survey using the crosswise model.
 
 ``` r
 data(cmdata)
@@ -110,19 +72,13 @@ head(cmdata)
 #> 6 1 1 0.15    0.15
 ```
 
-Here, `Y` is a binary response in the crosswise question (`Y`=1 if
-TRUE-TRUE or FALSE-FALSE), and `A` is a binary response in the anchor
-question. `p` and `p.prime` are auxiliary probabilities in the crosswise
-and anchor questions, respectively. While researchers can directly input
-the values of `p` and `p.prime` in the function below (without including
-them in data), we include them for an illustrative purpose.
+Here, `Y` is a binary response in the crosswise question (`Y`=1 if TRUE-TRUE or FALSE-FALSE), and `A` is a binary response in the anchor question. `p` and `p.prime` are auxiliary probabilities in the crosswise and anchor questions, respectively. While researchers can directly input the values of `p` and `p.prime` in the function below (without including them in data), we include them for an illustrative purpose.
 
 <br>
 
 ## `bc.est`: Estimate the Prevalence of Sensitive Attributes
 
-Generate a bias-corrected crosswise estimate using a crosswise data as
-follows:
+Generate a bias-corrected crosswise estimate using a crosswise data as follows:
 
 ``` r
 prev <- bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
@@ -138,23 +94,13 @@ prev
 #>          0.7729        2000
 ```
 
-The output is a list containing two elements. `$Results` is a matrix
-containing the point estimate, (estimated) standard error, the lower and
-upper bounds of 95% confidence intervals for the naive crosswise
-estimate and bias-corrected estimate, respectively.
+The output is a list containing two elements. `$Results` is a matrix containing the point estimate, (estimated) standard error, the lower and upper bounds of 95% confidence intervals for the naive crosswise estimate and bias-corrected estimate, respectively.
 
-`$Stats` is a vector containing the estimated attentive rate and sample
-size used for estimation. In this example, it is estimated that about
-77% of respondents are attentive and followed the instructions under the
-design.
+`$Stats` is a vector containing the estimated attentive rate and sample size used for estimation. In this example, it is estimated that about 77% of respondents are attentive and followed the instructions under the design.
 
 ### With Weighting
 
-When using unrepresentative samples, it is crucial to consider weighting
-to estimate the prevalence of sensitive attributes at the (real)
-population of interest. Great news: sample weights can be easily
-incorporated in our bias-corrected estimator by specifying the optional
-argument `weight` as follows:
+When using unrepresentative samples, it is crucial to consider weighting to estimate the prevalence of sensitive attributes at the (real) population of interest. Great news: sample weights can be easily incorporated in our bias-corrected estimator by specifying the optional argument `weight` as follows:
 
 ``` r
 bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
@@ -174,8 +120,7 @@ bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
 
 ## `cmBound`: Apply a Sensitivity Analysis
 
-Apply a sensitivity analysis and generate sensitivity bounds for naive
-crosswise estimates.
+Apply a sensitivity analysis and generate sensitivity bounds for naive crosswise estimates.
 
 ``` r
 p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073, N.dq=310)
@@ -184,9 +129,7 @@ p
 
 <img src="man/figures/bounds.png" width="50%" style="display: block; margin: auto;"/>
 
-Since the output is a ggplot object, one can easily add additional
-information by using "+". For example, to add a title with a specific
-font:
+Since the output is a ggplot object, one can easily add additional information by using "+". For example, to add a title with a specific font:
 
 ``` r
 p <- p + ggtitle("Sensitivity Analysis") + 
@@ -200,8 +143,7 @@ p
 
 ## `cmreg`: Regression with the Latent Sensitive Trait as an Outcome
 
-For an illustration, let's load and see `cmdata2` that contains the main
-and anchor response variables along with two covariates.
+For an illustration, let's load and see `cmdata2` that contains the main and anchor response variables along with two covariates.
 
 ``` r
 data(cmdata2)
@@ -216,9 +158,7 @@ head(cmdata2)
 #> 6 0 1      1  25 0.1 0.15
 ```
 
-To run a crosswise regression, one can specify the model by writing a
-formula: `Crosswise Response ~ var1 + ... + varN + Anchor Response` as
-follows:
+To run a crosswise regression, one can specify the model by writing a formula: `Crosswise Response ~ var1 + ... + varN + Anchor Response` as follows:
 
 ``` r
 m <- cmreg(Y~female+age+A, p=0.1, p.prime=0.15, data=cmdata2)
@@ -240,18 +180,13 @@ m
 #> age           0.0595     0.0394  1.511   0.131
 ```
 
-`$Coefficients` shows main restuls. They suggest that female and older
-respondents are more likely to possess the sensitive trait of interest.
-`$AuxiliaryCoef` lists esimated coefficients for being attentive in the
-crosswise model.
+`$Coefficients` shows main restuls. They suggest that female and older respondents are more likely to possess the sensitive trait of interest. `$AuxiliaryCoef` lists esimated coefficients for being attentive in the crosswise model.
 
 <br>
 
 ## `cmreg.p`: Regression with the Latent Sensitive Trait as a Predictor
 
-For a demonstration, let's load `cmdata3` that contains an outcome
-variable of interest (`V`), two covariates (`female` and `age`), and
-crosswise and anchor responses (`Y` and `A`).
+For a demonstration, let's load `cmdata3` that contains an outcome variable of interest (`V`), two covariates (`female` and `age`), and crosswise and anchor responses (`Y` and `A`).
 
 ``` r
 data(cmdata3)
@@ -266,10 +201,7 @@ head(cmdata3)
 #> 6 -0.34926673 0      1  25 1 0.1 0.15
 ```
 
-To run a regression with the sensitive trait as a predictor, one can
-specify the formula:
-`Outcome ~ Cov1 + ... + CovN + CrosswiseResponse + AnchorResponse` as
-follows:
+To run a regression with the sensitive trait as a predictor, one can specify the formula: `Outcome ~ Cov1 + ... + CovN + CrosswiseResponse + AnchorResponse` as follows:
 
 ``` r
 m2 <- cmreg.p(V~age+female+Y+A, p=0.1, p.prime=0.15, data=cmdata3)
@@ -298,9 +230,7 @@ m2
 #> female       -0.1075     0.3779  -0.284   0.776
 ```
 
-`$Coefficients` returns a list of coefficients that associte each
-covariate (including the sensitive trait of interest) and the outcome
-variable. Our primary quantities of interest are:
+`$Coefficients` returns a list of coefficients that associte each covariate (including the sensitive trait of interest) and the outcome variable. Our primary quantities of interest are:
 
 ``` r
 #> Y             0.9858     0.0756  13.035   0.000
@@ -310,11 +240,7 @@ variable. Our primary quantities of interest are:
 
 ## `cmpredict`: Predicted Probabilities with Uncertainty Quantifications
 
-`cmpredict` offers an easy way to compute predicted probabilities
-(proportions) of having sensitive attributes. It does so with three
-arguments: `out` = output of `cmreg`, `typical` = a vector of typical
-values for control variables, and `zval` = a specific value that the
-main explanatory variable (first listed variable in `cmreg`) takes.
+`cmpredict` offers an easy way to compute predicted probabilities (proportions) of having sensitive attributes. It does so with three arguments: `out` = output of `cmreg`, `typical` = a vector of typical values for control variables, and `zval` = a specific value that the main explanatory variable (first listed variable in `cmreg`) takes.
 
 ``` r
 pred.nonfem = cmpredict(out=m, typical=30, zval=0)
@@ -331,9 +257,7 @@ hist(pred.female, main="Among Female", xlab="Proportion w/ Sensitive Traits")
 
 ## `cmpredict.p`: Predicted Values of the Outcome Variable
 
-`cmpredict.p` provides an easy way to compute the predicted values of
-the outcome variable after applying `cmreg.p`. One can only specify a
-vector of typical values.
+`cmpredict.p` provides an easy way to compute the predicted values of the outcome variable after applying `cmreg.p`. One can only specify a vector of typical values.
 
 ``` r
 pred <- cmpredict.p(out=m2, typical=c(1,30))
