@@ -42,12 +42,12 @@ analysts will observe two outcome variables
 \
 To use our method, users only need to understand the following quantities. Among the four quantities, $p$ and $p\prime$ are called **design parameters** because users have full control over their values.
 
-| cWise | Notation | Description |
-|-------------------|-------------------|----------------------------------|
-| --- | $\pi$ | The proportion that the sensitive item applies in the target question or **Prob(A = Yes). This is our quantity of interest.** |
-| p | $p$ | The probability that the non-sensitive item is selected or **Prob(B = Yes)** |
-| --- | $\pi\prime (=0)$ | The proportion that the sensitive item applies in the anchor question or **Prob(D = Yes). This is set to 0 by default.** |
-| p.prime | $p'$ | The probability that the non-sensitive item is selected in the anchor question or **Prob(D = Yes)** |
+| Notation | Description |
+|----|----|
+| $\pi$ | The proportion that the sensitive item applies in the target question or **Prob(A = Yes). This is our quantity of interest.** |
+| $p$ | The probability that the non-sensitive item is selected or **Prob(B = Yes)** |
+| $\pi\prime (=0)$ | The proportion that the sensitive item applies in the anchor question or **Prob(D = Yes). This is set to 0 by default.** |
+| $p'$ | The probability that the non-sensitive item is selected in the anchor question or **Prob(D = Yes)** |
 
 ## Example
 
