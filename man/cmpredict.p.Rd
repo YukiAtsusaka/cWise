@@ -7,9 +7,9 @@
 cmpredict.p(out, typical)
 }
 \arguments{
-\item{typical}{A vector of typical values for other covariates}
+\item{out}{An output of \code{cmreg.p}}
 
-\item{cmreg_out}{An output of \code{cmreg} or \code{cmreg.p}}
+\item{typical}{A vector of typical values for other covariates}
 
 \item{zval}{A value for the explanatory variable of interest (the first listed variable in cmreg_out$Call)}
 }
