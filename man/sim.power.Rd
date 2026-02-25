@@ -30,7 +30,7 @@ For example, 0.8 means 80\% of respondents are attentive.}
 }
 \value{
 A numeric scalar representing the estimated statistical power
-(probability of correctly rejecting H0 when H1 is true) at the given sample size.
+  (probability of correctly rejecting H0 when H1 is true) at the given sample size.
 }
 \description{
 Computes statistical power for a one-sided hypothesis test of
@@ -55,15 +55,15 @@ at the specified sample size.
 }
 \note{
 This function can take considerable time to run depending on N.sim and
-sample size. For quick exploration, use smaller N.sim values (e.g., 100-500).
+sample size. For quick exploration, use smaller N.sim values (e.g., 100–500).
 For publication-quality results, use N.sim >= 2000.
 }
 \examples{
 # Compute power at a fixed sample size of 1000
 \dontrun{
 pwr <- sim.power(
-  N.sim   = 500,
-  sample  = 1000,
+  N.sim  = 500,
+  sample = 1000,
   pi.null = 0,
   pi.alt  = 0.1,
   p       = 0.1,
