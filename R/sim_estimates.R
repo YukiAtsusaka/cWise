@@ -89,7 +89,7 @@ sim.estimates <- function(N.sim = 100, sample, pi, p, p.prime, gamma, direct,
   sf <- n_sims / 100
 
   # Caterpillar plot: sorted estimates with bootstrap CIs
-  plot(est, type = "n", ylim = c(0, 0.4), xlab = "", las = 1, ylab = "")
+  plot(est, type = "n", ylim = c(0, max(high)), xlab = "", las = 1, ylab = "")
   points(est, pch = 16, col = scales::alpha("dimgray", 1))
   arrows(
     x0 = seq_along(est), x1 = seq_along(est),
@@ -99,24 +99,25 @@ sim.estimates <- function(N.sim = 100, sample, pi, p, p.prime, gamma, direct,
   abline(h = 0,  col = "dimgray",    lwd = 1.5)
   abline(h = pi, col = "firebrick4", lty = 1, lwd = 1.5)
 
-  legend(
-    x = 0, y = 0.42,
-    legend = "Quantity of interest",
-    lty = 1, lwd = 1.5, col = "firebrick4",
-    box.lty = 0, cex = 1.5
-  )
+  # legend(
+  #   x = 0, y = 0.42,
+  #   legend = "Quantity of interest",
+  #   lty = 1, lwd = 1.5, col = "firebrick4",
+  #   box.lty = 0, cex = 1.5
+  # )
 
-  # Parameter annotations — x positions scale with n_sims
-  text(x = 18   * sf, y = 0.33, labels = bquote("n"          == .(sample)),  cex = 1.5, col = txcol)
-  text(x = 15   * sf, y = 0.30, labels = bquote(pi           == .(pi)),      cex = 1.5, col = txcol)
-  text(x = 12.5 * sf, y = 0.27, labels = bquote(paste(pi, "'") == 0),        cex = 1.5, col = txcol)
-  text(x = 15   * sf, y = 0.24, labels = bquote("p"          == .(p)),       cex = 1.5, col = txcol)
-  text(x = 16   * sf, y = 0.21, labels = bquote("p'"         == .(p.prime)), cex = 1.5, col = txcol)
-  text(x = 14.5 * sf, y = 0.18, labels = bquote(gamma        == .(gamma)),   cex = 1.5, col = txcol)
+  # # Parameter annotations — x positions scale with n_sims
+  # text(x = 18   * sf, y = 0.33, labels = bquote("n"          == .(sample)),  cex = 1.5, col = txcol)
+  # text(x = 15   * sf, y = 0.30, labels = bquote(pi           == .(pi)),      cex = 1.5, col = txcol)
+  # text(x = 12.5 * sf, y = 0.27, labels = bquote(paste(pi, "'") == 0),        cex = 1.5, col = txcol)
+  # text(x = 15   * sf, y = 0.24, labels = bquote("p"          == .(p)),       cex = 1.5, col = txcol)
+  # text(x = 16   * sf, y = 0.21, labels = bquote("p'"         == .(p.prime)), cex = 1.5, col = txcol)
+  # text(x = 14.5 * sf, y = 0.18, labels = bquote(gamma        == .(gamma)),   cex = 1.5, col = txcol)
 
   mtext(side = 1, "Simulation Index",                  line = 2)
-  mtext(side = 2, "Prevalence of Sensitive Attribute", line = 2)
-  title("C", adj = 0, cex.main = 2, font = 2, line = 0.5)
+  # mtext(side = 2, "Prevalence of Sensitive Attribute", line = 2)
+  title("Simulated Bias-Corrected Estimates",
+        adj = 0, cex.main = 1, font = 2, line = 0.5)
   box()
 
   invisible(sim.results)
