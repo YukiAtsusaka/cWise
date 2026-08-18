@@ -1,13 +1,13 @@
 # cWise — CRAN Submission Plan
 
-Working document for **Yuki Atsusaka** and **collaborator**. Update the status boxes as
+Working document for **Yuki Atsusaka** and **Kolbe Dumas**. Update the status boxes as
 you go. Everything below was verified against the package as of commit `a27f64f`
 (R 4.4.1, Windows) — the check output in Phase 0 is real, not hypothetical.
 
 **Target:** `cWise 0.1.0` on CRAN, with two vignettes.
 
 **Owner column:** put initials in the `Who` cell when you pick a task up. `YA` = Yuki,
-`CO` = collaborator, `?` = unassigned.
+`KD` = Kolbe, `?` = unassigned.
 
 ---
 
@@ -114,12 +114,12 @@ The roxygen block documents `zval`, but `cmpredict.p()` takes `(out, typical)`.
 
 ## Phase 1 — Mechanical CRAN compliance
 
-Cheap, independent, no statistics involved. Good place for the collaborator to start
+Cheap, independent, no statistics involved. Good place for Kolbe to start
 while the estimation work (Phase 2) is in flight. Nothing here changes numerical output.
 
 | # | Task | File(s) | Who | Done |
 |---|---|---|---|---|
-| 1.1 | Replace `Author:` with `Authors@R = c(person(..., role=c("aut","cre")), person("Randy","Stevenson", role="aut"))`. Drop the `Author:`/`Maintainer:` fields entirely. | `DESCRIPTION` | ? | ☐ |
+| 1.1 | Replace `Author:` with `Authors@R = c(person(..., role=c("aut","cre")), person("Randy","Stevenson", role="aut"))`. Drop the `Author:`/`Maintainer:` fields entirely. Decide whether Kolbe is listed — `role="aut"` if he contributes package code, `role="ctb"` for smaller contributions. | `DESCRIPTION` | ? | ☐ |
 | 1.2 | Replace `tidyverse` in `Imports` with the packages actually used: `dplyr`, `ggplot2`, `scales`, `mvtnorm`. Drop `rlang` unless 1.9 keeps it. Add `knitr`, `rmarkdown` to `Suggests`. | `DESCRIPTION` | ? | ☐ |
 | 1.3 | Rewrite `Title` in title case, no redundant article, ≤65 chars. `Description` must be ≥2 sentences, must not start with "This package", and must cite the paper as `Atsusaka and Stevenson (2023) <doi:...>`. | `DESCRIPTION` | ? | ☐ |
 | 1.4 | Bump `Version: 0.1.0`. Rewrite `NEWS.md` under a `# cWise 0.1.0` heading (it currently says `0.0.1`, which matches nothing). | `DESCRIPTION`, `NEWS.md` | ? | ☐ |
@@ -311,7 +311,7 @@ hygiene, the other is the likelihood code. Splitting them is the main parallelis
 1. **Both:** agree on the Phase 2.2 and 2.9 API decisions first. They are breaking
    changes, and everything else (docs, tests, vignettes) is written against them.
    Doing this out of order is the most likely source of duplicated work.
-2. **Collaborator:** Phase 1 (all mechanical), then Phase 4.1 (getting-started vignette —
+2. **Kolbe:** Phase 1 (all mechanical), then Phase 4.1 (getting-started vignette —
    it only touches `bc.est`/`cmBound`, which Phase 2 does not change), then Phase 5.
 3. **Yuki:** Phase 2 (estimation rewrite) with Phase 2c gates and Phase 3.3–3.4 tests
    written as you go.
