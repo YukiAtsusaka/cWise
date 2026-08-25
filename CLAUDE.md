@@ -11,6 +11,8 @@ you go. The Phase 0 check output was verified against the package as of commit `
 - Completed 1.1: migrated `DESCRIPTION` to `Authors@R`; Yuki Atsusaka is `aut`/`cre`,
   and Kolbe Dumas and Randy T. Stevenson are `aut`. Kolbe's package email is
   `kdumas@CougarNet.UH.EDU`.
+- Maintainer decision: YA is the package maintainer, represented by the `cre` role in
+  `Authors@R`; R derives the `Maintainer` field from Yuki's name and email.
 - Completed 1.15: replaced the dead working-paper citation with the published 2023
   *Political Analysis* article and DOI `10.1017/pan.2021.43`.
 - Partially completed 1.3: `Description` is now two sentences and cites the DOI in
@@ -66,6 +68,10 @@ Namespace dependencies missing from DESCRIPTION Imports/Depends entries: 'dplyr'
 ```
 `NAMESPACE` imports from `dplyr` and `ggplot2`, but `DESCRIPTION` lists `tidyverse`.
 **CRAN will not accept `tidyverse` as an `Imports` entry** — it is a meta-package.
+
+**Resolved 2026-08-25:** `Imports` now declares `dplyr`, `ggplot2`, `mvtnorm`, and
+`scales` individually; `knitr` and `rmarkdown` are in `Suggests`, and unused `rlang`
+was removed. A source-package check reached `checking package dependencies ... OK`.
 
 **ERROR — examples**
 ```
@@ -133,12 +139,12 @@ while the estimation work (Phase 2) is in flight. Nothing here changes numerical
 | # | Task | File(s) | Who | Done |
 |---|---|---|---|---|
 | 1.1 | Replace `Author:` with `Authors@R = c(person(..., role=c("aut","cre")), person("Randy","Stevenson", role="aut"))`. Drop the `Author:`/`Maintainer:` fields entirely. Decide whether Kolbe is listed — `role="aut"` if he contributes package code, `role="ctb"` for smaller contributions. | `DESCRIPTION` | KD | ☒ |
-| 1.2 | Replace `tidyverse` in `Imports` with the packages actually used: `dplyr`, `ggplot2`, `scales`, `mvtnorm`. Drop `rlang` unless 1.9 keeps it. Add `knitr`, `rmarkdown` to `Suggests`. | `DESCRIPTION` | ? | ☐ |
+| 1.2 | Replace `tidyverse` in `Imports` with the packages actually used: `dplyr`, `ggplot2`, `scales`, `mvtnorm`. Drop `rlang` unless 1.9 keeps it. Add `knitr`, `rmarkdown` to `Suggests`. | `DESCRIPTION` | KD | ☒ |
 | 1.3 | Rewrite `Title` in title case, no redundant article, ≤65 chars. `Description` must be ≥2 sentences, must not start with "This package", and must cite the paper as `Atsusaka and Stevenson (2023) <doi:...>`. **Progress:** description complete; title pending. | `DESCRIPTION` | KD | ☐ |
 | 1.4 | Bump `Version: 0.1.0`. Rewrite `NEWS.md` under a `# cWise 0.1.0` heading (it currently says `0.0.1`, which matches nothing). | `DESCRIPTION`, `NEWS.md` | ? | ☐ |
 | 1.5 | Add `LICENSE` file if using `GPL-3`; confirm the license text matches the `License:` field. | root | ? | ☐ |
 | 1.6 | Add the full `importFrom("stats", ...)` / `importFrom("graphics", ...)` / `importFrom("utils", ...)` set as roxygen tags (a `@importFrom` in each function, or one `R/cWise-package.R` doc block). Then `devtools::document()`. Copy the list verbatim from the check output. | `R/*.R` | ? | ☐ |
-| 1.7 | Add `@importFrom scales ...` or fully qualify the `scales::` calls, and declare `scales` in `Imports`. | `R/cmBound.R` | ? | ☐ |
+| 1.7 | Add `@importFrom scales ...` or fully qualify the `scales::` calls, and declare `scales` in `Imports`. Calls in `R/sim_estimates.R` are fully qualified. | `R/sim_estimates.R`, `DESCRIPTION` | KD | ☒ |
 | 1.8 | Replace every `round(x, d = n)` with `round(x, digits = n)`. | `R/bc.est.R`, `R/cmreg.R`, `R/cmreg.p.R` | ? | ☐ |
 | 1.9 | **Delete `R/power_analysis.R`** after confirming `sim_power.R` + `sim_power_N.R` supersede it. If `sim.curve()` is still wanted, move it into its own file, fix the `pi=` call to pass `pi.null`/`pi.alt`, document it with roxygen, and export it. Note in `NEWS.md` either way. | `R/power_analysis.R` | ? | ☐ |
 | 1.10 | Remove `options(warn=-1)` — CRAN forbids changing global options without restoring them. If warnings must be suppressed, wrap the specific call in `suppressWarnings()`. | `R/cmreg.p.R:20` | ? | ☐ |
@@ -226,14 +232,14 @@ another round of index arithmetic.
 | # | Task | Who | Done |
 |---|---|---|---|
 | 2.1 | **Introduce an explicit parameter index map.** Build one helper, e.g. `cm_par_index(k, model = c("outcome","predictor"))`, returning a named list of integer vectors: `list(beta=, theta=, gamma=, gamma_z=, log_sigma=)`. Every subsequent slice — log-likelihood, output assembly, VCV subsetting, prediction — indexes through that list. **No more literal `2*n.var+1` anywhere.** This single change removes bugs (2), (3), and most of (4). | ? | ☐ |
-| 2.2 | Derive all widths from `model.matrix()`, never from `dim(model.frame())`. Take the anchor `A` (and `Y` in `cmreg.p`) out of the formula's RHS and make them their own arguments — e.g. `cmreg(Y ~ female + age, anchor = A, p, p.prime, data)`. Relying on "the last term is the anchor" is what couples the code to the example formulas. This is a **breaking API change**: decide it now, document it in `NEWS.md`, and update every example, test, and vignette. | ? | ☐ |
+| 2.2 | **Approved 2026-08-25; not started.** Derive all widths from `model.matrix()`, never from `dim(model.frame())`. Take the anchor `A` (and `Y` in `cmreg.p`) out of the formula's RHS and make them their own arguments — e.g. `cmreg(Y ~ female + age, anchor = A, p, p.prime, data)`. Relying on "the last term is the anchor" is what couples the code to the example formulas. This is a **breaking API change**; document it in `NEWS.md`, and update every example, test, and vignette when implemented. | YA | ☐ |
 | 2.3 | Reparametrize `sigma` as `log_sigma` so BFGS is unconstrained on a valid scale; exponentiate when evaluating the likelihood and delta-transform back for reporting. Removes the negative-`log()` failure mode and lets us delete `options(warn=-1)`. | ? | ☐ |
 | 2.4 | Harden the maximizer: `start = NULL` argument (default derived from a `glm()` fit on the observed responses rather than a flat `0.01`); `n.start` random restarts keeping the best log-likelihood; `control` passed through; **stop or warn loudly if `MLE$convergence != 0`**; check the Hessian with `tryCatch(solve(...))` and a negative-definiteness test, warning explicitly when SEs are unavailable instead of emitting `NaN`. | ? | ☐ |
 | 2.5 | Store full-precision estimates, SEs, log-likelihood, `n`, `convergence`, `p`, `p.prime`, and the call in the fit object. Give it class `"cmreg"` / `"cmreg.p"` and write `print()` and `summary()` methods; round only inside `print()`. Register the methods with `@export` (S3 methods need `S3method()` in `NAMESPACE`). | ? | ☐ |
 | 2.6 | Rewrite `cmpredict()`: accept a **named** `newdata` data frame (or named `typical` vector) and build the design row with `model.matrix()` + the stored `terms` object, so ordering can never drift. Match by name, not position. Vectorize over `zval` so a prediction *curve* needs no user loop. Validate names/lengths up front with an informative `stop()`. | ? | ☐ |
 | 2.7 | Rewrite `cmpredict.p()` on the same interface. **Fix the mean/covariance ordering bug** by subsetting `VCV` through the Phase 2.1 index map: `vcovs[idx$gamma, idx$gamma]` alongside `coefs[idx$gamma]`. Decide and document one return scale — recommend returning both the linear predictor and the response scale, with a `type = c("response","link")` argument matching `predict.glm()` convention. | ? | ☐ |
 | 2.8 | Expose `nsim` (default 1000, not 10000) and `seed = NULL` on both predict functions; restore RNG state with `on.exit()`. Return a tidy data frame (`estimate`, `conf.low`, `conf.high`) rather than a raw 10000-column matrix, with the raw draws available via an attribute or a `draws = TRUE` argument. | ? | ☐ |
-| 2.9 | Rename `cmpredict.p` → `cmpredict_p` (and `cmreg.p` → `cmreg_p`, `bc.est` → `bc_est`, `sim.power` → `sim_power`, …). **Dots in function names collide with S3 dispatch**: R sees `cmpredict.p` as the `p` method for a generic `cmpredict`. Once 2.5 adds real S3 methods this becomes an active hazard, not a style question. Keep the old names as deprecated wrappers calling `.Deprecated()` for one release. | ? | ☐ |
+| 2.9 | **Approved 2026-08-25; not started.** Rename `cmpredict.p` → `cmpredict_p` (and `cmreg.p` → `cmreg_p`, `bc.est` → `bc_est`, `sim.power` → `sim_power`, …). **Dots in function names collide with S3 dispatch**: R sees `cmpredict.p` as the `p` method for a generic `cmpredict`. Once 2.5 adds real S3 methods this becomes an active hazard, not a style question. Keep the old names as deprecated wrappers calling `.Deprecated()` for one release. | YA | ☐ |
 
 ### 2c. Correctness gates for Phase 2 — do not skip
 
@@ -309,7 +315,7 @@ study" are different audiences arriving with different questions:
 | 6.2 | `devtools::check_win_devel()` — clean on Windows r-devel. | ? | ☐ |
 | 6.3 | `rhub::rhub_check()` — clean on Linux and macOS. | ? | ☐ |
 | 6.4 | Write `cran-comments.md`: platforms tested, R versions, and a one-line justification for each remaining NOTE (expect only `New submission`). Add it to `.Rbuildignore`. | ? | ☐ |
-| 6.5 | Confirm the maintainer email is one Yuki will hold long-term and can respond from within a few days — CRAN archives packages whose maintainer goes unreachable. `atsusaka@rice.edu` is an institutional address; if the Rice affiliation may end, use a durable address now. | ? | ☐ |
+| 6.5 | Confirm the maintainer email is one Yuki will hold long-term and can respond from within a few days — CRAN archives packages whose maintainer goes unreachable. YA is assigned as maintainer; confirm the current `atsusaka@uh.edu` address is durable before submission. | YA | ☐ |
 | 6.6 | Tag the release in git (`v0.1.0`) and confirm the working tree is clean. | ? | ☐ |
 | 6.7 | `devtools::release()` — walks the final checklist and submits. Yuki must confirm from the maintainer address. | ? | ☐ |
 | 6.8 | Expect a human reviewer round. Reply on the same email thread, bump to `0.1.1`, resubmit. Budget 1–3 weeks. | ? | ☐ |
@@ -344,7 +350,7 @@ people to review and sign off; the first person listed is the implementation lea
 
 | Owner | Assigned tasks | Dependency / handoff |
 |---|---|---|
-| YA + KD | Decide 2.2 and 2.9 before implementation; also settle open question 3 | These decisions freeze the public API and release scope. Paper citation resolved on 2026-08-25. |
+| YA + KD | Settle open question 3 | Decisions 2.2 and 2.9 and the paper citation were approved/resolved on 2026-08-25. Release scope remains open. |
 | KD | 1.1-1.17 | Start immediately. Ask YA only for author/maintainer, simulation-scope, and citation decisions. |
 | YA | 2.1-2.9 | Start after the joint API decisions. Keep the index-map and full-precision fit-object work ahead of prediction rewrites. |
 | YA | 2.10-2.15, 3.3-3.4 | Write these correctness and regression tests alongside the corresponding Phase 2 changes, not afterward. |
@@ -356,20 +362,18 @@ people to review and sign off; the first person listed is the implementation lea
 
 Immediate parallel start:
 
-1. YA and KD jointly record decisions for 2.2, 2.9, and simulation scope.
-2. Once recorded, KD starts 1.1-1.17 while YA starts 2.1 and the 2.13 regression fixture.
+1. YA decides the simulation scope; decisions 2.2 and 2.9 are already approved.
+2. KD continues 1.1-1.17. YA starts Phase 2 only when implementation is explicitly requested.
 3. KD creates the testthat scaffold (3.1) early so both contributors can add tests without colliding.
 
 ## Open questions to settle between the two of you
 
-1. **Breaking the formula interface (2.2).** Moving `A` and `Y` out of the RHS is the
-   clean fix, but it invalidates every published example. Alternative: keep the current
-   interface and add `anchor`/`treat` arguments that *override* the positional
-   convention when supplied. More code, no breakage. Pick one before writing anything.
-2. **Deprecate the dotted names (2.9), or accept the S3 hazard?** The hazard only bites
-   once we add S3 methods in 2.5. If we skip 2.5, we can keep the dotted names — but
-   `print()`/`summary()` methods are a large usability gain for a package whose output is
-   currently a bare list of matrices.
+1. **Breaking the formula interface (2.2; approved 2026-08-25).** Move `A` and `Y`
+   out of the formula RHS into explicit arguments. This intentionally breaks the old
+   positional interface; update examples, tests, vignettes, and `NEWS.md` when implemented.
+2. **Deprecate dotted names (2.9; approved 2026-08-25).** Introduce underscore names
+   and retain the old dotted names as `.Deprecated()` wrappers for one release. Proceed
+   with the real S3 methods planned in 2.5. No implementation has started.
 3. **How much of `sim.*` ships in 0.1.0?** Six simulation functions with heavy runtimes
    are a CRAN check-time liability. Shipping `bc.est`, `cmBound`, `cmreg`, `cmreg.p`, and
    the predict functions in 0.1.0 and holding the power-analysis suite for 0.2.0 is a
