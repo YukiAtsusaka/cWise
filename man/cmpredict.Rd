@@ -4,7 +4,15 @@
 \alias{cmpredict}
 \title{cmpredict}
 \usage{
-cmpredict(out, newdata = NULL, zval = NULL, typical = NULL)
+cmpredict(
+  out,
+  newdata = NULL,
+  zval = NULL,
+  typical = NULL,
+  nsim = 1000L,
+  seed = NULL,
+  draws = FALSE
+)
 }
 \arguments{
 \item{out}{An output of \code{cmreg}.}
@@ -19,10 +27,19 @@ match a formula variable; all remaining covariates are supplied through
 
 \item{typical}{Optional named vector or list of fixed covariate values. This
 is a convenience alternative to `newdata` when used with `zval`.}
+
+\item{nsim}{Number of parametric-bootstrap draws.}
+
+\item{seed}{Optional integer seed for reproducible bootstrap draws. When set,
+the caller's RNG state is restored before returning.}
+
+\item{draws}{If `TRUE`, attach the raw bootstrap draw matrix as a `"draws"`
+attribute on the returned data frame.}
 }
 \value{
-A matrix of parametric-bootstrap draws of predicted probabilities,
-with one row for each prediction scenario.
+A data frame with `estimate`, `conf.low`, and `conf.high` columns,
+with one row for each prediction scenario. When `draws = TRUE`, its `"draws"`
+attribute contains the raw parametric-bootstrap matrix.
 }
 \description{
 Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap

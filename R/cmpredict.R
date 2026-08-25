@@ -11,9 +11,15 @@
 #' `newdata` or `typical`.
 #' @param typical Optional named vector or list of fixed covariate values. This
 #' is a convenience alternative to `newdata` when used with `zval`.
+#' @param nsim Number of parametric-bootstrap draws.
+#' @param seed Optional integer seed for reproducible bootstrap draws. When set,
+#' the caller's RNG state is restored before returning.
+#' @param draws If `TRUE`, attach the raw bootstrap draw matrix as a `"draws"`
+#' attribute on the returned data frame.
 #'
-#' @return A matrix of parametric-bootstrap draws of predicted probabilities,
-#' with one row for each prediction scenario.
+#' @return A data frame with `estimate`, `conf.low`, and `conf.high` columns,
+#' with one row for each prediction scenario. When `draws = TRUE`, its `"draws"`
+#' attribute contains the raw parametric-bootstrap matrix.
 #' @examples
 #' m <- cmreg(Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15,
 #'            data = cmdata2)
@@ -24,7 +30,8 @@
 #' @importFrom mvtnorm "rmvnorm"
 
 
-cmpredict <- function(out, newdata = NULL, zval = NULL, typical = NULL){
+cmpredict <- function(out, newdata = NULL, zval = NULL, typical = NULL,
+                      nsim = 1000L, seed = NULL, draws = FALSE){
 
 i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
 
@@ -38,6 +45,12 @@ i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
          call. = FALSE)
   }
   typ.vec <- cm_prediction_data(out, newdata, zval, typical)
+  if (length(nsim) != 1L || is.na(nsim) || nsim < 1L || nsim != as.integer(nsim)) {
+    stop("`nsim` must be a single positive integer.", call. = FALSE)
+  }
+  if (!is.logical(draws) || length(draws) != 1L || is.na(draws)) {
+    stop("`draws` must be `TRUE` or `FALSE`.", call. = FALSE)
+  }
 
 # GRAB FULL-PRECISION COEFFICIENTS
   idx <- cm_par_index(ncol(typ.vec), model = "outcome")
@@ -45,11 +58,13 @@ i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
   vcovs = out$VCV[idx$beta, idx$beta, drop = FALSE]
 
 # PARAMETRIC BOOTSTRAP
-  set.seed(20200730)
-  coef.sim <- mvtnorm::rmvnorm(n=10000, mean=coef.beta, sigma=vcovs) # from mvtnorm
+  coef.sim <- cm_with_seed(seed, function() {
+    mvtnorm::rmvnorm(n = as.integer(nsim), mean = coef.beta, sigma = vcovs)
+  })
 
   lin.agg <- typ.vec %*% t(coef.sim) # Linear aggregator
   pi.sim = i.logit(lin.agg) # Inverse logit
 
-  return(pi.sim)
+  point_estimate <- i.logit(typ.vec %*% coef.beta)
+  cm_prediction_summary(pi.sim, point_estimate, draws)
 }

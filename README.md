@@ -246,9 +246,9 @@ m2
 
 ``` r
 predictions <- cmpredict(out = m, typical = c(age = 30),
-                         zval = c(female = 0, female = 1))
-pred.nonfem <- predictions[1, ]
-pred.female <- predictions[2, ]
+                         zval = c(female = 0, female = 1), draws = TRUE)
+pred.nonfem <- attr(predictions, "draws")[1, ]
+pred.female <- attr(predictions, "draws")[2, ]
 
 par(mmfrow=c(1,2))
 hist(pred.nonfem, main="Among non-Female", xlab="Proportion w/ Sensitive Traits")
@@ -261,14 +261,16 @@ hist(pred.female, main="Among Female", xlab="Proportion w/ Sensitive Traits")
 
 ## `cmpredict.p`: Predicted Values of the Outcome Variable
 
-`cmpredict.p` provides an easy way to compute the predicted values of the outcome variable after applying `cmreg.p`. One can only specify a vector of typical values.
+`cmpredict.p` computes outcome predictions after `cmreg.p`. Covariates are supplied by name; it returns an absent-trait row and a present-trait row for each scenario.
 
 ``` r
-pred <- cmpredict.p(out=m2, typical=c(1,30))
+pred <- cmpredict.p(out = m2, newdata = data.frame(age = 30, female = 1),
+                     draws = TRUE)
+pred.draws <- attr(pred, "draws")
 
 par(mfrow=c(1,2))
-hist(pred[1,], main="No Sensitive Trait", xlab="Outcome Value", breaks=40)
-hist(pred[2,], main="With Sensitive Trait", xlab="Outcome Value", breaks=40)
+hist(pred.draws[1,], main="No Sensitive Trait", xlab="Outcome Value", breaks=40)
+hist(pred.draws[2,], main="With Sensitive Trait", xlab="Outcome Value", breaks=40)
 ```
 
 <img src="man/figures/pred3.png" width="80%" style="display: block; margin: auto;"/>

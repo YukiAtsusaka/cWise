@@ -5,7 +5,7 @@ Version: 0.0.0.9000
 Authors@R: c(
     person("Yuki", "Atsusaka", email = "atsusaka@uh.edu",
            role = c("aut", "cre")),
-    person("Kolbe", "Dumas", email = "kdumas@CougarNet.UH.EDU",
+    person("Kolbe", "Dumas", email = "kdumas@uh.edu",
            role = "aut"),
     person(given = c("Randy", "T."), family = "Stevenson",
            role = "aut")

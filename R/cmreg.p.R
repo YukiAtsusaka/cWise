@@ -153,6 +153,10 @@ Mlist$convergence <- MLE$convergence
 Mlist$p <- p
 Mlist$p.prime <- p.prime
 Mlist$model <- "predictor"
+Mlist$terms <- terms(mf)
+Mlist$xlevels <- stats::.getXlevels(Mlist$terms, df)
+Mlist["contrasts"] <- list(attr(X1, "contrasts"))
+Mlist$design_columns <- varnam
 class(Mlist) <- c("cmreg.p", "cmreg")
 
 return(Mlist)

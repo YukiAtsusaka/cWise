@@ -266,3 +266,40 @@ cm_prediction_data <- function(out, newdata, zval, typical) {
   }
   design
 }
+
+cm_with_seed <- function(seed, generator) {
+  if (is.null(seed)) {
+    return(generator())
+  }
+  if (length(seed) != 1L || is.na(seed) || !is.finite(seed) ||
+      seed != as.integer(seed)) {
+    stop("`seed` must be a single integer or `NULL`.", call. = FALSE)
+  }
+
+  seed_exists <- exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
+  if (seed_exists) {
+    previous_seed <- get(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
+  }
+  on.exit({
+    if (seed_exists) {
+      assign(".Random.seed", previous_seed, envir = .GlobalEnv)
+    } else if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
+      rm(".Random.seed", envir = .GlobalEnv)
+    }
+  }, add = TRUE)
+  set.seed(as.integer(seed))
+  generator()
+}
+
+cm_prediction_summary <- function(draws, estimate, include_draws) {
+  result <- data.frame(
+    estimate = as.numeric(estimate),
+    conf.low = apply(draws, 1L, stats::quantile, probs = 0.025, names = FALSE),
+    conf.high = apply(draws, 1L, stats::quantile, probs = 0.975, names = FALSE)
+  )
+  rownames(result) <- rownames(draws)
+  if (isTRUE(include_draws)) {
+    attr(result, "draws") <- draws
+  }
+  result
+}

@@ -4,22 +4,54 @@
 \alias{cmpredict.p}
 \title{cmpredict.p}
 \usage{
-cmpredict.p(out, typical)
+cmpredict.p(
+  out,
+  newdata = NULL,
+  zval = NULL,
+  typical = NULL,
+  type = c("response", "link"),
+  nsim = 1000L,
+  seed = NULL,
+  draws = FALSE
+)
 }
 \arguments{
-\item{out}{An output of \code{cmreg.p}}
+\item{out}{An output of \code{cmreg.p}.}
 
-\item{typical}{A vector of typical values for other covariates}
+\item{newdata}{A named data frame, list, or vector supplying values for every
+covariate in the fitted formula. A data frame returns absent/present latent-
+trait scenarios for every row.}
 
-\item{zval}{A value for the explanatory variable of interest (the first listed variable in cmreg_out$Call)}
+\item{zval}{Optional named vector for one covariate to vary. Its name must
+match a formula variable; all remaining covariates are supplied through
+`newdata` or `typical`.}
+
+\item{typical}{Optional named vector or list of fixed covariate values. This
+is a convenience alternative to `newdata` when used with `zval`.}
+
+\item{type}{Prediction scale: `"response"` (default) or `"link"`. The
+Gaussian outcome model has an identity link, so these are currently equal.}
+
+\item{nsim}{Number of parametric-bootstrap draws.}
+
+\item{seed}{Optional integer seed for reproducible bootstrap draws. When set,
+the caller's RNG state is restored before returning.}
+
+\item{draws}{If `TRUE`, attach the raw bootstrap draw matrix as a `"draws"`
+attribute on the returned data frame.}
 }
 \value{
-A vector of predicted probabilities given the input covariatevalues
+A data frame with `estimate`, `conf.low`, and `conf.high` columns.
+Each input scenario contributes an absent-trait row followed by a present-
+trait row. When `draws = TRUE`, its `"draws"` attribute contains the raw
+parametric-bootstrap matrix.
 }
 \description{
 Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap
 }
 \examples{
-pr2 <- cmpredict2(out=m2, typical=c(1,30))
-pr2
+m2 <- cmreg.p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
+              p.prime = 0.15, data = cmdata3)
+predictions <- cmpredict.p(m2, newdata = data.frame(age = 30, female = 1))
+predictions
 }
