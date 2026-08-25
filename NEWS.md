@@ -4,9 +4,12 @@
 
 - `cmreg()` now takes the anchor response through an explicit `anchor` argument;
   remove the anchor from the right-hand side of `formula`.
-- `cmreg.p()` now takes the crosswise and anchor responses through explicit
+- `cmreg_p()` now takes the crosswise and anchor responses through explicit
   `crosswise` and `anchor` arguments; remove both from the right-hand side of
   `formula`.
+- Underscore names are now canonical: `bc_est`, `cmreg_p`, `cmpredict_p`,
+  `sim_cwdata`, `sim_estimates`, `sim_power`, and `sim_power_N`. The former
+  dotted names remain as deprecated wrappers for one release.
 
 ## CRAN submission preparation
 

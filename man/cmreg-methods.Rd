@@ -14,13 +14,13 @@
 \method{print}{summary.cmreg}(x, digits = max(3L, getOption("digits") - 3L), ...)
 }
 \arguments{
-\item{x}{A `cmreg` or `cmreg.p` fit object.}
+\item{x}{A `cmreg` or `cmreg_p` fit object.}
 
 \item{digits}{Number of significant digits to display.}
 
 \item{...}{Additional arguments, currently ignored.}
 
-\item{object}{A `cmreg` or `cmreg.p` fit object.}
+\item{object}{A `cmreg` or `cmreg_p` fit object.}
 }
 \value{
 `summary.cmreg()` returns a list containing the fit call, coefficient

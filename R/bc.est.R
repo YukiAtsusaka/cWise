@@ -1,6 +1,6 @@
-#' @title bc.est
+#' @title bc_est
 #'
-#' @description  \code{bc.est} is used to apply a bias-corrected crosswise estimator to survey data.
+#' @description  \code{bc_est} is used to apply a bias-corrected crosswise estimator to survey data.
 #'
 #' @param Y a vector of binary responses in the crosswise question (Y=1 if TRUE-TRUE or FALSE-FALSE, Y=0 otherwise).
 #' @param A a vector of binary responses in the anchor question (A=1 if TRUE-TRUE or FALSE-FALSE, A=0 otherwise).
@@ -11,13 +11,13 @@
 #'
 #' @return A list containing main results ($Results) and related statistics ($Stats).
 #' @examples
-#' bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
-#' bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
+#' bc_est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
+#' bc_est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
 #' @export
 #' @importFrom dplyr "%>%" "select" "pull"
 #'             tibble "as_tibble"
 
-bc.est <- function(Y, A, p, p.prime, weight, data){
+bc_est <- function(Y, A, p, p.prime, weight, data){
 
 Yquo <- dplyr::enquo(Y)        # QUoting variable name for Y
 Aquo <- dplyr::enquo(A)        # Quoting variable name for A
@@ -111,4 +111,11 @@ weight = data %>% dplyr::select(!!Wquo) %>% pull()
   names(result) <- c("Results", "Stats")
 
 return(result)
+}
+
+#' @rdname bc_est
+#' @export
+bc.est <- function(...) {
+  .Deprecated("bc_est")
+  bc_est(...)
 }

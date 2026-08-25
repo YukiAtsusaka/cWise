@@ -33,7 +33,7 @@
 #'         under H0 and H1 respectively
 #' }
 #'
-#' The function runs \code{sim.cwdata()} twice — once under H0 using \code{pi.null}
+#' The function runs \code{sim_cwdata()} twice — once under H0 using \code{pi.null}
 #' and once under H1 using \code{pi.alt} — to estimate the sampling distributions
 #' at the specified sample size.
 #'
@@ -44,7 +44,7 @@
 #' @examples
 #' # Compute power at a fixed sample size of 1000
 #' \dontrun{
-#' pwr <- sim.power(
+#' pwr <- sim_power(
 #'   N.sim  = 500,
 #'   sample = 1000,
 #'   pi.null = 0,
@@ -57,14 +57,14 @@
 #' cat(sprintf("Estimated power: %.3f\n", pwr))
 #' }
 #'
-#' @seealso \code{\link{sim.cwdata}} for the underlying simulation function
+#' @seealso \code{\link{sim_cwdata}} for the underlying simulation function
 #'
 #' @references
 #' Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
 #' and Parameter Selection.
 #'
 #' @export
-sim.power <- function(N.sim, sample, pi.null, pi.alt, p, p.prime, gamma, direct) {
+sim_power <- function(N.sim, sample, pi.null, pi.alt, p, p.prime, gamma, direct) {
 
   alpha <- 0.05
   mu0   <- pi.null
@@ -73,7 +73,7 @@ sim.power <- function(N.sim, sample, pi.null, pi.alt, p, p.prime, gamma, direct)
   cat(sprintf("Simulating under H0 (pi = %.3f, n = %d)...\n", mu0, sample))
 
   # Simulate under H0 (null hypothesis)
-  H0 <- sim.cwdata(
+  H0 <- sim_cwdata(
     N.sim   = N.sim,
     sample  = sample,
     pi      = pi.null,
@@ -86,7 +86,7 @@ sim.power <- function(N.sim, sample, pi.null, pi.alt, p, p.prime, gamma, direct)
   cat(sprintf("Simulating under H1 (pi = %.3f, n = %d)...\n", mu1, sample))
 
   # Simulate under H1 (alternative hypothesis)
-  H1 <- sim.cwdata(
+  H1 <- sim_cwdata(
     N.sim   = N.sim,
     sample  = sample,
     pi      = pi.alt,
@@ -110,4 +110,11 @@ sim.power <- function(N.sim, sample, pi.null, pi.alt, p, p.prime, gamma, direct)
   power <- pnorm(A, mean = 0, sd = 1)
 
   return(power)
+}
+
+#' @rdname sim_power
+#' @export
+sim.power <- function(...) {
+  .Deprecated("sim_power")
+  sim_power(...)
 }

@@ -1,8 +1,8 @@
-#' @title cmpredict.p
+#' @title cmpredict_p
 #'
 #' @description Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap
 #'
-#' @param out An output of \code{cmreg.p}.
+#' @param out An output of \code{cmreg_p}.
 #' @param newdata A named data frame, list, or vector supplying values for every
 #' covariate in the fitted formula. A data frame returns absent/present latent-
 #' trait scenarios for every row.
@@ -24,22 +24,22 @@
 #' trait row. When `draws = TRUE`, its `"draws"` attribute contains the raw
 #' parametric-bootstrap matrix.
 #' @examples
-#' m2 <- cmreg.p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
+#' m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
 #'               p.prime = 0.15, data = cmdata3)
-#' predictions <- cmpredict.p(m2, newdata = data.frame(age = 30, female = 1))
+#' predictions <- cmpredict_p(m2, newdata = data.frame(age = 30, female = 1))
 #' predictions
 #' @export
 #' @importFrom mvtnorm "rmvnorm"
 
-cmpredict.p <- function(out, newdata = NULL, zval = NULL, typical = NULL,
+cmpredict_p <- function(out, newdata = NULL, zval = NULL, typical = NULL,
                         type = c("response", "link"), nsim = 1000L,
                         seed = NULL, draws = FALSE){
 
   type <- match.arg(type)
 
 # VALIDATE FIT AND BUILD DESIGN MATRIX
-  if (!inherits(out, "cmreg.p") || !identical(out$model, "predictor")) {
-    stop("`out` must be a fitted predictor-model `cmreg.p` object.", call. = FALSE)
+  if (!inherits(out, "cmreg_p") || !identical(out$model, "predictor")) {
+    stop("`out` must be a fitted predictor-model `cmreg_p` object.", call. = FALSE)
   }
   required_fields <- c("terms", "design_columns", "estimates")
   if (!all(required_fields %in% names(out))) {
@@ -83,5 +83,12 @@ cmpredict.p <- function(out, newdata = NULL, zval = NULL, typical = NULL,
   point_estimate <- typ.vec %*% coef.gamma
   prediction <- switch(type, response = lin.agg, link = lin.agg)
   cm_prediction_summary(prediction, point_estimate, draws)
+}
+
+#' @rdname cmpredict_p
+#' @export
+cmpredict.p <- function(...) {
+  .Deprecated("cmpredict_p")
+  cmpredict_p(...)
 }
 

@@ -87,6 +87,114 @@ cm_lm_start <- function(x, y) {
   coefficients
 }
 
+cm_validate_probabilities <- function(p, p.prime) {
+  for (argument in c("p", "p.prime")) {
+    value <- if (identical(argument, "p")) p else p.prime
+    if (length(value) != 1L || is.na(value) || !is.finite(value) ||
+        value <= 0 || value >= 1) {
+      stop(sprintf("`%s` must be a single value strictly between 0 and 1.", argument),
+           call. = FALSE)
+    }
+    if (isTRUE(all.equal(value, 0.5))) {
+      stop(sprintf("`%s` must not equal 0.5 because the model is unidentified.", argument),
+           call. = FALSE)
+    }
+  }
+}
+
+cm_validate_binary <- function(x, argument) {
+  if (!is.numeric(x) && !is.integer(x) && !is.logical(x)) {
+    stop(sprintf("`%s` must be binary (0/1).", argument), call. = FALSE)
+  }
+  if (any(!is.finite(x)) || !all(x %in% c(0, 1))) {
+    stop(sprintf("`%s` must contain only 0 and 1 values.", argument), call. = FALSE)
+  }
+  if (length(unique(x)) < 2L) {
+    stop(sprintf("`%s` must not be constant.", argument), call. = FALSE)
+  }
+}
+
+cm_validate_no_separation <- function(x, y, argument) {
+  fit <- suppressWarnings(tryCatch(
+    stats::glm.fit(x = x, y = y, family = stats::binomial()),
+    error = function(e) NULL
+  ))
+  if (is.null(fit)) {
+    return(invisible(NULL))
+  }
+  fitted <- fit$fitted.values
+  separated <- any(abs(fit$coefficients[is.finite(fit$coefficients)]) > 20) ||
+    (all(fitted[y == 1] > 1 - 1e-8) && all(fitted[y == 0] < 1e-8))
+  if (separated) {
+    stop(sprintf("`%s` is perfectly separated by the model covariates.", argument),
+         call. = FALSE)
+  }
+  invisible(NULL)
+}
+
+cm_outcome_loglik <- function(par, x, y, anchor, p, p.prime) {
+  k <- ncol(x)
+  beta <- par[seq_len(k)]
+  theta <- par[k + seq_len(k)]
+  pi <- stats::plogis(drop(x %*% beta))
+  attention <- stats::plogis(drop(x %*% theta))
+  response_probability <- 0.5 + ((2 * p - 1) * pi + 0.5 - p) * attention
+  anchor_probability <- 0.5 + (0.5 - p.prime) * attention
+
+  sum(
+    y * log(response_probability) + (1 - y) * log1p(-response_probability) +
+      anchor * log(anchor_probability) + (1 - anchor) * log1p(-anchor_probability)
+  )
+}
+
+cm_outcome_hessian <- function(par, x, y, anchor, p, p.prime) {
+  k <- ncol(x)
+  beta <- par[seq_len(k)]
+  theta <- par[k + seq_len(k)]
+  pi <- stats::plogis(drop(x %*% beta))
+  attention <- stats::plogis(drop(x %*% theta))
+  c_p <- 2 * p - 1
+  h <- c_p * pi + 0.5 - p
+  response_probability <- 0.5 + h * attention
+  anchor_probability <- 0.5 + (0.5 - p.prime) * attention
+  hessian <- matrix(0, nrow = 2L * k, ncol = 2L * k)
+
+  for (i in seq_len(nrow(x))) {
+    xx <- tcrossprod(x[i, ])
+    dq_beta <- c_p * pi[i] * (1 - pi[i]) * attention[i] * x[i, ]
+    dq_theta <- h[i] * attention[i] * (1 - attention[i]) * x[i, ]
+    dq <- c(dq_beta, dq_theta)
+    d2q <- matrix(0, nrow = 2L * k, ncol = 2L * k)
+    d2q[seq_len(k), seq_len(k)] <-
+      c_p * pi[i] * (1 - pi[i]) * (1 - 2 * pi[i]) * attention[i] * xx
+    d2q[k + seq_len(k), k + seq_len(k)] <-
+      h[i] * attention[i] * (1 - attention[i]) * (1 - 2 * attention[i]) * xx
+    cross <- c_p * pi[i] * (1 - pi[i]) * attention[i] * (1 - attention[i]) * xx
+    d2q[seq_len(k), k + seq_len(k)] <- cross
+    d2q[k + seq_len(k), seq_len(k)] <- cross
+
+    response_weight <- (y[i] - response_probability[i]) /
+      (response_probability[i] * (1 - response_probability[i]))
+    response_weight_derivative <- -y[i] / response_probability[i]^2 -
+      (1 - y[i]) / (1 - response_probability[i])^2
+    hessian <- hessian + response_weight * d2q +
+      response_weight_derivative * tcrossprod(dq)
+
+    da <- c(rep(0, k), (0.5 - p.prime) * attention[i] * (1 - attention[i]) * x[i, ])
+    d2a <- matrix(0, nrow = 2L * k, ncol = 2L * k)
+    d2a[k + seq_len(k), k + seq_len(k)] <-
+      (0.5 - p.prime) * attention[i] * (1 - attention[i]) *
+      (1 - 2 * attention[i]) * xx
+    anchor_weight <- (anchor[i] - anchor_probability[i]) /
+      (anchor_probability[i] * (1 - anchor_probability[i]))
+    anchor_weight_derivative <- -anchor[i] / anchor_probability[i]^2 -
+      (1 - anchor[i]) / (1 - anchor_probability[i])^2
+    hessian <- hessian + anchor_weight * d2a +
+      anchor_weight_derivative * tcrossprod(da)
+  }
+  (hessian + t(hessian)) / 2
+}
+
 cm_hessian_vcov <- function(hessian, npar) {
   unavailable <- function(reason) {
     warning(

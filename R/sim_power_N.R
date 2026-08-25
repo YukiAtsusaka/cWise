@@ -53,7 +53,7 @@
 #' @examples
 #' # Find sample size needed to reliably exclude zero
 #' \dontrun{
-#' result <- sim.power.N(
+#' result <- sim_power_N(
 #'   N.sim = 50,
 #'   pi = 0.1,
 #'   p = 0.1,
@@ -71,14 +71,14 @@
 #'      main = "Precision vs Sample Size")
 #' }
 #'
-#' @seealso \code{\link{sim.power}} for the underlying simulation function
+#' @seealso \code{\link{sim_power}} for the underlying simulation function
 #'
 #' @references
 #' Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
 #' and Parameter Selection.
 #'
 #' @export
-sim.power.N <- function(N.sim = 50, pi, p, p.prime, gamma, direct) {
+sim_power_N <- function(N.sim = 50, pi, p, p.prime, gamma, direct) {
 
   # Helper function for rounding
   roundy <- function(x) { round(x, digits = 3) }
@@ -213,4 +213,11 @@ sim.power.N <- function(N.sim = 50, pi, p, p.prime, gamma, direct) {
   )
 
   return(out)
+}
+
+#' @rdname sim_power_N
+#' @export
+sim.power.N <- function(...) {
+  .Deprecated("sim_power_N")
+  sim_power_N(...)
 }

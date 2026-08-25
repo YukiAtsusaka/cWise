@@ -31,17 +31,31 @@ cmreg <- function(formula, anchor, p, p.prime, data, start = NULL,
 
   call <- match.call()
 
-  i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
-
   anchor_info <- cm_data_column(data, substitute(anchor), "anchor", parent.frame())
-  mf <- model.frame(formula, data, na.action = na.pass)
-  keep <- complete.cases(mf, anchor_info$value)
+  ## `model.frame()` evaluates transformations such as poly() before applying
+  ## its `na.action`.  Remove rows missing raw formula variables first so that
+  ## transformed formulas handle incomplete data consistently.
+  formula_complete <- complete.cases(data[, all.vars(formula), drop = FALSE])
+  mf <- model.frame(formula, data[formula_complete, , drop = FALSE],
+                    na.action = na.fail)
+  anchor_values <- anchor_info$value[formula_complete]
+  keep <- complete.cases(anchor_values)
   df <- mf[keep, , drop = FALSE]
   X1 <- model.matrix(formula, df)
-  A <- anchor_info$value[keep]
+  A <- anchor_values[keep]
   Y <- model.response(df)
   k <- dim(X1)[2]      # Number of beta parameters
   idx <- cm_par_index(k, model = "outcome")
+
+  cm_validate_probabilities(p, p.prime)
+  cm_validate_binary(Y, "formula response")
+  cm_validate_binary(A, "anchor")
+  if (nrow(X1) <= idx$npar) {
+    stop("The number of complete observations must exceed the number of parameters.",
+         call. = FALSE)
+  }
+  cm_validate_no_separation(X1, Y, "formula response")
+  cm_validate_no_separation(X1, A, "anchor")
 
   init <- if (is.null(start)) {
     c(cm_glm_start(X1, Y), cm_glm_start(X1, A))
@@ -55,17 +69,14 @@ cmreg <- function(formula, anchor, p, p.prime, data, start = NULL,
 
   # LOG-LIKELIHOOD FUNCTION
   log.L <- function(par) {
-    sum(   Y*log(            ((2*p-1)*(i.logit(X1 %*% par[idx$beta])) + (0.5-p) )*i.logit(X1 %*% par[idx$theta]) + 0.5)
-           + (1-Y)*log( 1 - (((2*p-1)*(i.logit(X1 %*% par[idx$beta])) + (0.5-p) )*i.logit(X1 %*% par[idx$theta]) + 0.5))
-           + A*log(        (0.5-p.prime)*i.logit(X1 %*% par[idx$theta]) + 0.5 )
-           + (1-A)*log(1- ((0.5-p.prime)*i.logit(X1 %*% par[idx$theta]) + 0.5 ))
-    )
+    cm_outcome_loglik(par, X1, Y, A, p, p.prime)
   }
 
 
   # MAXIMIZATION
   MLE = cm_multistart_optim(log.L, init, n.start, control)
-  VCV = cm_hessian_vcov(MLE$hessian, idx$npar)
+  H = cm_outcome_hessian(MLE$par, X1, Y, A, p, p.prime)
+  VCV = cm_hessian_vcov(H, idx$npar)
   SE = sqrt(diag(VCV))
 
 
@@ -96,6 +107,7 @@ cmreg <- function(formula, anchor, p, p.prime, data, start = NULL,
   Mlist$estimates <- MLE$par
   Mlist$std.errors <- SE
   Mlist$logLik <- MLE$value
+  Mlist$hessian <- H
   Mlist$n <- length(Y)
   Mlist$convergence <- MLE$convergence
   Mlist$p <- p

@@ -1,4 +1,4 @@
-#' @title cmreg.p
+#' @title cmreg_p
 #'
 #' @description \code{cmreg} is used to run a regression with the latent sensitive trait as a predictor.
 #'
@@ -22,29 +22,49 @@
 #'
 #' @return A list containing the estimated results and related statistics.
 #' @examples
-#' m2 <- cmreg.p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
+#' m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
 #'               p.prime = 0.15, data = cmdata3)
 #' m2
 #' @export
 
 
-cmreg.p <- function(formula, crosswise, anchor, p, p.prime, data, start = NULL,
+cmreg_p <- function(formula, crosswise, anchor, p, p.prime, data, start = NULL,
                     n.start = 3L, control = list()){
   call <- match.call()
   i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
   crosswise_info <- cm_data_column(data, substitute(crosswise), "crosswise", parent.frame())
   anchor_info <- cm_data_column(data, substitute(anchor), "anchor", parent.frame())
-  mf <- model.frame(formula, data, na.action = na.pass)
-  keep <- complete.cases(mf, crosswise_info$value, anchor_info$value)
+  ## `model.frame()` evaluates transformations such as poly() before applying
+  ## its `na.action`.  Remove rows missing raw formula variables first so that
+  ## transformed formulas handle incomplete data consistently.
+  formula_complete <- complete.cases(data[, all.vars(formula), drop = FALSE])
+  mf <- model.frame(formula, data[formula_complete, , drop = FALSE],
+                    na.action = na.fail)
+  crosswise_values <- crosswise_info$value[formula_complete]
+  anchor_values <- anchor_info$value[formula_complete]
+  keep <- complete.cases(crosswise_values, anchor_values)
   df <- mf[keep, , drop = FALSE]
   X1 <- model.matrix(formula, df)
 
-  A <- anchor_info$value[keep]
-  Y <- crosswise_info$value[keep]
+  A <- anchor_values[keep]
+  Y <- crosswise_values[keep]
   V <- model.response(df)
 
   k <- dim(X1)[2]      # Number of beta parameters ( #covariate + 1)
   idx <- cm_par_index(k, model = "predictor")
+
+  cm_validate_probabilities(p, p.prime)
+  cm_validate_binary(Y, "crosswise")
+  cm_validate_binary(A, "anchor")
+  if (!is.numeric(V) || any(!is.finite(V)) || length(unique(V)) < 2L) {
+    stop("The outcome response must be finite and must not be constant.", call. = FALSE)
+  }
+  if (nrow(X1) <= idx$npar) {
+    stop("The number of complete observations must exceed the number of parameters.",
+         call. = FALSE)
+  }
+  cm_validate_no_separation(X1, Y, "crosswise")
+  cm_validate_no_separation(X1, A, "anchor")
 
   init <- if (is.null(start)) {
     gamma <- cm_lm_start(X1, V)
@@ -155,7 +175,14 @@ Mlist$terms <- terms(mf)
 Mlist$xlevels <- stats::.getXlevels(Mlist$terms, df)
 Mlist["contrasts"] <- list(attr(X1, "contrasts"))
 Mlist$design_columns <- varnam
-class(Mlist) <- c("cmreg.p", "cmreg")
+class(Mlist) <- c("cmreg_p", "cmreg")
 
 return(Mlist)
+}
+
+#' @rdname cmreg_p
+#' @export
+cmreg.p <- function(...) {
+  .Deprecated("cmreg_p")
+  cmreg_p(...)
 }

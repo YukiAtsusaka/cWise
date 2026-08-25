@@ -13,10 +13,10 @@
 #' @param gamma Numeric. Proportion of attentive respondents (between 0 and 1).
 #' @param direct Numeric. Direct questioning estimate for comparison.
 #' @param txcol Character. Color for annotation text. Default: \code{"dimgray"}.
-#' @param sim.results Optional list. Pre-computed output from \code{\link{sim.cwdata}}.
+#' @param sim.results Optional list. Pre-computed output from \code{\link{sim_cwdata}}.
 #'   If \code{NULL} (default), the simulation is run internally.
 #'
-#' @return Invisibly returns the simulation results list from \code{\link{sim.cwdata}},
+#' @return Invisibly returns the simulation results list from \code{\link{sim_cwdata}},
 #'   containing \code{BiasCorrectEst}, \code{BiasCorrectLow},
 #'   \code{BiasCorrectHigh}, and summary \code{Results}.
 #'
@@ -41,7 +41,7 @@
 #' @examples
 #' \dontrun{
 #' # Replicate Panel C of Figure C7
-#' sim.estimates(
+#' sim_estimates(
 #'   N.sim   = 100,
 #'   sample  = 1000,
 #'   pi      = 0.1,
@@ -52,24 +52,24 @@
 #' )
 #'
 #' # Re-use pre-computed simulation results
-#' res <- sim.cwdata(N.sim = 100, sample = 1000, pi = 0.1,
+#' res <- sim_cwdata(N.sim = 100, sample = 1000, pi = 0.1,
 #'                   p = 0.1, p.prime = 0.1, gamma = 0.8, direct = 0.1)
-#' sim.estimates(sample = 1000, pi = 0.1, p = 0.1, p.prime = 0.1,
+#' sim_estimates(sample = 1000, pi = 0.1, p = 0.1, p.prime = 0.1,
 #'               gamma = 0.8, direct = 0.1, sim.results = res)
 #' }
 #'
-#' @seealso \code{\link{sim.cwdata}} for the underlying simulation function
+#' @seealso \code{\link{sim_cwdata}} for the underlying simulation function
 #'
 #' @references
 #' Atsusaka and Stevenson (2023). Figure C7, Panel C.
 #'
 #' @export
-sim.estimates <- function(N.sim = 100, sample, pi, p, p.prime, gamma, direct,
+sim_estimates <- function(N.sim = 100, sample, pi, p, p.prime, gamma, direct,
                           txcol = "dimgray", sim.results = NULL) {
 
   # Run simulation if pre-computed results are not supplied
   if (is.null(sim.results)) {
-    sim.results <- sim.cwdata(
+    sim.results <- sim_cwdata(
       N.sim   = N.sim,
       sample  = sample,
       pi      = pi,
@@ -121,4 +121,11 @@ sim.estimates <- function(N.sim = 100, sample, pi, p, p.prime, gamma, direct,
   box()
 
   invisible(sim.results)
+}
+
+#' @rdname sim_estimates
+#' @export
+sim.estimates <- function(...) {
+  .Deprecated("sim_estimates")
+  sim_estimates(...)
 }

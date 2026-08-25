@@ -6,7 +6,7 @@
 
 <!-- badges: end -->
 
-This R package implements the methods proposed by Atsusaka and Stevenson (2023), ["A Bias-Corrected Estimator for the Crosswise Model with Inattentive Respondents," *Political Analysis*, 31(1), 134-148](https://doi.org/10.1017/pan.2021.43). Our workhorse function is `bc.est` which generates a bias-corrected crosswise estimate of the proportion of individuals with sensitive attributes. `cmBound` applies our sensitivity analysis to crosswise data without the anchor question. `cmreg` and `cmreg.p` implement crosswise regressions in which the latent sensitive trait can be used as an outcome or as a predictor, respectively. `cmpredict` generates predicted proportions of having sensitive traits given specific covariate values with uncertainty estimates via parametric bootstrap, whereas `cmpredict.p` yields predicted values for a given outcome variable and specific covariate values in the presence and absence of sensitive traits. Simulated crosswise data are saved as `cmdata`, `cmdata2`, and `cmdata3`.
+This R package implements the methods proposed by Atsusaka and Stevenson (2023), ["A Bias-Corrected Estimator for the Crosswise Model with Inattentive Respondents," *Political Analysis*, 31(1), 134-148](https://doi.org/10.1017/pan.2021.43). Our workhorse function is `bc_est` which generates a bias-corrected crosswise estimate of the proportion of individuals with sensitive attributes. `cmBound` applies our sensitivity analysis to crosswise data without the anchor question. `cmreg` and `cmreg_p` implement crosswise regressions in which the latent sensitive trait can be used as an outcome or as a predictor, respectively. `cmpredict` generates predicted proportions of having sensitive traits given specific covariate values with uncertainty estimates via parametric bootstrap, whereas `cmpredict_p` yields predicted values for a given outcome variable and specific covariate values in the presence and absence of sensitive traits. Simulated crosswise data are saved as `cmdata`, `cmdata2`, and `cmdata3`.
 
 ## Installation
 
@@ -76,12 +76,12 @@ Here, `Y` is a binary response in the crosswise question (`Y`=1 if TRUE-TRUE or 
 
 <br>
 
-## `bc.est`: Estimate the Prevalence of Sensitive Attributes
+## `bc_est`: Estimate the Prevalence of Sensitive Attributes
 
 Generate a bias-corrected crosswise estimate using a crosswise data as follows:
 
 ``` r
-prev <- bc.est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
+prev <- bc_est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
 prev
 
 #> $Results
@@ -103,7 +103,7 @@ The output is a list containing two elements. `$Results` is a matrix containing 
 When using unrepresentative samples, it is crucial to consider weighting to estimate the prevalence of sensitive attributes at the (real) population of interest. Great news: sample weights can be easily incorporated in our bias-corrected estimator by specifying the optional argument `weight` as follows:
 
 ``` r
-bc.est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
+bc_est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
 
 
 #> $Results
@@ -185,7 +185,7 @@ m
 
 <br>
 
-## `cmreg.p`: Regression with the Latent Sensitive Trait as a Predictor
+## `cmreg_p`: Regression with the Latent Sensitive Trait as a Predictor
 
 For a demonstration, let's load `cmdata3` that contains an outcome variable of interest (`V`), two covariates (`female` and `age`), and crosswise and anchor responses (`Y` and `A`).
 
@@ -205,7 +205,7 @@ head(cmdata3)
 To run a regression with the sensitive trait as a predictor, one can specify the formula: `Outcome ~ Cov1 + ... + CovN + CrosswiseResponse + AnchorResponse` as follows:
 
 ``` r
-m2 <- cmreg.p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
+m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
               p.prime = 0.15, data = cmdata3)
 m2
 
@@ -259,12 +259,12 @@ hist(pred.female, main="Among Female", xlab="Proportion w/ Sensitive Traits")
 
 <br>
 
-## `cmpredict.p`: Predicted Values of the Outcome Variable
+## `cmpredict_p`: Predicted Values of the Outcome Variable
 
-`cmpredict.p` computes outcome predictions after `cmreg.p`. Covariates are supplied by name; it returns an absent-trait row and a present-trait row for each scenario.
+`cmpredict_p` computes outcome predictions after `cmreg_p`. Covariates are supplied by name; it returns an absent-trait row and a present-trait row for each scenario.
 
 ``` r
-pred <- cmpredict.p(out = m2, newdata = data.frame(age = 30, female = 1),
+pred <- cmpredict_p(out = m2, newdata = data.frame(age = 30, female = 1),
                      draws = TRUE)
 pred.draws <- attr(pred, "draws")
 

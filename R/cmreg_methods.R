@@ -1,7 +1,7 @@
 #' Print and summarise crosswise regression fits
 #'
-#' @param x A `cmreg` or `cmreg.p` fit object.
-#' @param object A `cmreg` or `cmreg.p` fit object.
+#' @param x A `cmreg` or `cmreg_p` fit object.
+#' @param object A `cmreg` or `cmreg_p` fit object.
 #' @param digits Number of significant digits to display.
 #' @param ... Additional arguments, currently ignored.
 #'
@@ -37,7 +37,7 @@ summary.cmreg <- function(object, ...) {
     convergence = object$convergence,
     model = object$model
   )
-  if (inherits(object, "cmreg.p")) {
+  if (inherits(object, "cmreg_p")) {
     result$auxiliary2 <- object$AuxiliaryCoef2
   }
   class(result) <- "summary.cmreg"

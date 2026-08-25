@@ -253,7 +253,7 @@ another round of index arithmetic.
 | 2.6 | `cmpredict()` now accepts named `newdata` or named `typical` inputs and optional named, vectorized `zval`. It rebuilds and aligns the design matrix from stored model-frame terms, factor levels, contrasts, and column names. Inputs are validated by name and length. Verified direct multi-row data, curves, factors, interactions, `poly()`, and intercept-only models. | YA | ☒ |
 | 2.7 | `cmpredict.p()` now uses named `newdata`/`typical` inputs and vectorized named `zval`, returning absent/present latent-trait rows for each scenario. Bootstrap means and VCVs are subset through the same gamma-plus-gamma-z index set. Added `type = c("response", "link")`; they are equal under the current Gaussian identity-link model. Verified exact agreement with a manually indexed bootstrap draw, plus factor and invalid-input cases. | YA | ☒ |
 | 2.8 | Both prediction functions now use `nsim = 1000`, `seed = NULL`, and `draws = FALSE` by default. Seeded calls restore the exact prior RNG state (including no prior seed). They return scenario-level `estimate`, `conf.low`, and `conf.high` data frames; `draws = TRUE` attaches the raw matrix. Verified reproducibility, interval calculations, and RNG preservation. | YA | ☒ |
-| 2.9 | **Approved 2026-08-25; not started.** Rename `cmpredict.p` → `cmpredict_p` (and `cmreg.p` → `cmreg_p`, `bc.est` → `bc_est`, `sim.power` → `sim_power`, …). **Dots in function names collide with S3 dispatch**: R sees `cmpredict.p` as the `p` method for a generic `cmpredict`. Once 2.5 adds real S3 methods this becomes an active hazard, not a style question. Keep the old names as deprecated wrappers calling `.Deprecated()` for one release. | YA | ☐ |
+| 2.9 | Renamed the canonical dotted API to `bc_est`, `cmreg_p`, `cmpredict_p`, `sim_cwdata`, `sim_estimates`, `sim_power`, and `sim_power_N`. Dotted names remain exported `.Deprecated()` wrappers for one release. The predictor fit class is now `c("cmreg_p", "cmreg")`; README, NEWS, examples, internal calls, docs, and NAMESPACE use the canonical names. | YA | ☒ |
 
 ### 2c. Correctness gates for Phase 2 — do not skip
 
@@ -262,12 +262,12 @@ incorrect one. Add the evidence before declaring it fixed.
 
 | # | Task | Who | Done |
 |---|---|---|---|
-| 2.10 | **Recovery test.** Simulate from the model with known parameters at large `n` (e.g. 20,000) and assert every estimate is within ~3 SEs of truth. This is the test that would have caught bugs (2) and (3). | ? | ☐ |
-| 2.11 | **Analytic cross-check on `sigma`.** With the latent trait held fixed, `cmreg.p`'s gamma/sigma block reduces to OLS; assert agreement with `lm()` to a tolerance. Pins down the residual SD that is currently unreported. | ? | ☐ |
-| 2.12 | **Numeric-vs-analytic Hessian check** on a small dataset, to confirm the SEs come from the likelihood we think we wrote. | ? | ☐ |
-| 2.13 | **Regression fixture.** Freeze the current `cmdata2`/`cmdata3` coefficient estimates in a test file *before* refactoring, so 2.1–2.9 can be verified as behaviour-preserving except where we intend a change. Where output legitimately changes (the `sigma` row, `cmpredict.p` intervals), record the old and new values side by side in the commit message — those two are *supposed* to move. | ? | ☐ |
-| 2.14 | **Formula-generality suite.** Fit with: one covariate; no covariates (intercept only — check `X0[, -ncol(X0)]` does not drop to a vector); a 3-level factor; an interaction; a `poly()` term; a covariate with `NA`s. All must fit or fail with a clear message. | ? | ☐ |
-| 2.15 | **Degenerate-input suite.** `p = 0.5` (division by `2*p-1` → `Inf`), `p` outside `(0,1)`, perfectly separated data, `n` smaller than the parameter count, constant `Y`. Each should `stop()` with an informative message rather than return nonsense. | ? | ☐ |
+| 2.10 | **Recovery test.** Simulate from the model with known parameters at large `n` (e.g. 20,000) and assert every estimate is within ~3 SEs of truth. This is the test that would have caught bugs (2) and (3). | YA | ☑ — `test-cmreg-correctness.R` |
+| 2.11 | **Analytic cross-check on `sigma`.** With the latent trait held fixed, `cmreg.p`'s gamma/sigma block reduces to OLS; assert agreement with `lm()` to a tolerance. Pins down the residual SD that is currently unreported. | YA | ☑ — fixed-latent OLS comparison |
+| 2.12 | **Numeric-vs-analytic Hessian check** on a small dataset, to confirm the SEs come from the likelihood we think we wrote. | YA | ☑ — central-difference comparison |
+| 2.13 | **Regression fixture.** Freeze the current `cmdata2`/`cmdata3` coefficient estimates in a test file *before* refactoring, so 2.1–2.9 can be verified as behaviour-preserving except where we intend a change. Where output legitimately changes (the `sigma` row, `cmpredict.p` intervals), record the old and new values side by side in the commit message — those two are *supposed* to move. | YA | ☑ — canonical-fit coefficients frozen |
+| 2.14 | **Formula-generality suite.** Fit with: one covariate; no covariates (intercept only — check `X0[, -ncol(X0)]` does not drop to a vector); a 3-level factor; an interaction; a `poly()` term; a covariate with `NA`s. All must fit or fail with a clear message. | YA | ☑ — includes transformed-formula NA handling |
+| 2.15 | **Degenerate-input suite.** `p = 0.5` (division by `2*p-1` → `Inf`), `p` outside `(0,1)`, perfectly separated data, `n` smaller than the parameter count, constant `Y`. Each should `stop()` with an informative message rather than return nonsense. | YA | ☑ — validation/error tests |
 
 ---
 

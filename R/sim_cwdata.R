@@ -42,7 +42,7 @@
 #'
 #' @examples
 #' # Basic usage
-#' result <- sim.cwdata(
+#' result <- sim_cwdata(
 #'   N.sim = 100,
 #'   sample = 500,
 #'   pi = 0.1,
@@ -58,7 +58,7 @@
 #' and Parameter Selection.
 #'
 #' @export
-sim.cwdata <- function(N.sim = 500, sample, pi, p, p.prime, gamma, direct) {
+sim_cwdata <- function(N.sim = 500, sample, pi, p, p.prime, gamma, direct) {
 
   # Helper function for rounding output
   roundy <- function(x) { round(x, digits = 3) }
@@ -216,4 +216,11 @@ sim.cwdata <- function(N.sim = 500, sample, pi, p, p.prime, gamma, direct) {
   )
 
   return(out)
+}
+
+#' @rdname sim_cwdata
+#' @export
+sim.cwdata <- function(...) {
+  .Deprecated("sim_cwdata")
+  sim_cwdata(...)
 }
