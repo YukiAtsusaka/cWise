@@ -1,5 +1,4 @@
-
-# cWise (development)
+# cWise 0.1.0
 
 ## Breaking changes
 
@@ -9,7 +8,14 @@
   `crosswise` and `anchor` arguments; remove both from the right-hand side of
   `formula`.
 
-# cWise 0.0.1
-## Major changes
+## CRAN submission preparation
 
-- This is the first release of cWise
+- Updated package authorship metadata so that Yuki Atsusaka is the maintainer and
+  Kolbe Dumas and Randy T. Stevenson are authors.
+- Replaced the pre-publication citation with Atsusaka and Stevenson (2023),
+  *Political Analysis*, <doi:10.1017/pan.2021.43>.
+- Declared direct package dependencies and vignette-building dependencies required
+  for CRAN checks.
+- Revised the package title and description for CRAN metadata requirements.
+- Removed legacy duplicate power-analysis code. The undocumented internal
+  `sim.curve()` helper was already broken and is no longer included.

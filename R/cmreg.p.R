@@ -108,8 +108,6 @@ SE = sqrt(diag(VCV))
   Mlist <- list()
   z = estimate / SE
   pv = 2*(1- pnorm(abs(z)))
-
-
   Mlist[[1]] <- call
   gamma_idx <- c(idx$gamma, idx$gamma_z)
   theta_sigma_idx <- c(idx$theta, idx$sigma)
@@ -161,4 +159,3 @@ class(Mlist) <- c("cmreg.p", "cmreg")
 
 return(Mlist)
 }
-

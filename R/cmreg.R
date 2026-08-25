@@ -75,8 +75,6 @@ cmreg <- function(formula, anchor, p, p.prime, data, start = NULL,
 
   z = MLE$par / SE
   pv = 2*(1- pnorm(abs(z)))
-
-
   Mlist[[1]] <- call
   Mlist[[2]] <- t(rbind(MLE$par[idx$beta], SE[idx$beta], z[idx$beta], pv[idx$beta]))
   Mlist[[3]] <- t(rbind(MLE$par[idx$theta], SE[idx$theta],
@@ -115,4 +113,3 @@ cmreg <- function(formula, anchor, p, p.prime, data, start = NULL,
   return(Mlist)
 
 }
-

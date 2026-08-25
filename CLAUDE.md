@@ -10,13 +10,27 @@ you go. The Phase 0 check output was verified against the package as of commit `
 
 - Completed 1.1: migrated `DESCRIPTION` to `Authors@R`; Yuki Atsusaka is `aut`/`cre`,
   and Kolbe Dumas and Randy T. Stevenson are `aut`. Kolbe's package email is
-  `kdumas@CougarNet.UH.EDU`.
+  `kdumas@uh.edu`.
 - Maintainer decision: YA is the package maintainer, represented by the `cre` role in
   `Authors@R`; R derives the `Maintainer` field from Yuki's name and email.
 - Completed 1.15: replaced the dead working-paper citation with the published 2023
   *Political Analysis* article and DOI `10.1017/pan.2021.43`.
-- Partially completed 1.3: `Description` is now two sentences and cites the DOI in
-  CRAN format. The package `Title` still needs revision before 1.3 can be checked off.
+- Completed 1.3: the title is now "Crosswise Models for Sensitive Survey Questions";
+  the description is two sentences and cites the DOI in CRAN format.
+- Completed 1.4: bumped the development version to `0.1.0` and rewrote `NEWS.md`
+  to record the completed CRAN-submission preparation work.
+- Completed 1.5: verified that the standard `License: GPL-3` declaration is valid;
+  a separate `LICENSE` file is neither needed nor appropriate unless the declaration
+  explicitly refers to one.
+- Completed 1.6: declared the missing `stats`, `graphics`, and `utils` functions in
+  `R/cWise-package.R` and regenerated `NAMESPACE` and internal package help with
+  roxygen 7.3.3. A fresh RStudio tarball check reported zero missing declarations.
+- Completed 1.8: `bc.est()` now uses explicit `digits =` arguments, and no
+  abbreviated `round(..., d = ...)` calls remain after the regression rewrite.
+- Completed 1.9: removed the legacy `R/power_analysis.R` file, whose duplicate
+  power functions were silently superseded and whose undocumented `sim.curve()`
+  helper was broken. A fresh RStudio build and install retained `sim.power()` and
+  `sim.power.N()` and no longer contained `sim.curve()`.
 - Updated the README and simulation references from the pre-publication year to 2023.
 - Added the two-person ownership map under "Suggested sequencing for two people."
 
@@ -140,14 +154,14 @@ while the estimation work (Phase 2) is in flight. Nothing here changes numerical
 |---|---|---|---|---|
 | 1.1 | Replace `Author:` with `Authors@R = c(person(..., role=c("aut","cre")), person("Randy","Stevenson", role="aut"))`. Drop the `Author:`/`Maintainer:` fields entirely. Decide whether Kolbe is listed — `role="aut"` if he contributes package code, `role="ctb"` for smaller contributions. | `DESCRIPTION` | KD | ☒ |
 | 1.2 | Replace `tidyverse` in `Imports` with the packages actually used: `dplyr`, `ggplot2`, `scales`, `mvtnorm`. Drop `rlang` unless 1.9 keeps it. Add `knitr`, `rmarkdown` to `Suggests`. | `DESCRIPTION` | KD | ☒ |
-| 1.3 | Rewrite `Title` in title case, no redundant article, ≤65 chars. `Description` must be ≥2 sentences, must not start with "This package", and must cite the paper as `Atsusaka and Stevenson (2023) <doi:...>`. **Progress:** description complete; title pending. | `DESCRIPTION` | KD | ☐ |
-| 1.4 | Bump `Version: 0.1.0`. Rewrite `NEWS.md` under a `# cWise 0.1.0` heading (it currently says `0.0.1`, which matches nothing). | `DESCRIPTION`, `NEWS.md` | ? | ☐ |
-| 1.5 | Add `LICENSE` file if using `GPL-3`; confirm the license text matches the `License:` field. | root | ? | ☐ |
-| 1.6 | Add the full `importFrom("stats", ...)` / `importFrom("graphics", ...)` / `importFrom("utils", ...)` set as roxygen tags (a `@importFrom` in each function, or one `R/cWise-package.R` doc block). Then `devtools::document()`. Copy the list verbatim from the check output. | `R/*.R` | ? | ☐ |
+| 1.3 | Rewrite `Title` in title case, no redundant article, ≤65 chars. `Description` must be ≥2 sentences, must not start with "This package", and must cite the paper as `Atsusaka and Stevenson (2023) <doi:...>`. | `DESCRIPTION` | KD | ☒ |
+| 1.4 | Bump `Version: 0.1.0`. Rewrite `NEWS.md` under a `# cWise 0.1.0` heading (it currently says `0.0.1`, which matches nothing). | `DESCRIPTION`, `NEWS.md` | KD | ☒ |
+| 1.5 | Verified standard `License: GPL-3`; no separate `LICENSE` file should be added unless the declaration refers to it. | `DESCRIPTION` | KD | ☒ |
+| 1.6 | Declared the full `stats`, `graphics`, and `utils` import set in `R/cWise-package.R`; regenerated `NAMESPACE` and package help with `devtools::document()`. A fresh tarball check found zero missing declarations. | `R/cWise-package.R`, `NAMESPACE`, `man/cWise-package.Rd` | KD | ☒ |
 | 1.7 | Add `@importFrom scales ...` or fully qualify the `scales::` calls, and declare `scales` in `Imports`. Calls in `R/sim_estimates.R` are fully qualified. | `R/sim_estimates.R`, `DESCRIPTION` | KD | ☒ |
-| 1.8 | Replace every `round(x, d = n)` with `round(x, digits = n)`. | `R/bc.est.R`, `R/cmreg.R`, `R/cmreg.p.R` | ? | ☐ |
-| 1.9 | **Delete `R/power_analysis.R`** after confirming `sim_power.R` + `sim_power_N.R` supersede it. If `sim.curve()` is still wanted, move it into its own file, fix the `pi=` call to pass `pi.null`/`pi.alt`, document it with roxygen, and export it. Note in `NEWS.md` either way. | `R/power_analysis.R` | ? | ☐ |
-| 1.10 | Remove `options(warn=-1)` — CRAN forbids changing global options without restoring them. If warnings must be suppressed, wrap the specific call in `suppressWarnings()`. Completed as part of 2.3; no global warning option is changed. | `R/cmreg.p.R` | YA | ☒ |
+| 1.8 | Confirmed that no abbreviated `round(..., d = ...)` calls remain after the regression rewrite; `bc.est()` now uses explicit `digits =` arguments. | `R/bc.est.R`, `R/cmreg.R`, `R/cmreg.p.R` | KD | ☒ |
+| 1.9 | Removed legacy `R/power_analysis.R` after confirming that `sim_power.R` and `sim_power_N.R` provide the active supported functions. The undocumented `sim.curve()` helper was broken and removed; `NEWS.md` records the change. A fresh build and install passed. | `R/power_analysis.R`, `NEWS.md` | KD | ☒ |
+| 1.10 | Completed as part of Phase 2.3; no global warning option is changed. | `R/cmreg.p.R` | YA | ☒ |
 | 1.11 | Remove the hard-coded `set.seed()` calls from inside exported functions. They silently overwrite the user's RNG stream, which is a CRAN policy problem and makes results non-reproducible in the way users expect. Add a `seed = NULL` argument and, when set, restore state on exit via `on.exit()`. **Progress:** completed for `cmpredict()` and `cmpredict.p()` in 2.8; `bc.est()` remains. | `R/bc.est.R:63`, `R/cmpredict.R`, `R/cmpredict.p.R` | KD | ☐ |
 | 1.12 | Route all `cat()`/`print()` progress output through `message()` and gate it behind a `verbose = TRUE` argument, so it can be silenced and goes to stderr. | `R/sim_power.R`, `R/sim_cwdata.R` | ? | ☐ |
 | 1.13 | Fix the `ggtitle` example: either `\dontrun{}` the ggplot2-syntax lines or prefix `library(ggplot2)` inside the example. Prefer the latter — a runnable example is better. | `R/cmBound.R` roxygen | ? | ☐ |

@@ -1,7 +1,7 @@
 Package: cWise
 Type: Package 
-Title: A (Cross)Wise Method to Analyze Sensitive Survey Questions
-Version: 0.0.0.9000
+Title: Crosswise Models for Sensitive Survey Questions
+Version: 0.1.0
 Authors@R: c(
     person("Yuki", "Atsusaka", email = "atsusaka@uh.edu",
            role = c("aut", "cre")),

@@ -100,12 +100,12 @@ weight = data %>% dplyr::select(!!Wquo) %>% pull()
 
   result[[1]] <-   rbind(cbind(pi.hat.naive, pi.hat.naive.sd, naive.low, naive.high),
                          cbind(pi.hat.bc, pi.hat.bc.sd, bc.low, bc.high))
-  result[[1]] <- round(result[[1]], d=4)
+  result[[1]] <- round(result[[1]], digits = 4)
   colnames(result[[1]]) <- c("Estimate", "Std. Error", "95%CI(Low)", "95%CI(Up)")
   rownames(result[[1]]) <- c("Naive Crosswise", "Bias-Corrected")
 
   result[[2]] <- cbind(gamma.hat, N)
-  result[[2]] <- round(result[[2]], d=4)
+  result[[2]] <- round(result[[2]], digits = 4)
   colnames(result[[2]]) <- c("Attentive Rate", "Sample Size")
   rownames(result[[2]]) <- ""
   names(result) <- c("Results", "Stats")
