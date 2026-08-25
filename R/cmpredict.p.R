@@ -16,18 +16,15 @@
 cmpredict.p <- function(out, typical){
 
 # GRAB COEFFICIENTS
+  idx <- cm_par_index(nrow(out$AuxiliaryCoef), model = "predictor")
+  gamma_idx = c(idx$gamma, idx$gamma_z)
   coef.gamma = out$Coefficients[,1]
-  coef.beta  = out$AuxiliaryCoef[,1]
-  coef.theta = out$AuxiliaryCoef2[,1]
-  coefs = c(coef.gamma, coef.beta, coef.theta)
-  vcovs = out$VCV
+  vcovs = out$VCV[gamma_idx, gamma_idx, drop = FALSE]
 
 
 # PARAMETRIC BOOTSTRAP
-  k = 1 + length(typical) + 1
   set.seed(20200730)
-  coef.sim <- rmvnorm(n=10000, mean=coefs, sigma=vcovs) # from mvtnorm
-  coef.sim <- coef.sim[,1:k]
+  coef.sim <- rmvnorm(n=10000, mean=coef.gamma, sigma=vcovs) # from mvtnorm
 
 
 # TYPICAL VALUE MATRIX

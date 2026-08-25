@@ -161,7 +161,8 @@ head(cmdata2)
 To run a crosswise regression, one can specify the model by writing a formula: `Crosswise Response ~ var1 + ... + varN + Anchor Response` as follows:
 
 ``` r
-m <- cmreg(Y~female+age+A, p=0.1, p.prime=0.15, data=cmdata2)
+m <- cmreg(Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15,
+           data = cmdata2)
 m
 
 #> $Call
@@ -204,7 +205,8 @@ head(cmdata3)
 To run a regression with the sensitive trait as a predictor, one can specify the formula: `Outcome ~ Cov1 + ... + CovN + CrosswiseResponse + AnchorResponse` as follows:
 
 ``` r
-m2 <- cmreg.p(V~age+female+Y+A, p=0.1, p.prime=0.15, data=cmdata3)
+m2 <- cmreg.p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
+              p.prime = 0.15, data = cmdata3)
 m2
 
 #> $Call

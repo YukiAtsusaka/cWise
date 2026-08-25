@@ -4,39 +4,44 @@
 #'
 #' @param formula an object of class "formula":
 #' a symbolic description of the model to be fitted.
-#' Ex. Crosswise response ~ Covariates + Anchor response.
+#' Ex. Crosswise response ~ Covariates. The anchor response is supplied
+#' separately through `anchor`.
+#' @param anchor Unquoted column name (or a single character column name) for the
+#' anchor response.
 #' @param p an auxiliary probability for the crosswise question.
 #' @param p.prime an auxiliary probability for the anchor question.
 #' @param data a data frame containing information from the crosswise model and covariates.
 #'
 #' @return A list containing the estimated results and related statistics.
 #' @examples
-#' m <-  cmreg(Y~female+age+A, p=0.1, p.prime=0.15, data=cmdata2)
+#' m <- cmreg(Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15,
+#'            data = cmdata2)
 #' m
 #' @export
 
 
-cmreg <- function(formula, p, p.prime, data){
+cmreg <- function(formula, anchor, p, p.prime, data){
 
   i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
 
-  df <- model.frame(formula, data, na.action = na.omit)
-  X0 <- model.matrix.default(formula, df) # Data matrix including A
-  X1 <- X0[, -dim(X0)[2]]                 # Matrix with 1 and predictors
-  A <- df[, dim(X0)[2]]
-  Y <- df[,1]
+  anchor_info <- cm_data_column(data, substitute(anchor), "anchor", parent.frame())
+  mf <- model.frame(formula, data, na.action = na.pass)
+  keep <- complete.cases(mf, anchor_info$value)
+  df <- mf[keep, , drop = FALSE]
+  X1 <- model.matrix(formula, df)
+  A <- anchor_info$value[keep]
+  Y <- model.response(df)
   k <- dim(X1)[2]      # Number of beta parameters
-  k.t <- k + 1         # Start of theta parameters
-  k.t.e <- 2*k         # End of theta parameters
+  idx <- cm_par_index(k, model = "outcome")
 
-  init <- rep(0.01, k.t.e) # Initial values for optim
+  init <- rep(0.01, idx$npar) # Initial values for optim
 
   # LOG-LIKELIHOOD FUNCTION
   log.L <- function(par) {
-    sum(   Y*log(            ((2*p-1)*(i.logit(X1 %*% par[1:k])) + (0.5-p) )*i.logit(X1 %*% par[k.t:k.t.e]) + 0.5)
-           + (1-Y)*log( 1 - (((2*p-1)*(i.logit(X1 %*% par[1:k])) + (0.5-p) )*i.logit(X1 %*% par[k.t:k.t.e]) + 0.5))
-           + A*log(        (0.5-p.prime)*i.logit(X1 %*% par[k.t:k.t.e]) + 0.5 )
-           + (1-A)*log(1- ((0.5-p.prime)*i.logit(X1 %*% par[k.t:k.t.e]) + 0.5 ))
+    sum(   Y*log(            ((2*p-1)*(i.logit(X1 %*% par[idx$beta])) + (0.5-p) )*i.logit(X1 %*% par[idx$theta]) + 0.5)
+           + (1-Y)*log( 1 - (((2*p-1)*(i.logit(X1 %*% par[idx$beta])) + (0.5-p) )*i.logit(X1 %*% par[idx$theta]) + 0.5))
+           + A*log(        (0.5-p.prime)*i.logit(X1 %*% par[idx$theta]) + 0.5 )
+           + (1-A)*log(1- ((0.5-p.prime)*i.logit(X1 %*% par[idx$theta]) + 0.5 ))
     )
   }
 
@@ -57,7 +62,6 @@ cmreg <- function(formula, p, p.prime, data){
 
   Mlist <- list()
 
-  n.var = dim(df)[2] - 1
   z = MLE$par / SE
   pv = 2*(1- pnorm(abs(z)))
   z = round(z, d=3)
@@ -65,16 +69,16 @@ cmreg <- function(formula, p, p.prime, data){
 
 
   Mlist[[1]] <- formula
-  Mlist[[2]] <- t(rbind(MLE$par[1:n.var], SE[1:n.var], z[1:n.var], pv[1:n.var]))
-  Mlist[[3]] <- t(rbind(MLE$par[(n.var+1):(2*n.var)], SE[(n.var+1):(2*n.var)],
-                        z[(n.var+1):(2*n.var)], pv[(n.var+1):(2*n.var)]))
+  Mlist[[2]] <- t(rbind(MLE$par[idx$beta], SE[idx$beta], z[idx$beta], pv[idx$beta]))
+  Mlist[[3]] <- t(rbind(MLE$par[idx$theta], SE[idx$theta],
+                        z[idx$theta], pv[idx$theta]))
   Mlist[[2]] <- round(Mlist[[2]], d=4)
   Mlist[[3]] <- round(Mlist[[3]], d=4)
   Mlist[[4]] <- -solve(H) # Estimated Variance-Covariance Matrix
   colnames(Mlist[[2]]) <- c("Estimate", "Std. Error", "z score", "Pr(>|z|)")
   colnames(Mlist[[3]]) <- c("Estimate", "Std. Error", "z score", "Pr(>|z|)")
 
-  varnam <- c("(intercept)", colnames(df)[2:n.var])
+  varnam <- colnames(X1)
   rownames(Mlist[[2]]) <- varnam
   rownames(Mlist[[3]]) <- varnam
 

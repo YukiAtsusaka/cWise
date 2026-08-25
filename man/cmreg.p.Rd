@@ -4,12 +4,19 @@
 \alias{cmreg.p}
 \title{cmreg.p}
 \usage{
-cmreg.p(formula, p, p.prime, data)
+cmreg.p(formula, crosswise, anchor, p, p.prime, data)
 }
 \arguments{
 \item{formula}{an object of class "formula":
 a symbolic description of the model to be fitted.
-Ex. Outcome ~ Covariates + Crosswise Response + Anchor response.}
+Ex. Outcome ~ Covariates. The crosswise and anchor responses are supplied
+separately through `crosswise` and `anchor`.}
+
+\item{crosswise}{Unquoted column name (or a single character column name) for
+the crosswise response.}
+
+\item{anchor}{Unquoted column name (or a single character column name) for the
+anchor response.}
 
 \item{p}{an auxiliary probability for the crosswise question.}
 
@@ -24,6 +31,7 @@ A list containing the estimated results and related statistics.
 \code{cmreg} is used to run a regression with the latent sensitive trait as a predictor.
 }
 \examples{
-m2 <- cmreg.p(V~age+female+Y+A, p=0.1, p.prime=0.15, data=cmdata3)
+m2 <- cmreg.p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
+              p.prime = 0.15, data = cmdata3)
 m2
 }

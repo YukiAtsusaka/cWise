@@ -19,19 +19,16 @@ cmpredict <- function(out, zval, typical){
 i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
 
 # GRAB COEFFICIENTS
+  idx <- cm_par_index(nrow(out$Coefficients), model = "outcome")
   coef.beta  = out$Coefficients[,1]
-  coef.theta = out$AuxiliaryCoef[,1]
-  coefs = c(coef.beta, coef.theta)
-  vcovs = out$VCV
+  vcovs = out$VCV[idx$beta, idx$beta, drop = FALSE]
 
 # TYPICAL VALUE MATRIX
   typ.vec = cbind(1, zval, typical)
 
 # PARAMETRIC BOOTSTRAP
-  k = 1 + length(typical) + 1
   set.seed(20200730)
-  coef.sim <- mvtnorm::rmvnorm(n=10000, mean=coefs, sigma=vcovs) # from mvtnorm
-  coef.sim <- coef.sim[,1:k]
+  coef.sim <- mvtnorm::rmvnorm(n=10000, mean=coef.beta, sigma=vcovs) # from mvtnorm
 
   lin.agg <- as.matrix(typ.vec) %*% t(coef.sim) # Linear aggregator
   pi.sim = i.logit(lin.agg) # Inverse logit
