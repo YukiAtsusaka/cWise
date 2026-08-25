@@ -1,10 +1,22 @@
 # cWise — CRAN Submission Plan
 
 Working document for **Yuki Atsusaka** and **Kolbe Dumas**. Update the status boxes as
-you go. Everything below was verified against the package as of commit `a27f64f`
+you go. The Phase 0 check output was verified against the package as of commit `a27f64f`
 (R 4.4.1, Windows) — the check output in Phase 0 is real, not hypothetical.
 
 **Target:** `cWise 0.1.0` on CRAN, with two vignettes.
+
+**Progress through 2026-08-25:**
+
+- Completed 1.1: migrated `DESCRIPTION` to `Authors@R`; Yuki Atsusaka is `aut`/`cre`,
+  and Kolbe Dumas and Randy T. Stevenson are `aut`. Kolbe's package email is
+  `kdumas@CougarNet.UH.EDU`.
+- Completed 1.15: replaced the dead working-paper citation with the published 2023
+  *Political Analysis* article and DOI `10.1017/pan.2021.43`.
+- Partially completed 1.3: `Description` is now two sentences and cites the DOI in
+  CRAN format. The package `Title` still needs revision before 1.3 can be checked off.
+- Updated the README and simulation references from the pre-publication year to 2023.
+- Added the two-person ownership map under "Suggested sequencing for two people."
 
 **Owner column:** put initials in the `Who` cell when you pick a task up. `YA` = Yuki,
 `KD` = Kolbe, `?` = unassigned.
@@ -35,16 +47,17 @@ in the submission comments.** The only NOTE we expect to keep is `New submission
 
 ## Phase 0 — Baseline: what `R CMD check --as-cran` says today
 
-This is the actual current state. The check aborts almost immediately, so the list
+This is the original baseline snapshot, not a live check report. The check aborted
 grows as we fix things — expect new findings after each phase.
 
 **ERROR — `DESCRIPTION`**
 ```
 Required field missing or empty: 'Maintainer'
 ```
-`Author: person(...)` is not valid syntax. The `Author:` field is free text; the
-`person()` call belongs in `Authors@R`. Because there is no `Authors@R`, R cannot
-derive `Maintainer`, and the check stops before anything else runs.
+**Resolved 2026-08-25:** the invalid `Author: person(...)` field was replaced with a
+valid `Authors@R` list. R now derives Yuki Atsusaka as maintainer from the `cre` role.
+Re-run the full check after the remaining Phase 1 metadata changes to confirm this
+gate stays resolved.
 
 **ERROR — dependencies** (appears once `DESCRIPTION` parses)
 ```
@@ -103,8 +116,8 @@ The roxygen block documents `zval`, but `cmpredict.p()` takes `(out, typical)`.
 
 **NOTEs**
 - `Version contains large components (0.0.0.9000)` — dev version; ship `0.1.0`.
-- `inst/CITATION` URL returns **404**:
-  `https://github.com/YukiAtsusaka/working-paper/blob/master/WP_BiasCorrectedCM.pdf`
+- ~~`inst/CITATION` URL returns **404**.~~ Resolved 2026-08-25 by replacing the
+  working-paper entry with the published article and DOI.
 - ~45 × `no visible global function definition` — every base-package function
   (`optim`, `pnorm`, `quantile`, `model.frame`, `rbinom`, `abline`, `txtProgressBar`, …)
   needs an `importFrom`. The check prints the exact block to paste; see Phase 1.
@@ -119,9 +132,9 @@ while the estimation work (Phase 2) is in flight. Nothing here changes numerical
 
 | # | Task | File(s) | Who | Done |
 |---|---|---|---|---|
-| 1.1 | Replace `Author:` with `Authors@R = c(person(..., role=c("aut","cre")), person("Randy","Stevenson", role="aut"))`. Drop the `Author:`/`Maintainer:` fields entirely. Decide whether Kolbe is listed — `role="aut"` if he contributes package code, `role="ctb"` for smaller contributions. | `DESCRIPTION` | ? | ☐ |
+| 1.1 | Replace `Author:` with `Authors@R = c(person(..., role=c("aut","cre")), person("Randy","Stevenson", role="aut"))`. Drop the `Author:`/`Maintainer:` fields entirely. Decide whether Kolbe is listed — `role="aut"` if he contributes package code, `role="ctb"` for smaller contributions. | `DESCRIPTION` | KD | ☒ |
 | 1.2 | Replace `tidyverse` in `Imports` with the packages actually used: `dplyr`, `ggplot2`, `scales`, `mvtnorm`. Drop `rlang` unless 1.9 keeps it. Add `knitr`, `rmarkdown` to `Suggests`. | `DESCRIPTION` | ? | ☐ |
-| 1.3 | Rewrite `Title` in title case, no redundant article, ≤65 chars. `Description` must be ≥2 sentences, must not start with "This package", and must cite the paper as `Atsusaka and Stevenson (2023) <doi:...>`. | `DESCRIPTION` | ? | ☐ |
+| 1.3 | Rewrite `Title` in title case, no redundant article, ≤65 chars. `Description` must be ≥2 sentences, must not start with "This package", and must cite the paper as `Atsusaka and Stevenson (2023) <doi:...>`. **Progress:** description complete; title pending. | `DESCRIPTION` | KD | ☐ |
 | 1.4 | Bump `Version: 0.1.0`. Rewrite `NEWS.md` under a `# cWise 0.1.0` heading (it currently says `0.0.1`, which matches nothing). | `DESCRIPTION`, `NEWS.md` | ? | ☐ |
 | 1.5 | Add `LICENSE` file if using `GPL-3`; confirm the license text matches the `License:` field. | root | ? | ☐ |
 | 1.6 | Add the full `importFrom("stats", ...)` / `importFrom("graphics", ...)` / `importFrom("utils", ...)` set as roxygen tags (a `@importFrom` in each function, or one `R/cWise-package.R` doc block). Then `devtools::document()`. Copy the list verbatim from the check output. | `R/*.R` | ? | ☐ |
@@ -133,7 +146,7 @@ while the estimation work (Phase 2) is in flight. Nothing here changes numerical
 | 1.12 | Route all `cat()`/`print()` progress output through `message()` and gate it behind a `verbose = TRUE` argument, so it can be silenced and goes to stderr. | `R/sim_power.R`, `R/sim_cwdata.R` | ? | ☐ |
 | 1.13 | Fix the `ggtitle` example: either `\dontrun{}` the ggplot2-syntax lines or prefix `library(ggplot2)` inside the example. Prefer the latter — a runnable example is better. | `R/cmBound.R` roxygen | ? | ☐ |
 | 1.14 | Replace `size` with `linewidth` in `geom_line`/`geom_segment` calls (deprecated since ggplot2 3.4.0; currently emits a deprecation warning during checks). | `R/cmBound.R` | ? | ☐ |
-| 1.15 | Fix the `inst/CITATION` 404 URL and update `year`/`journal` to the published reference. Use `bibentry(bibtype = "Article", ...)` — capital A. | `inst/CITATION` | ? | ☐ |
+| 1.15 | Fix the `inst/CITATION` 404 URL and update `year`/`journal` to the published reference. Use `bibentry(bibtype = "Article", ...)` — capital A. | `inst/CITATION` | KD | ☒ |
 | 1.16 | Add `^doc$`, `^\.github$`, `^README\.Rmd$`, `^cran-comments\.md$`, `^CLAUDE\.md$` to `.Rbuildignore`. Decide whether `doc/Appendix_C5.pdf` ships in `inst/` (it is a real reference, so probably yes → move it to `inst/doc_ref/`, **not** `inst/doc/`, which knitr owns). | `.Rbuildignore` | ? | ☐ |
 | 1.17 | Consider renaming the `pi` argument in the `sim.*` functions to `prev` or `pi.true`. `pi` masks the base constant inside those function bodies and is what caused the 1.9 partial-matching bug. Not a check failure today — a trap for later. | `R/sim_*.R` | ? | ☐ |
 
@@ -324,6 +337,29 @@ intervals under our names.
 
 ---
 
+### Assigned work
+
+Use this as the ownership map for the `Who` column above. Shared items require both
+people to review and sign off; the first person listed is the implementation lead.
+
+| Owner | Assigned tasks | Dependency / handoff |
+|---|---|---|
+| YA + KD | Decide 2.2 and 2.9 before implementation; also settle open question 3 | These decisions freeze the public API and release scope. Paper citation resolved on 2026-08-25. |
+| KD | 1.1-1.17 | Start immediately. Ask YA only for author/maintainer, simulation-scope, and citation decisions. |
+| YA | 2.1-2.9 | Start after the joint API decisions. Keep the index-map and full-precision fit-object work ahead of prediction rewrites. |
+| YA | 2.10-2.15, 3.3-3.4 | Write these correctness and regression tests alongside the corresponding Phase 2 changes, not afterward. |
+| KD | 3.1-3.2, 3.5-3.7 | Establish testthat first, then cover the mechanical/non-regression surfaces while YA owns the likelihood tests. |
+| KD | 4.1, 4.3-4.7 | Begin 4.1 after its Phase 1 dependencies are stable. Defer power-analysis content until YA decides what ships. |
+| YA + KD | 4.2 | YA leads technical examples after the Phase 2 API is frozen; KD reviews narrative, build behavior, and declared dependencies. |
+| KD | 5.1-5.6 | Coordinate changed regression documentation with YA before regenerating final Rd files. |
+| YA + KD | 6.1-6.8 | KD leads checks and `cran-comments.md`; YA owns maintainer-address confirmation, release tag, submission, and reviewer replies. Do not begin until YA signs off 2.10-2.15. |
+
+Immediate parallel start:
+
+1. YA and KD jointly record decisions for 2.2, 2.9, and simulation scope.
+2. Once recorded, KD starts 1.1-1.17 while YA starts 2.1 and the 2.13 regression fixture.
+3. KD creates the testthat scaffold (3.1) early so both contributors can add tests without colliding.
+
 ## Open questions to settle between the two of you
 
 1. **Breaking the formula interface (2.2).** Moving `A` and `Y` out of the RHS is the
@@ -338,6 +374,7 @@ intervals under our names.
    are a CRAN check-time liability. Shipping `bc.est`, `cmBound`, `cmreg`, `cmreg.p`, and
    the predict functions in 0.1.0 and holding the power-analysis suite for 0.2.0 is a
    defensible way to get on CRAN sooner. Yuki's call.
-4. **Paper citation.** `DESCRIPTION`, `inst/CITATION`, and the README all say
-   "Working Paper (2020)" and the CITATION URL 404s. What is the current published
-   reference and DOI? CRAN reviewers do check these.
+4. **Paper citation (resolved 2026-08-25).** Atsusaka, Y., & Stevenson, R. T.
+   (2023). "A Bias-Corrected Estimator for the Crosswise Model with Inattentive
+   Respondents." *Political Analysis*, 31(1), 134-148.
+   <https://doi.org/10.1017/pan.2021.43>.

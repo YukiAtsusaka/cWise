@@ -76,7 +76,7 @@ cat(sprintf("Estimated power: \%.3f\n", pwr))
 
 }
 \references{
-Atsusaka and Stevenson (2021). Appendix C5: Sample Size Determination
+Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
 and Parameter Selection.
 }
 \seealso{

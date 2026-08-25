@@ -6,7 +6,7 @@
 
 <!-- badges: end -->
 
-This R package implements the methods proposed by Atsusaka and Stevenson (2023) ["A Bias-Corrected Estimator for the Crosswise Model with Inattentive Respondents"](https://doi.org/10.1017/pan.2021.43). Our workhorse function is `bc.est` which generates a bias-corrected crosswise estimate of the proportion of individuals with sensitive attributes. `cmBound` applies our sensitivity analysis to crosswise data without the anchor question. `cmreg` and `cmreg.p` implement crosswise regressions in which the latent sensitive trait can be used as an outcome or as a predictor, respectively. `cmpredict` generates predicted proportions of having sensitive traits given specific covariate values with uncertainty estimates via parametric bootstrap, whereas `cmpredict.p` yields predicted values for a given outcome variable and specific covariate values in the presence and absence of sensitive traits. Simulated crosswise data are saved as `cmdata`, `cmdata2`, and `cmdata3`.
+This R package implements the methods proposed by Atsusaka and Stevenson (2023), ["A Bias-Corrected Estimator for the Crosswise Model with Inattentive Respondents," *Political Analysis*, 31(1), 134-148](https://doi.org/10.1017/pan.2021.43). Our workhorse function is `bc.est` which generates a bias-corrected crosswise estimate of the proportion of individuals with sensitive attributes. `cmBound` applies our sensitivity analysis to crosswise data without the anchor question. `cmreg` and `cmreg.p` implement crosswise regressions in which the latent sensitive trait can be used as an outcome or as a predictor, respectively. `cmpredict` generates predicted proportions of having sensitive traits given specific covariate values with uncertainty estimates via parametric bootstrap, whereas `cmpredict.p` yields predicted values for a given outcome variable and specific covariate values in the presence and absence of sensitive traits. Simulated crosswise data are saved as `cmdata`, `cmdata2`, and `cmdata3`.
 
 ## Installation
 
@@ -29,15 +29,15 @@ Our design-based method requires two survey questions as follows:
 
 Based on the four statements,
 
--   Statement A: the **sensitive** item of interest
--   Statement B: a non-sensitive item (whose prevalence is known to users)
--   Statement C: an anchoring sensitive item (whose prevalence is set to 0)
--   Statement D: an anchoring non-sensitive item (whose prevalence is known to users)
+- Statement A: the **sensitive** item of interest
+- Statement B: a non-sensitive item (whose prevalence is known to users)
+- Statement C: an anchoring sensitive item (whose prevalence is set to 0)
+- Statement D: an anchoring non-sensitive item (whose prevalence is known to users)
 
 analysts will observe two outcome variables
 
--   $Y_i$: whether person $i$ chooses the first option [Both or Neither] in the main question
--   $A_{i}$: whether person $i$ chooses the first option [Both or Neither] in the anchor question
+- $Y_i$: whether person $i$ chooses the first option [Both or Neither] in the main question
+- $A_{i}$: whether person $i$ chooses the first option [Both or Neither] in the anchor question
 
 \
 To use our method, users only need to understand the following quantities. Among the four quantities, $p$ and $p\prime$ are called **design parameters** because users have full control over their values.

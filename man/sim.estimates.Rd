@@ -45,7 +45,7 @@ Invisibly returns the simulation results list from \code{\link{sim.cwdata}},
 Runs Monte Carlo simulations using the bias-corrected crosswise model and
 creates a caterpillar plot showing sorted point estimates with bootstrap
 confidence intervals, replicating Panel C of Figure C7 in Atsusaka and
-Stevenson (2021).
+Stevenson (2023).
 }
 \details{
 The plot displays:
@@ -87,7 +87,7 @@ sim.estimates(sample = 1000, pi = 0.1, p = 0.1, p.prime = 0.1,
 
 }
 \references{
-Atsusaka and Stevenson (2021). Figure C7, Panel C.
+Atsusaka and Stevenson (2023). Figure C7, Panel C.
 }
 \seealso{
 \code{\link{sim.cwdata}} for the underlying simulation function

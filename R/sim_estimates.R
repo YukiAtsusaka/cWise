@@ -3,7 +3,7 @@
 #' Runs Monte Carlo simulations using the bias-corrected crosswise model and
 #' creates a caterpillar plot showing sorted point estimates with bootstrap
 #' confidence intervals, replicating Panel C of Figure C7 in Atsusaka and
-#' Stevenson (2021).
+#' Stevenson (2023).
 #'
 #' @param N.sim Integer. Number of Monte Carlo simulations. Default is 100.
 #' @param sample Integer. Sample size per simulation.
@@ -61,7 +61,7 @@
 #' @seealso \code{\link{sim.cwdata}} for the underlying simulation function
 #'
 #' @references
-#' Atsusaka and Stevenson (2021). Figure C7, Panel C.
+#' Atsusaka and Stevenson (2023). Figure C7, Panel C.
 #'
 #' @export
 sim.estimates <- function(N.sim = 100, sample, pi, p, p.prime, gamma, direct,
