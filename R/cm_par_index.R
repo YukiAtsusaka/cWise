@@ -1,8 +1,8 @@
 # Central parameter layout for the crosswise regression models.
 #
-# Keep all parameter slicing in one place. The predictor model still estimates
-# sigma on its natural scale; task 2.3 will change that parameter to log_sigma
-# without changing its position in the vector.
+# Keep all parameter slicing in one place. The predictor model estimates
+# log_sigma internally; `sigma` identifies that same position on the reporting
+# scale after the delta transformation.
 cm_par_index <- function(k, model = c("outcome", "predictor")) {
   model <- match.arg(model)
 
@@ -68,4 +68,201 @@ cm_data_column <- function(data, expression, argument, environment) {
   }
 
   list(value = value, name = name)
+}
+
+cm_glm_start <- function(x, y) {
+  fit <- tryCatch(
+    stats::glm.fit(x = x, y = y, family = stats::binomial()),
+    error = function(e) NULL
+  )
+  coefficients <- if (is.null(fit)) rep(0, ncol(x)) else fit$coefficients
+  coefficients[!is.finite(coefficients)] <- 0
+  pmax(pmin(coefficients, 5), -5)
+}
+
+cm_lm_start <- function(x, y) {
+  fit <- tryCatch(stats::lm.fit(x = x, y = y), error = function(e) NULL)
+  coefficients <- if (is.null(fit)) rep(0, ncol(x)) else fit$coefficients
+  coefficients[!is.finite(coefficients)] <- 0
+  coefficients
+}
+
+cm_hessian_vcov <- function(hessian, npar) {
+  unavailable <- function(reason) {
+    warning(
+      sprintf("Standard errors are unavailable because %s.", reason),
+      call. = FALSE
+    )
+    matrix(NA_real_, nrow = npar, ncol = npar)
+  }
+
+  if (!is.matrix(hessian) || !identical(dim(hessian), c(npar, npar)) ||
+      any(!is.finite(hessian))) {
+    return(unavailable("the Hessian is missing, malformed, or non-finite"))
+  }
+
+  hessian <- (hessian + t(hessian)) / 2
+  eigenvalues <- tryCatch(
+    eigen(hessian, symmetric = TRUE, only.values = TRUE)$values,
+    error = function(e) NULL
+  )
+  if (is.null(eigenvalues) || any(!is.finite(eigenvalues)) ||
+      any(eigenvalues >= -sqrt(.Machine$double.eps))) {
+    return(unavailable("the Hessian is not negative definite"))
+  }
+
+  inverse <- tryCatch(solve(hessian), error = function(e) NULL)
+  if (is.null(inverse) || any(!is.finite(inverse))) {
+    return(unavailable("the Hessian cannot be inverted"))
+  }
+
+  -inverse
+}
+
+cm_multistart_optim <- function(fn, start, n.start, control) {
+  if (length(n.start) != 1L || is.na(n.start) || n.start < 1L ||
+      n.start != as.integer(n.start)) {
+    stop("`n.start` must be a single positive integer.", call. = FALSE)
+  }
+  if (!is.list(control)) {
+    stop("`control` must be a list passed to `optim()`.", call. = FALSE)
+  }
+
+  n.start <- as.integer(n.start)
+  optim_control <- utils::modifyList(list(maxit = 800, fnscale = -1), control)
+  if (length(optim_control$fnscale) != 1L ||
+      !isTRUE(all.equal(optim_control$fnscale, -1))) {
+    warning("`control$fnscale` is ignored; cWise maximizes its log-likelihood.",
+            call. = FALSE)
+    optim_control$fnscale <- -1
+  }
+
+  starts <- vector("list", n.start)
+  starts[[1L]] <- start
+  if (n.start > 1L) {
+    for (i in 2:n.start) {
+      starts[[i]] <- start + stats::rnorm(length(start), sd = 0.1)
+    }
+  }
+
+  fits <- lapply(starts, function(candidate) {
+    tryCatch(
+      stats::optim(
+        par = candidate, fn = fn, method = "BFGS", control = optim_control,
+        hessian = TRUE
+      ),
+      error = function(e) e
+    )
+  })
+  valid <- vapply(fits, function(fit) {
+    inherits(fit, "list") && is.finite(fit$value) && all(is.finite(fit$par))
+  }, logical(1))
+  converged <- valid & vapply(fits, function(fit) {
+    inherits(fit, "list") && identical(fit$convergence, 0L)
+  }, logical(1))
+
+  if (!any(converged)) {
+    stop(
+      sprintf("Optimization failed to converge from all %d start(s).", n.start),
+      call. = FALSE
+    )
+  }
+  failed_starts <- n.start - sum(converged)
+  if (failed_starts > 0L) {
+    warning(
+      sprintf("%d of %d optimization start(s) failed or did not converge; using the best converged fit.",
+              failed_starts, n.start),
+      call. = FALSE
+    )
+  }
+
+  candidate_indices <- which(converged)
+  fits[[candidate_indices[which.max(vapply(fits[candidate_indices], `[[`, numeric(1), "value"))]]]
+}
+
+cm_prediction_data <- function(out, newdata, zval, typical) {
+  if (!is.null(newdata) && !is.null(typical)) {
+    stop("Supply either `newdata` or `typical`, not both.", call. = FALSE)
+  }
+  supplied <- if (is.null(newdata)) typical else newdata
+  argument <- if (is.null(newdata)) "typical" else "newdata"
+
+  if (is.null(supplied)) {
+    values <- list()
+  } else if (is.data.frame(supplied)) {
+    values <- as.list(supplied)
+  } else if (is.list(supplied) && !is.null(names(supplied))) {
+    values <- supplied
+  } else if (is.atomic(supplied) && !is.null(names(supplied))) {
+    values <- as.list(supplied)
+  } else {
+    stop(sprintf("`%s` must be a named data frame, list, or vector.", argument),
+         call. = FALSE)
+  }
+
+  rhs_terms <- stats::delete.response(out$terms)
+  required <- all.vars(rhs_terms)
+  if (!is.null(zval)) {
+    z_names <- unique(names(zval))
+    if (is.null(names(zval)) || length(z_names) != 1L || !nzchar(z_names)) {
+      stop("`zval` must be a named vector for exactly one covariate.", call. = FALSE)
+    }
+    values[[z_names]] <- unname(zval)
+  }
+
+  unknown <- setdiff(names(values), required)
+  if (length(unknown)) {
+    stop(sprintf("Unknown prediction variable(s): %s.",
+                 paste(unknown, collapse = ", ")), call. = FALSE)
+  }
+  missing <- setdiff(required, names(values))
+  if (length(missing)) {
+    stop(sprintf("Missing prediction variable(s): %s.",
+                 paste(missing, collapse = ", ")), call. = FALSE)
+  }
+
+  if (!length(required)) {
+    prediction_data <- data.frame(.cm_row = 1L)
+  } else {
+    lengths <- vapply(values[required], length, integer(1))
+    if (any(lengths == 0L)) {
+      stop("Prediction variables cannot be empty.", call. = FALSE)
+    }
+    n <- max(lengths)
+    if (any(!lengths %in% c(1L, n))) {
+      stop("Prediction variables must have length one or a common length.",
+           call. = FALSE)
+    }
+    values <- lapply(values[required], rep, length.out = n)
+    prediction_data <- as.data.frame(values, optional = TRUE)
+  }
+
+  for (variable in intersect(names(out$xlevels), names(prediction_data))) {
+    if (!is.factor(prediction_data[[variable]])) {
+      prediction_data[[variable]] <- factor(
+        prediction_data[[variable]], levels = out$xlevels[[variable]]
+      )
+    }
+  }
+
+  design <- tryCatch(
+    stats::model.matrix(
+      rhs_terms, data = prediction_data, xlev = out$xlevels,
+      contrasts.arg = out$contrasts
+    ),
+    error = function(e) {
+      stop("Could not construct the prediction design matrix: ",
+           conditionMessage(e), call. = FALSE)
+    }
+  )
+  missing_columns <- setdiff(out$design_columns, colnames(design))
+  if (length(missing_columns)) {
+    stop(sprintf("Prediction design is missing column(s): %s.",
+                 paste(missing_columns, collapse = ", ")), call. = FALSE)
+  }
+  design <- design[, out$design_columns, drop = FALSE]
+  if (any(!is.finite(design))) {
+    stop("`newdata` contains missing or non-finite values.", call. = FALSE)
+  }
+  design
 }

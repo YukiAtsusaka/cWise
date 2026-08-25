@@ -4,7 +4,16 @@
 \alias{cmreg}
 \title{cmreg}
 \usage{
-cmreg(formula, anchor, p, p.prime, data)
+cmreg(
+  formula,
+  anchor,
+  p,
+  p.prime,
+  data,
+  start = NULL,
+  n.start = 3L,
+  control = list()
+)
 }
 \arguments{
 \item{formula}{an object of class "formula":
@@ -20,6 +29,15 @@ anchor response.}
 \item{p.prime}{an auxiliary probability for the anchor question.}
 
 \item{data}{a data frame containing information from the crosswise model and covariates.}
+
+\item{start}{Optional numeric vector of starting values for the beta and theta
+parameters. By default, starts are derived from binomial GLMs for the observed
+crosswise and anchor responses.}
+
+\item{n.start}{Number of optimization starts, including the data-informed start.}
+
+\item{control}{A list of control settings passed to [stats::optim()]. `fnscale`
+is fixed internally because the log-likelihood is maximized.}
 }
 \value{
 A list containing the estimated results and related statistics.

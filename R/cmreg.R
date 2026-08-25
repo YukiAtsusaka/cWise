@@ -11,6 +11,12 @@
 #' @param p an auxiliary probability for the crosswise question.
 #' @param p.prime an auxiliary probability for the anchor question.
 #' @param data a data frame containing information from the crosswise model and covariates.
+#' @param start Optional numeric vector of starting values for the beta and theta
+#' parameters. By default, starts are derived from binomial GLMs for the observed
+#' crosswise and anchor responses.
+#' @param n.start Number of optimization starts, including the data-informed start.
+#' @param control A list of control settings passed to [stats::optim()]. `fnscale`
+#' is fixed internally because the log-likelihood is maximized.
 #'
 #' @return A list containing the estimated results and related statistics.
 #' @examples
@@ -20,7 +26,10 @@
 #' @export
 
 
-cmreg <- function(formula, anchor, p, p.prime, data){
+cmreg <- function(formula, anchor, p, p.prime, data, start = NULL,
+                  n.start = 3L, control = list()){
+
+  call <- match.call()
 
   i.logit <- function(XB){ exp(XB)/(1 + exp(XB))}
 
@@ -34,7 +43,15 @@ cmreg <- function(formula, anchor, p, p.prime, data){
   k <- dim(X1)[2]      # Number of beta parameters
   idx <- cm_par_index(k, model = "outcome")
 
-  init <- rep(0.01, idx$npar) # Initial values for optim
+  init <- if (is.null(start)) {
+    c(cm_glm_start(X1, Y), cm_glm_start(X1, A))
+  } else {
+    as.numeric(start)
+  }
+  if (length(init) != idx$npar || any(!is.finite(init))) {
+    stop(sprintf("`start` must contain %d finite beta/theta values.", idx$npar),
+         call. = FALSE)
+  }
 
   # LOG-LIKELIHOOD FUNCTION
   log.L <- function(par) {
@@ -47,15 +64,9 @@ cmreg <- function(formula, anchor, p, p.prime, data){
 
 
   # MAXIMIZATION
-  MLE = optim(par=init,                      # initial values for beta and theta
-              fn = log.L,                    # function to maximize
-              method = "BFGS",               # this method lets set lower bounds (Modified Newton method)
-              control = list(maxit=800, fnscale = -1),  # maximize the function
-              hessian = TRUE)                # calculate Hessian matricce because we will need for confidence intervals
-
-  H = MLE$hessian                            # Hessian matrix
-  Var.hat = diag(-solve(H))                  # Variance as the negative inverse of the Hessian matrix (Dropping covariances)
-  SE = sqrt(Var.hat)                         # Standard errors
+  MLE = cm_multistart_optim(log.L, init, n.start, control)
+  VCV = cm_hessian_vcov(MLE$hessian, idx$npar)
+  SE = sqrt(diag(VCV))
 
 
 # OUTPUT
@@ -64,17 +75,13 @@ cmreg <- function(formula, anchor, p, p.prime, data){
 
   z = MLE$par / SE
   pv = 2*(1- pnorm(abs(z)))
-  z = round(z, d=3)
-  pv = round(pv, d=3)
 
 
-  Mlist[[1]] <- formula
+  Mlist[[1]] <- call
   Mlist[[2]] <- t(rbind(MLE$par[idx$beta], SE[idx$beta], z[idx$beta], pv[idx$beta]))
   Mlist[[3]] <- t(rbind(MLE$par[idx$theta], SE[idx$theta],
                         z[idx$theta], pv[idx$theta]))
-  Mlist[[2]] <- round(Mlist[[2]], d=4)
-  Mlist[[3]] <- round(Mlist[[3]], d=4)
-  Mlist[[4]] <- -solve(H) # Estimated Variance-Covariance Matrix
+  Mlist[[4]] <- VCV # Estimated variance-covariance matrix
   colnames(Mlist[[2]]) <- c("Estimate", "Std. Error", "z score", "Pr(>|z|)")
   colnames(Mlist[[3]]) <- c("Estimate", "Std. Error", "z score", "Pr(>|z|)")
 
@@ -82,7 +89,27 @@ cmreg <- function(formula, anchor, p, p.prime, data){
   rownames(Mlist[[2]]) <- varnam
   rownames(Mlist[[3]]) <- varnam
 
+  parameter_names <- c(paste0("beta:", varnam), paste0("theta:", varnam))
+  names(MLE$par) <- parameter_names
+  names(SE) <- parameter_names
+  dimnames(Mlist[[4]]) <- list(parameter_names, parameter_names)
+
   names(Mlist) <- c("Call", "Coefficients", "AuxiliaryCoef", "VCV")
+  Mlist$estimates <- MLE$par
+  Mlist$std.errors <- SE
+  Mlist$logLik <- MLE$value
+  Mlist$n <- length(Y)
+  Mlist$convergence <- MLE$convergence
+  Mlist$p <- p
+  Mlist$p.prime <- p.prime
+  Mlist$model <- "outcome"
+  # The model-frame terms retain transformation metadata (for example, the
+  # orthogonal-polynomial coefficients needed to predict from `poly()`).
+  Mlist$terms <- terms(mf)
+  Mlist$xlevels <- stats::.getXlevels(Mlist$terms, df)
+  Mlist["contrasts"] <- list(attr(X1, "contrasts"))
+  Mlist$design_columns <- varnam
+  class(Mlist) <- "cmreg"
 
 
   return(Mlist)

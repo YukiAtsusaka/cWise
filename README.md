@@ -242,11 +242,13 @@ m2
 
 ## `cmpredict`: Predicted Probabilities with Uncertainty Quantifications
 
-`cmpredict` offers an easy way to compute predicted probabilities (proportions) of having sensitive attributes. It does so with three arguments: `out` = output of `cmreg`, `typical` = a vector of typical values for control variables, and `zval` = a specific value that the main explanatory variable (first listed variable in `cmreg`) takes.
+`cmpredict` computes predicted probabilities (proportions) of having sensitive attributes. Supply covariates by name through `newdata`, or use a named `typical` vector together with a named `zval` vector to create a prediction curve.
 
 ``` r
-pred.nonfem = cmpredict(out=m, typical=30, zval=0)
-pred.female = cmpredict(out=m, typical=30, zval=1)
+predictions <- cmpredict(out = m, typical = c(age = 30),
+                         zval = c(female = 0, female = 1))
+pred.nonfem <- predictions[1, ]
+pred.female <- predictions[2, ]
 
 par(mmfrow=c(1,2))
 hist(pred.nonfem, main="Among non-Female", xlab="Proportion w/ Sensitive Traits")

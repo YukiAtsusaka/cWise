@@ -4,22 +4,33 @@
 \alias{cmpredict}
 \title{cmpredict}
 \usage{
-cmpredict(out, zval, typical)
+cmpredict(out, newdata = NULL, zval = NULL, typical = NULL)
 }
 \arguments{
-\item{out}{An output of \code{cmreg}}
+\item{out}{An output of \code{cmreg}.}
 
-\item{zval}{A value for the main explanatory variable of interest (the first listed variable in cmreg_out$Call)}
+\item{newdata}{A named data frame, list, or vector supplying values for every
+covariate in the fitted formula. A data frame returns one prediction row per
+row of `newdata`.}
 
-\item{typical}{A vector of typical values for other covariates}
+\item{zval}{Optional named vector for one covariate to vary. Its name must
+match a formula variable; all remaining covariates are supplied through
+`newdata` or `typical`.}
+
+\item{typical}{Optional named vector or list of fixed covariate values. This
+is a convenience alternative to `newdata` when used with `zval`.}
 }
 \value{
-A vector of predicted probabilities given the input covariatevalues
+A matrix of parametric-bootstrap draws of predicted probabilities,
+with one row for each prediction scenario.
 }
 \description{
 Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap
 }
 \examples{
-m <- cmpredict(m, zval=0, typical=30)
-m
+m <- cmreg(Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15,
+           data = cmdata2)
+predictions <- cmpredict(m, typical = c(age = 30),
+                          zval = c(female = 0, female = 1))
+predictions
 }
