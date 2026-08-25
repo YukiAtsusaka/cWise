@@ -22,7 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Kolbe Dumas \email{kdumas@CougarNet.UH.EDU}
+  \item Kolbe Dumas \email{kdumas@uh.edu}
   \item Randy T. Stevenson
 }
 
