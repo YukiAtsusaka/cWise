@@ -7,11 +7,14 @@
 #'
 #' @param N.sim Integer. Number of Monte Carlo simulations to run. Default is 500.
 #' @param sample Integer. Sample size per simulation (number of respondents).
-#' @param pi Numeric. True prevalence rate of the sensitive attribute (between 0 and 1).
+#' @param prevalence Numeric. True prevalence rate of the sensitive attribute
+#'   (between 0 and 1).
 #' @param p Numeric. Probability for the randomization item in sensitive question (between 0 and 1).
 #' @param p.prime Numeric. Probability for the anchor question (non-sensitive, between 0 and 1).
 #' @param gamma Numeric. Proportion of attentive respondents (between 0 and 1).
 #' @param direct Numeric. Direct questioning estimate for comparison purposes (between 0 and 1).
+#' @param verbose Logical. If `TRUE` (the default), display a progress bar while
+#'   simulations run.
 #'
 #' @return A list containing:
 #' \describe{
@@ -41,31 +44,37 @@
 #' where the bias is estimated using the anchor question responses.
 #'
 #' @examples
+#' \dontrun{
 #' # Basic usage
 #' result <- sim_cwdata(
 #'   N.sim = 100,
 #'   sample = 500,
-#'   pi = 0.1,
+#'   prevalence = 0.1,
 #'   p = 0.1,
 #'   p.prime = 0.1,
 #'   gamma = 0.8,
 #'   direct = 0.05
 #' )
 #' print(result$Results)
+#' }
 #'
 #' @references
 #' Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
 #' and Parameter Selection.
 #'
 #' @export
-sim_cwdata <- function(N.sim = 500, sample, pi, p, p.prime, gamma, direct) {
+sim_cwdata <- function(N.sim = 500, sample, prevalence, p, p.prime, gamma,
+                       direct, verbose = TRUE) {
 
   # Helper function for rounding output
   roundy <- function(x) { round(x, digits = 3) }
 
   N <- sample
   p2 <- p.prime
-  pb <- txtProgressBar(min = 1, max = N.sim, initial = 0, style = 3)
+  pb <- if (isTRUE(verbose)) {
+    txtProgressBar(min = 1, max = N.sim, initial = 0, style = 3)
+  }
+  on.exit(if (!is.null(pb)) close(pb), add = TRUE)
 
   # Storage for simulation results
   naive.cover <- numeric(N.sim)
@@ -84,13 +93,13 @@ sim_cwdata <- function(N.sim = 500, sample, pi, p, p.prime, gamma, direct) {
   #############################################################
   for (i in 1:N.sim) {
 
-    setTxtProgressBar(pb, i)
+    if (!is.null(pb)) setTxtProgressBar(pb, i)
 
     # Generate attentive/inattentive status
     Attentive <- rbinom(n = N, size = 1, prob = gamma)
 
     # SENSITIVE QUESTION OF INTEREST (Crosswise format)
-    StatementA <- rbinom(n = N, size = 1, prob = pi)           # Sensitive item
+    StatementA <- rbinom(n = N, size = 1, prob = prevalence)   # Sensitive item
     StatementB <- rbinom(n = N, size = 1, prob = p)            # Randomization item
     True.res <- ifelse(StatementA != StatementB, 0, 1)         # True answer (same=1, different=0)
 
@@ -158,25 +167,23 @@ sim_cwdata <- function(N.sim = 500, sample, pi, p, p.prime, gamma, direct) {
     bc.pred[i] <- pi.hat.bc
     bc.high.save[i] <- bc.high
     bc.low.save[i] <- bc.low
-    naive.cover[i] <- (naive.low <= pi & pi <= naive.high)
-    bc.cover[i] <- (bc.low <= pi & pi <= bc.high)
+    naive.cover[i] <- (naive.low <= prevalence & prevalence <= naive.high)
+    bc.cover[i] <- (bc.low <= prevalence & prevalence <= bc.high)
     bc.cover0[i] <- (bc.low <= 0)
     bc.cover.direct[i] <- (bc.low <= direct & direct <= bc.high)
     REbc[i] <- (bc.high - bc.low) / (naive.high - naive.low)
   }
-  close(pb)
-
   #############################################################
   # COMPUTE SUMMARY STATISTICS
   #############################################################
 
   # Average bias
-  bias.naive.cm <- mean(naive.pred - pi)
-  bias.bias.correct <- mean(bc.pred - pi)
+  bias.naive.cm <- mean(naive.pred - prevalence)
+  bias.bias.correct <- mean(bc.pred - prevalence)
 
   # Root Mean Squared Error
-  rmse.naive.cm <- mean((naive.pred - pi)^2)
-  rmse.bias.correct <- mean((bc.pred - pi)^2)
+  rmse.naive.cm <- mean((naive.pred - prevalence)^2)
+  rmse.bias.correct <- mean((bc.pred - prevalence)^2)
 
   # Coverage rates
   coverage.naive.cm <- mean(naive.cover, na.rm = TRUE) * 100
@@ -219,8 +226,17 @@ sim_cwdata <- function(N.sim = 500, sample, pi, p, p.prime, gamma, direct) {
 }
 
 #' @rdname sim_cwdata
+#' @param ... Arguments passed to \code{sim_cwdata()}.
 #' @export
 sim.cwdata <- function(...) {
   .Deprecated("sim_cwdata")
-  sim_cwdata(...)
+  arguments <- list(...)
+  if ("pi" %in% names(arguments)) {
+    if ("prevalence" %in% names(arguments)) {
+      stop("Supply only one of `pi` and `prevalence`.", call. = FALSE)
+    }
+    arguments$prevalence <- arguments$pi
+    arguments$pi <- NULL
+  }
+  do.call(sim_cwdata, arguments)
 }

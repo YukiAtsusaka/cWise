@@ -5,7 +5,16 @@
 \alias{sim.cwdata}
 \title{Simulate Survey Data and Compute Bias-Corrected Estimates}
 \usage{
-sim_cwdata(N.sim = 500, sample, pi, p, p.prime, gamma, direct)
+sim_cwdata(
+  N.sim = 500,
+  sample,
+  prevalence,
+  p,
+  p.prime,
+  gamma,
+  direct,
+  verbose = TRUE
+)
 
 sim.cwdata(...)
 }
@@ -14,7 +23,8 @@ sim.cwdata(...)
 
 \item{sample}{Integer. Sample size per simulation (number of respondents).}
 
-\item{pi}{Numeric. True prevalence rate of the sensitive attribute (between 0 and 1).}
+\item{prevalence}{Numeric. True prevalence rate of the sensitive attribute
+(between 0 and 1).}
 
 \item{p}{Numeric. Probability for the randomization item in sensitive question (between 0 and 1).}
 
@@ -23,6 +33,11 @@ sim.cwdata(...)
 \item{gamma}{Numeric. Proportion of attentive respondents (between 0 and 1).}
 
 \item{direct}{Numeric. Direct questioning estimate for comparison purposes (between 0 and 1).}
+
+\item{verbose}{Logical. If `TRUE` (the default), display a progress bar while
+simulations run.}
+
+\item{...}{Arguments passed to \code{sim_cwdata()}.}
 }
 \value{
 A list containing:
@@ -59,17 +74,19 @@ The bias correction formula is:
 where the bias is estimated using the anchor question responses.
 }
 \examples{
+\dontrun{
 # Basic usage
 result <- sim_cwdata(
   N.sim = 100,
   sample = 500,
-  pi = 0.1,
+  prevalence = 0.1,
   p = 0.1,
   p.prime = 0.1,
   gamma = 0.8,
   direct = 0.05
 )
 print(result$Results)
+}
 
 }
 \references{

@@ -5,7 +5,17 @@
 \alias{sim.power}
 \title{Compute Statistical Power for a Fixed Sample Size}
 \usage{
-sim_power(N.sim, sample, pi.null, pi.alt, p, p.prime, gamma, direct)
+sim_power(
+  N.sim,
+  sample,
+  pi.null,
+  pi.alt,
+  p,
+  p.prime,
+  gamma,
+  direct,
+  verbose = TRUE
+)
 
 sim.power(...)
 }
@@ -30,6 +40,11 @@ Values between 0.1 and 0.3 are typical.}
 For example, 0.8 means 80\% of respondents are attentive.}
 
 \item{direct}{Numeric. Direct questioning estimate for comparison purposes.}
+
+\item{verbose}{Logical. If \code{TRUE} (the default), report progress messages
+and show progress bars for the two underlying simulations.}
+
+\item{...}{Arguments passed to \code{sim_power()}.}
 }
 \value{
 A numeric scalar representing the estimated statistical power

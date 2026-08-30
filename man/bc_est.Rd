@@ -5,7 +5,7 @@
 \alias{bc.est}
 \title{bc_est}
 \usage{
-bc_est(Y, A, p, p.prime, weight, data)
+bc_est(Y, A, p, p.prime, weight, data, seed = NULL)
 
 bc.est(...)
 }
@@ -21,6 +21,12 @@ bc.est(...)
 \item{weight}{an optional vector specifying sample weights in data.}
 
 \item{data}{a data frame containing information from the crosswise model (Y, A, weight).}
+
+\item{seed}{Optional integer used to reproduce the bootstrap uncertainty
+estimate. When supplied, the caller's random-number state is restored after
+the function returns.}
+
+\item{...}{Arguments passed to \code{bc_est()}.}
 }
 \value{
 A list containing main results ($Results) and related statistics ($Stats).

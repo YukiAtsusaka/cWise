@@ -6,7 +6,7 @@ you go. The Phase 0 check output was verified against the package as of commit `
 
 **Target:** `cWise 0.1.0` on CRAN, with two vignettes.
 
-**Progress through 2026-08-25:**
+**Progress through 2026-08-30:**
 
 - Completed 1.1: migrated `DESCRIPTION` to `Authors@R`; Yuki Atsusaka is `aut`/`cre`,
   and Kolbe Dumas and Randy T. Stevenson are `aut`. Kolbe's package email is
@@ -24,13 +24,30 @@ you go. The Phase 0 check output was verified against the package as of commit `
   explicitly refers to one.
 - Completed 1.6: declared the missing `stats`, `graphics`, and `utils` functions in
   `R/cWise-package.R` and regenerated `NAMESPACE` and internal package help with
-  roxygen 7.3.3. A fresh RStudio tarball check reported zero missing declarations.
-- Completed 1.8: `bc.est()` now uses explicit `digits =` arguments, and no
+  roxygen 7.3.3. Rechecked after the regression rewrite, including `model.matrix`,
+  `model.response`, `na.fail`, and `terms`; the final check reports no missing
+  declarations.
+- Completed 1.8: `bc_est()` now uses explicit `digits =` arguments, and no
   abbreviated `round(..., d = ...)` calls remain after the regression rewrite.
 - Completed 1.9: removed the legacy `R/power_analysis.R` file, whose duplicate
   power functions were silently superseded and whose undocumented `sim.curve()`
   helper was broken. A fresh RStudio build and install retained `sim.power()` and
   `sim.power.N()` and no longer contained `sim.curve()`.
+- Completed 1.11: `bc_est()` accepts an optional `seed`; seeded bootstrap calls
+  are reproducible and restore the caller's random-number state.
+- Completed 1.12: canonical simulation functions accept `verbose = TRUE` and
+  suppress progress output when `verbose = FALSE`; `sim_power()` uses
+  `message()` for its status lines.
+- Completed 1.13 and 1.14: the `cmBound()` example explicitly qualifies ggplot2
+  additions and supplies `N.dq`; deprecated ggplot2 line `size` arguments are
+  now `linewidth`.
+- Completed 1.16: `.Rbuildignore` excludes development files and the Appendix C5
+  PDF is shipped under `inst/doc_ref/`.
+- Completed 1.17: canonical simulation functions use `prevalence`; deprecated
+  dotted wrappers translate their prior `pi =` argument for one release.
+- Final Part 1 verification: RStudio tests pass, and a disposable source-package
+  `R CMD check --as-cran --no-manual --no-vignettes` exits successfully with two
+  expected notes: new submission and an external inability to verify the clock.
 - Updated the README and simulation references from the pre-publication year to 2023.
 - Added the two-person ownership map under "Suggested sequencing for two people."
 
@@ -157,21 +174,22 @@ while the estimation work (Phase 2) is in flight. Nothing here changes numerical
 | 1.3 | Rewrite `Title` in title case, no redundant article, ≤65 chars. `Description` must be ≥2 sentences, must not start with "This package", and must cite the paper as `Atsusaka and Stevenson (2023) <doi:...>`. | `DESCRIPTION` | KD | ☒ |
 | 1.4 | Bump `Version: 0.1.0`. Rewrite `NEWS.md` under a `# cWise 0.1.0` heading (it currently says `0.0.1`, which matches nothing). | `DESCRIPTION`, `NEWS.md` | KD | ☒ |
 | 1.5 | Verified standard `License: GPL-3`; no separate `LICENSE` file should be added unless the declaration refers to it. | `DESCRIPTION` | KD | ☒ |
-| 1.6 | Declared the full `stats`, `graphics`, and `utils` import set in `R/cWise-package.R`; regenerated `NAMESPACE` and package help with `devtools::document()`. A fresh tarball check found zero missing declarations. | `R/cWise-package.R`, `NAMESPACE`, `man/cWise-package.Rd` | KD | ☒ |
+| 1.6 | Declared the full `stats`, `graphics`, and `utils` import set in `R/cWise-package.R`, including imports needed by the post-rewrite regression code; regenerated `NAMESPACE` and package help with `devtools::document()`. The final check found zero missing declarations. | `R/cWise-package.R`, `NAMESPACE`, `man/cWise-package.Rd` | KD | ☒ |
 | 1.7 | Add `@importFrom scales ...` or fully qualify the `scales::` calls, and declare `scales` in `Imports`. Calls in `R/sim_estimates.R` are fully qualified. | `R/sim_estimates.R`, `DESCRIPTION` | KD | ☒ |
 | 1.8 | Confirmed that no abbreviated `round(..., d = ...)` calls remain after the regression rewrite; `bc.est()` now uses explicit `digits =` arguments. | `R/bc.est.R`, `R/cmreg.R`, `R/cmreg.p.R` | KD | ☒ |
 | 1.9 | Removed legacy `R/power_analysis.R` after confirming that `sim_power.R` and `sim_power_N.R` provide the active supported functions. The undocumented `sim.curve()` helper was broken and removed; `NEWS.md` records the change. A fresh build and install passed. | `R/power_analysis.R`, `NEWS.md` | KD | ☒ |
 | 1.10 | Completed as part of Phase 2.3; no global warning option is changed. | `R/cmreg.p.R` | YA | ☒ |
-| 1.11 | Remove the hard-coded `set.seed()` calls from inside exported functions. They silently overwrite the user's RNG stream, which is a CRAN policy problem and makes results non-reproducible in the way users expect. Add a `seed = NULL` argument and, when set, restore state on exit via `on.exit()`. **Progress:** completed for `cmpredict()` and `cmpredict.p()` in 2.8; `bc.est()` remains. | `R/bc.est.R:63`, `R/cmpredict.R`, `R/cmpredict.p.R` | KD | ☐ |
-| 1.12 | Route all `cat()`/`print()` progress output through `message()` and gate it behind a `verbose = TRUE` argument, so it can be silenced and goes to stderr. | `R/sim_power.R`, `R/sim_cwdata.R` | ? | ☐ |
-| 1.13 | Fix the `ggtitle` example: either `\dontrun{}` the ggplot2-syntax lines or prefix `library(ggplot2)` inside the example. Prefer the latter — a runnable example is better. | `R/cmBound.R` roxygen | ? | ☐ |
-| 1.14 | Replace `size` with `linewidth` in `geom_line`/`geom_segment` calls (deprecated since ggplot2 3.4.0; currently emits a deprecation warning during checks). | `R/cmBound.R` | ? | ☐ |
+| 1.11 | Replaced `bc_est()`'s fixed bootstrap seed with `seed = NULL`, using the package seed helper to restore the caller's RNG state. Added a reproducibility and RNG-preservation test. | `R/bc.est.R`, `tests/testthat/test-part1-cran-compliance.R` | KD | ☒ |
+| 1.12 | Added `verbose = TRUE` to canonical simulation functions. Progress bars are omitted when false, and `sim_power()` status output now uses `message()`. | `R/sim_cwdata.R`, `R/sim_power.R`, `R/sim_power_N.R`, `R/sim_estimates.R` | KD | ☒ |
+| 1.13 | Made the `cmBound()` example runnable by supplying `N.dq` and qualifying `ggplot2` additions. | `R/cmBound.R` roxygen | KD | ☒ |
+| 1.14 | Replaced deprecated `size` arguments with `linewidth` in `cmBound()` line layers. | `R/cmBound.R` | KD | ☒ |
 | 1.15 | Fix the `inst/CITATION` 404 URL and update `year`/`journal` to the published reference. Use `bibentry(bibtype = "Article", ...)` — capital A. | `inst/CITATION` | KD | ☒ |
-| 1.16 | Add `^doc$`, `^\.github$`, `^README\.Rmd$`, `^cran-comments\.md$`, `^CLAUDE\.md$` to `.Rbuildignore`. Decide whether `doc/Appendix_C5.pdf` ships in `inst/` (it is a real reference, so probably yes → move it to `inst/doc_ref/`, **not** `inst/doc/`, which knitr owns). | `.Rbuildignore` | ? | ☐ |
-| 1.17 | Consider renaming the `pi` argument in the `sim.*` functions to `prev` or `pi.true`. `pi` masks the base constant inside those function bodies and is what caused the 1.9 partial-matching bug. Not a check failure today — a trap for later. | `R/sim_*.R` | ? | ☐ |
+| 1.16 | Added the development-file exclusions to `.Rbuildignore` and moved Appendix C5 to `inst/doc_ref/` so it ships as a reference rather than a generated vignette output. | `.Rbuildignore`, `inst/doc_ref/Appendix_C5.pdf` | KD | ☒ |
+| 1.17 | Renamed canonical simulation arguments from `pi` to `prevalence`. Dotted deprecated wrappers translate old named `pi` calls for one release. | `R/sim_*.R` | KD | ☒ |
 
 **Exit criterion:** `devtools::check(args = "--as-cran")` reaches the examples/tests
-stage and reports only NOTEs about `New submission` plus whatever Phase 2 breaks.
+stage with zero errors and warnings. A new submission note is expected; an additional
+timestamp note can occur when the check host cannot verify the current time online.
 
 ---
 

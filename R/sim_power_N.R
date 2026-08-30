@@ -8,11 +8,14 @@
 #' @param N.sim Integer. Number of Monte Carlo simulations per sample size.
 #'   Default is 50. Larger values provide more stable estimates but increase
 #'   computation time.
-#' @param pi Numeric. True prevalence rate of the sensitive attribute (between 0 and 1).
+#' @param prevalence Numeric. True prevalence rate of the sensitive attribute
+#'   (between 0 and 1).
 #' @param p Numeric. Probability for the randomization item in sensitive question.
 #' @param p.prime Numeric. Probability for the anchor question (non-sensitive).
 #' @param gamma Numeric. Proportion of attentive respondents (between 0 and 1).
 #' @param direct Numeric. Direct questioning estimate for comparison purposes.
+#' @param verbose Logical. If \code{TRUE} (the default), display a progress bar
+#'   while sample sizes are evaluated.
 #'
 #' @return A data frame with three columns:
 #' \describe{
@@ -55,7 +58,7 @@
 #' \dontrun{
 #' result <- sim_power_N(
 #'   N.sim = 50,
-#'   pi = 0.1,
+#'   prevalence = 0.1,
 #'   p = 0.1,
 #'   p.prime = 0.1,
 #'   gamma = 0.8,
@@ -78,14 +81,18 @@
 #' and Parameter Selection.
 #'
 #' @export
-sim_power_N <- function(N.sim = 50, pi, p, p.prime, gamma, direct) {
+sim_power_N <- function(N.sim = 50, prevalence, p, p.prime, gamma, direct,
+                        verbose = TRUE) {
 
   # Helper function for rounding
   roundy <- function(x) { round(x, digits = 3) }
 
   p2 <- p.prime
   Nvec <- c(100, 500, 1000, 1500, 2000, 2500, 3000)
-  pb <- txtProgressBar(min = 1, max = length(Nvec), initial = 0, style = 3)
+  pb <- if (isTRUE(verbose)) {
+    txtProgressBar(min = 1, max = length(Nvec), initial = 0, style = 3)
+  }
+  on.exit(if (!is.null(pb)) close(pb), add = TRUE)
 
   coverage.zero.save <- numeric(length(Nvec))
   coverage.direct.save <- numeric(length(Nvec))
@@ -93,7 +100,7 @@ sim_power_N <- function(N.sim = 50, pi, p, p.prime, gamma, direct) {
   # Loop through each sample size
   for (n in 1:length(Nvec)) {
 
-    setTxtProgressBar(pb, n)
+    if (!is.null(pb)) setTxtProgressBar(pb, n)
     N <- Nvec[n]
 
     # Storage for simulation results
@@ -117,7 +124,7 @@ sim_power_N <- function(N.sim = 50, pi, p, p.prime, gamma, direct) {
       Attentive <- rbinom(n = N, size = 1, prob = gamma)
 
       # SENSITIVE QUESTION OF INTEREST (Crosswise format)
-      StatementA <- rbinom(n = N, size = 1, prob = pi)           # Sensitive item
+      StatementA <- rbinom(n = N, size = 1, prob = prevalence)   # Sensitive item
       StatementB <- rbinom(n = N, size = 1, prob = p)            # Randomization item
       True.res <- ifelse(StatementA != StatementB, 0, 1)         # True answer
 
@@ -185,8 +192,8 @@ sim_power_N <- function(N.sim = 50, pi, p, p.prime, gamma, direct) {
       bc.pred[i] <- pi.hat.bc
       bc.high.save[i] <- bc.high
       bc.low.save[i] <- bc.low
-      naive.cover[i] <- (naive.low <= pi & pi <= naive.high)
-      bc.cover[i] <- (bc.low <= pi & pi <= bc.high)
+      naive.cover[i] <- (naive.low <= prevalence & prevalence <= naive.high)
+      bc.cover[i] <- (bc.low <= prevalence & prevalence <= bc.high)
       bc.cover0[i] <- (bc.low <= 0)                              # Does CI include 0?
       bc.cover.direct[i] <- (bc.low <= direct & direct <= bc.high)  # Does CI include direct estimate?
       REbc[i] <- (bc.high - bc.low) / (naive.high - naive.low)
@@ -201,8 +208,6 @@ sim_power_N <- function(N.sim = 50, pi, p, p.prime, gamma, direct) {
     coverage.zero.save[n] <- coverage.zero
     coverage.direct.save[n] <- coverage.direct
   }
-  close(pb)
-
   #########
   # RETURN OUTPUT
   #########
@@ -216,8 +221,17 @@ sim_power_N <- function(N.sim = 50, pi, p, p.prime, gamma, direct) {
 }
 
 #' @rdname sim_power_N
+#' @param ... Arguments passed to \code{sim_power_N()}.
 #' @export
 sim.power.N <- function(...) {
   .Deprecated("sim_power_N")
-  sim_power_N(...)
+  arguments <- list(...)
+  if ("pi" %in% names(arguments)) {
+    if ("prevalence" %in% names(arguments)) {
+      stop("Supply only one of `pi` and `prevalence`.", call. = FALSE)
+    }
+    arguments$prevalence <- arguments$pi
+    arguments$pi <- NULL
+  }
+  do.call(sim_power_N, arguments)
 }

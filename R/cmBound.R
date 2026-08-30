@@ -11,11 +11,11 @@
 #'
 #' @return A ggplot object visualizing the result of sensitivity analysis.
 #' @examples
-#' p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073)
+#' p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073, N.dq=310)
 #' p
 #'
-#' p <- p + ggtitle("Sensitivity Analysis") +
-#'          theme(plot.title = element_text(size=20, face="bold"))
+#' p + ggplot2::ggtitle("Sensitivity Analysis") +
+#'   ggplot2::theme(plot.title = ggplot2::element_text(size = 20, face = "bold"))
 #' @export
 #' @import ggplot2
 
@@ -50,10 +50,10 @@ cmBound = function(lambda.hat, p, N, kappa=0.5, dq=NULL, N.dq=NULL){
   ggdata <- as.data.frame(cbind(mean, low, high, perinat, dq))
 
   p <- ggplot(ggdata, aes(x=perinat, y=mean)) +
-       geom_hline(yintercept=dq, col="dimgray", size=1.2) +
-       geom_hline(yintercept=dq.upper, linetype="dashed", col="dimgray", size=1.2) +
-       geom_hline(yintercept=dq.lower, linetype="dashed", col="dimgray", size=1.2) +
-       geom_line(col="firebrick", size=2) +
+       geom_hline(yintercept=dq, col="dimgray", linewidth=1.2) +
+       geom_hline(yintercept=dq.upper, linetype="dashed", col="dimgray", linewidth=1.2) +
+       geom_hline(yintercept=dq.lower, linetype="dashed", col="dimgray", linewidth=1.2) +
+       geom_line(col="firebrick", linewidth=2) +
        geom_ribbon(aes(ymin=low, ymax=high),linetype=2, alpha=0.5)+
        geom_point(x=0, y=mean[1], shape=4, size=6, color="navy")+
        xlab("Inattentive Respondents (%)")+

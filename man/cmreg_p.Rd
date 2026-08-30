@@ -45,6 +45,8 @@ are derived from GLM and least-squares fits to observed responses.}
 
 \item{control}{A list of control settings passed to [stats::optim()]. `fnscale`
 is fixed internally because the log-likelihood is maximized.}
+
+\item{...}{Arguments passed to \code{cmreg_p()}.}
 }
 \value{
 A list containing the estimated results and related statistics.
