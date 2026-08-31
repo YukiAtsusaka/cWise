@@ -26,9 +26,16 @@ A ggplot object visualizing the result of sensitivity analysis.
 \code{cmBound} is used to apply a sensitivity analysis and visualize the sensitivity bounds for naive crosswise estimates.
 }
 \examples{
-p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073)
+p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073, N.dq=310)
 p
 
-p <- p + ggtitle("Sensitivity Analysis") +
-         theme(plot.title = element_text(size=20, face="bold"))
+p <- p + ggplot2::ggtitle("Sensitivity Analysis") +
+         ggplot2::theme(plot.title = ggplot2::element_text(size=20, face="bold"))
+}
+\references{
+Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+for sensitive survey questions. \doi{10.1017/pan.2021.43}.
+}
+\seealso{
+[bc_est()] for bias-corrected prevalence estimation.
 }

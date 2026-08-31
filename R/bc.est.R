@@ -9,7 +9,16 @@
 #' @param weight an optional vector specifying sample weights in data.
 #' @param data a data frame containing information from the crosswise model (Y, A, weight).
 #'
-#' @return A list containing main results ($Results) and related statistics ($Stats).
+#' @return A list with:
+#' \describe{
+#'   \item{Results}{A two-row matrix of naive and bias-corrected prevalence
+#'   estimates, standard errors, and 95 percent confidence intervals.}
+#'   \item{Stats}{A matrix containing the estimated attentive-response rate and
+#'   the number of complete observations.}
+#' }
+#' @seealso [cmBound()] for a sensitivity analysis of naive crosswise estimates.
+#' @references Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+#' for sensitive survey questions. \doi{10.1017/pan.2021.43}.
 #' @examples
 #' bc_est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
 #' bc_est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)

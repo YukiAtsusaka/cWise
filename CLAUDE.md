@@ -298,13 +298,13 @@ study" are different audiences arriving with different questions:
 
 | # | Task | Who | Done |
 |---|---|---|---|
-| 4.1 | `usethis::use_vignette("cWise")` — **"Getting started with cWise"**. Delete the stub. Narrative: what the crosswise model is; why inattentive respondents bias the naive estimator; `bc.est()` on `cmdata`; reading the output; `cmBound()` for sensitivity analysis. Should stand alone for a reader who has not read the paper. | ? | ☐ |
-| 4.2 | `usethis::use_vignette("regression")` — **"Regression with a latent sensitive trait"**. `cmreg()` with the trait as outcome, `cmreg.p()` with it as predictor, then `cmpredict()`/`cmpredict.p()` for predicted probabilities with uncertainty. **Write this last** — it is the surface Phase 2 changes most, and rewriting it twice is wasted effort. | ? | ☐ |
-| 4.3 | Decide whether power analysis gets a third vignette or a section in 4.1. If a vignette: pre-compute the simulations, save results to `inst/extdata/`, and load them in the chunk. A vignette that runs `sim.power(N.sim = 500)` at build time will blow the CRAN time budget. | ? | ☐ |
-| 4.4 | Every vignette: `eval` must succeed from a clean session with only declared deps attached. No `tidyverse`, no internet access, no `setwd()`, no writing outside `tempdir()`. | ? | ☐ |
-| 4.5 | Add `%\VignetteDepends{}` where needed; confirm `VignetteBuilder: knitr` and that `knitr`/`rmarkdown` are in `Suggests`. | ? | ☐ |
-| 4.6 | `devtools::build_vignettes()`, then confirm `inst/doc` is gitignored (it already is) but *is* included in the built tarball. | ? | ☐ |
-| 4.7 | Optional: convert `README.md` → `README.Rmd` so its output stays in sync with the code, and add `^README\.Rmd$` to `.Rbuildignore`. The current README is 12 KB of hand-maintained output. | ? | ☐ |
+| 4.1 | `usethis::use_vignette("cWise")` — **"Getting started with cWise"**. Delete the stub. Narrative: what the crosswise model is; why inattentive respondents bias the naive estimator; `bc.est()` on `cmdata`; reading the output; `cmBound()` for sensitivity analysis. Should stand alone for a reader who has not read the paper. | YA | ☑ — `vignettes/cWise.Rmd` |
+| 4.2 | `usethis::use_vignette("regression")` — **"Regression with a latent sensitive trait"**. `cmreg()` with the trait as outcome, `cmreg.p()` with it as predictor, then `cmpredict()`/`cmpredict.p()` for predicted probabilities with uncertainty. **Write this last** — it is the surface Phase 2 changes most, and rewriting it twice is wasted effort. | YA | ☑ — `vignettes/regression.Rmd` |
+| 4.3 | Decide whether power analysis gets a third vignette or a section in 4.1. If a vignette: pre-compute the simulations, save results to `inst/extdata/`, and load them in the chunk. A vignette that runs `sim.power(N.sim = 500)` at build time will blow the CRAN time budget. | YA | ☑ — concise, non-evaluated section in getting-started vignette |
+| 4.4 | Every vignette: `eval` must succeed from a clean session with only declared deps attached. No `tidyverse`, no internet access, no `setwd()`, no writing outside `tempdir()`. | YA | ☑ — clean `build_vignettes()` successful |
+| 4.5 | Add `%\VignetteDepends{}` where needed; confirm `VignetteBuilder: knitr` and that `knitr`/`rmarkdown` are in `Suggests`. | YA | ☑ — metadata and DESCRIPTION verified |
+| 4.6 | `devtools::build_vignettes()`, then confirm `inst/doc` is gitignored (it already is) but *is* included in the built tarball. | YA | ☑ — `cWise_0.1.0.tar.gz` contains both `inst/doc` vignettes |
+| 4.7 | Optional: convert `README.md` → `README.Rmd` so its output stays in sync with the code, and add `^README\.Rmd$` to `.Rbuildignore`. The current README is 12 KB of hand-maintained output. | ? | ☐ — deferred (optional) |
 
 ---
 
@@ -312,11 +312,11 @@ study" are different audiences arriving with different questions:
 
 | # | Task | Who | Done |
 |---|---|---|---|
-| 5.1 | Every exported function needs `@return` describing the object concretely (`\describe{}` over the list elements), plus `@examples` that **actually run**. Fix `cmpredict`/`cmpredict.p` examples so they build `m`/`m2` first. | ? | ☐ |
-| 5.2 | Reconcile the `cmpredict.p` roxygen block with its real signature (drop `zval` or add the argument). | ? | ☐ |
-| 5.3 | Add `R/cWise-package.R` with `@keywords internal` + `"_PACKAGE"` for the package-level `?cWise` page, and hang the base `@importFrom` tags there. | ? | ☐ |
-| 5.4 | Cross-link with `@seealso`; add `@references` with the paper DOI once available. | ? | ☐ |
-| 5.5 | Spell check: `devtools::spell_check()`. | ? | ☐ |
+| 5.1 | Every exported function needs `@return` describing the object concretely (`\describe{}` over the list elements), plus `@examples` that **actually run**. Fixed the `cmBound()` example; all 15 documentation example files run successfully. | YA | ☑ |
+| 5.2 | Reconciled the `cmpredict.p` roxygen block with its real signature: `zval` is documented and supported. | YA | ☑ |
+| 5.3 | Confirmed `R/cWise-package.R` provides `@keywords internal` + `"_PACKAGE"` for the package-level `?cWise` page and holds the base `@importFrom` tags. | YA | ☑ |
+| 5.4 | Added `@seealso` cross-links and paper DOI references; regenerated the affected `.Rd` files. | YA | ☑ |
+| 5.5 | Ran `devtools::spell_check()` clean; added `inst/WORDLIST` for package terms and fixed README prose typos. | YA | ☑ |
 | 5.6 | Optional but useful: `usethis::use_github_action("check-standard")` so both of us see check results on every push instead of discovering breakage at submission time. | ? | ☐ |
 
 ---

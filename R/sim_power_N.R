@@ -75,7 +75,7 @@
 #'
 #' @references
 #' Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
-#' and Parameter Selection.
+#' and Parameter Selection. \doi{10.1017/pan.2021.43}.
 #'
 #' @export
 sim_power_N <- function(N.sim = 50, pi, p, p.prime, gamma, direct) {

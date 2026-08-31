@@ -23,6 +23,10 @@
 #' Each input scenario contributes an absent-trait row followed by a present-
 #' trait row. When `draws = TRUE`, its `"draws"` attribute contains the raw
 #' parametric-bootstrap matrix.
+#' @seealso [cmreg_p()] to fit the required predictor-model object and
+#' [cmpredict()] for predictions from an outcome model.
+#' @references Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+#' for sensitive survey questions. \doi{10.1017/pan.2021.43}.
 #' @examples
 #' m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
 #'               p.prime = 0.15, data = cmdata3)

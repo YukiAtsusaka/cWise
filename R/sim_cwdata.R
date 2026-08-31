@@ -55,7 +55,7 @@
 #'
 #' @references
 #' Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
-#' and Parameter Selection.
+#' and Parameter Selection. \doi{10.1017/pan.2021.43}.
 #'
 #' @export
 sim_cwdata <- function(N.sim = 500, sample, pi, p, p.prime, gamma, direct) {

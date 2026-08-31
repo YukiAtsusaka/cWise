@@ -181,7 +181,7 @@ m
 #> age           0.0595     0.0394  1.511   0.131
 ```
 
-`$Coefficients` shows main restuls. They suggest that female and older respondents are more likely to possess the sensitive trait of interest. `$AuxiliaryCoef` lists esimated coefficients for being attentive in the crosswise model.
+`$Coefficients` shows the main results. They suggest that female and older respondents are more likely to possess the sensitive trait of interest. `$AuxiliaryCoef` lists estimated coefficients for being attentive in the crosswise model.
 
 <br>
 
@@ -232,7 +232,7 @@ m2
 #> female       -0.1075     0.3779  -0.284   0.776
 ```
 
-`$Coefficients` returns a list of coefficients that associte each covariate (including the sensitive trait of interest) and the outcome variable. Our primary quantities of interest are:
+`$Coefficients` returns a list of coefficients that associate each covariate (including the sensitive trait of interest) with the outcome variable. Our primary quantities of interest are:
 
 ``` r
 #> Y             0.9858     0.0756  13.035   0.000
@@ -240,7 +240,7 @@ m2
 
 <br>
 
-## `cmpredict`: Predicted Probabilities with Uncertainty Quantifications
+## `cmpredict`: Predicted Probabilities with Uncertainty Quantification
 
 `cmpredict` computes predicted probabilities (proportions) of having sensitive attributes. Supply covariates by name through `newdata`, or use a named `typical` vector together with a named `zval` vector to create a prediction curve.
 

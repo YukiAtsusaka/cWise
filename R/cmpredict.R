@@ -20,6 +20,10 @@
 #' @return A data frame with `estimate`, `conf.low`, and `conf.high` columns,
 #' with one row for each prediction scenario. When `draws = TRUE`, its `"draws"`
 #' attribute contains the raw parametric-bootstrap matrix.
+#' @seealso [cmreg()] to fit the required outcome-model object and
+#' [cmpredict_p()] for predictions from a predictor model.
+#' @references Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+#' for sensitive survey questions. \doi{10.1017/pan.2021.43}.
 #' @examples
 #' m <- cmreg(Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15,
 #'            data = cmdata2)

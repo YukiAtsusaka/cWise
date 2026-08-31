@@ -15,10 +15,10 @@ Larger values provide more stable power estimates but increase computation time.
 
 \item{sample}{Integer. The fixed sample size (number of respondents) to evaluate.}
 
-\item{pi.null}{Numeric. Prevalence rate under the null hypothesis (π0).
+\item{pi.null}{Numeric. Prevalence rate under the null hypothesis (pi0).
 Can be 0 or a value from direct questioning.}
 
-\item{pi.alt}{Numeric. True prevalence rate under the alternative hypothesis (π1).
+\item{pi.alt}{Numeric. True prevalence rate under the alternative hypothesis (pi1).
 Must be greater than pi.null.}
 
 \item{p}{Numeric. Probability for the randomization item in the sensitive question.
@@ -37,7 +37,7 @@ A numeric scalar representing the estimated statistical power
 }
 \description{
 Computes statistical power for a one-sided hypothesis test of
-H0: π ≤ π0 vs H1: π > π0 at a given fixed sample size. This is useful
+H0: pi <= pi0 versus H1: pi > pi0 at a given fixed sample size. This is useful
 when researchers already know their sample size and want to assess the
 power they can expect from their study.
 }
@@ -52,13 +52,13 @@ where:
         under H0 and H1 respectively
 }
 
-The function runs \code{sim_cwdata()} twice — once under H0 using \code{pi.null}
-and once under H1 using \code{pi.alt} — to estimate the sampling distributions
+The function runs \code{sim_cwdata()} twice: once under H0 using \code{pi.null}
+and once under H1 using \code{pi.alt}, to estimate the sampling distributions
 at the specified sample size.
 }
 \note{
 This function can take considerable time to run depending on N.sim and
-sample size. For quick exploration, use smaller N.sim values (e.g., 100–500).
+sample size. For quick exploration, use smaller N.sim values (for example, 100 to 500).
 For publication-quality results, use N.sim >= 2000.
 }
 \examples{
@@ -80,7 +80,7 @@ cat(sprintf("Estimated power: \%.3f\n", pwr))
 }
 \references{
 Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
-and Parameter Selection.
+and Parameter Selection. \doi{10.1017/pan.2021.43}.
 }
 \seealso{
 \code{\link{sim_cwdata}} for the underlying simulation function

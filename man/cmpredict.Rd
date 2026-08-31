@@ -51,3 +51,11 @@ predictions <- cmpredict(m, typical = c(age = 30),
                           zval = c(female = 0, female = 1))
 predictions
 }
+\references{
+Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+for sensitive survey questions. \doi{10.1017/pan.2021.43}.
+}
+\seealso{
+[cmreg()] to fit the required outcome-model object and
+[cmpredict_p()] for predictions from a predictor model.
+}

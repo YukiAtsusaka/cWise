@@ -58,3 +58,11 @@ m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
 predictions <- cmpredict_p(m2, newdata = data.frame(age = 30, female = 1))
 predictions
 }
+\references{
+Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+for sensitive survey questions. \doi{10.1017/pan.2021.43}.
+}
+\seealso{
+[cmreg_p()] to fit the required predictor-model object and
+[cmpredict()] for predictions from an outcome model.
+}

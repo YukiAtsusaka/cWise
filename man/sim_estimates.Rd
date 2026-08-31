@@ -91,6 +91,7 @@ sim_estimates(sample = 1000, pi = 0.1, p = 0.1, p.prime = 0.1,
 }
 \references{
 Atsusaka and Stevenson (2023). Figure C7, Panel C.
+\doi{10.1017/pan.2021.43}.
 }
 \seealso{
 \code{\link{sim_cwdata}} for the underlying simulation function

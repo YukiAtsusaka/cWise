@@ -62,6 +62,7 @@
 #'
 #' @references
 #' Atsusaka and Stevenson (2023). Figure C7, Panel C.
+#' \doi{10.1017/pan.2021.43}.
 #'
 #' @export
 sim_estimates <- function(N.sim = 100, sample, pi, p, p.prime, gamma, direct,

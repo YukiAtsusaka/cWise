@@ -40,7 +40,17 @@ crosswise and anchor responses.}
 is fixed internally because the log-likelihood is maximized.}
 }
 \value{
-A list containing the estimated results and related statistics.
+An object of class `cmreg`, a list with:
+\describe{
+  \item{Call}{The matched model call.}
+  \item{Coefficients}{A coefficient table for the latent-trait outcome model.}
+  \item{AuxiliaryCoef}{A coefficient table for the anchor-response model.}
+  \item{VCV}{The estimated variance-covariance matrix of all parameters.}
+  \item{estimates, std.errors}{Named full-precision parameter estimates and
+  standard errors.}
+  \item{logLik, n, convergence}{The optimized log-likelihood, number of
+  complete observations, and optimizer convergence code.}
+}
 }
 \description{
 \code{cmreg} is used to run a regression with the latent sensitive trait as an outcome.
@@ -49,4 +59,12 @@ A list containing the estimated results and related statistics.
 m <- cmreg(Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15,
            data = cmdata2)
 m
+}
+\references{
+Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+for sensitive survey questions. \doi{10.1017/pan.2021.43}.
+}
+\seealso{
+[cmpredict()] for predicted latent-trait probabilities and
+[cmreg_p()] for a model with the latent trait as a predictor.
 }

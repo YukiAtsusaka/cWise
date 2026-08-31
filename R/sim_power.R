@@ -1,16 +1,16 @@
 #' Compute Statistical Power for a Fixed Sample Size
 #'
 #' Computes statistical power for a one-sided hypothesis test of
-#' H0: π ≤ π0 vs H1: π > π0 at a given fixed sample size. This is useful
+#' H0: pi <= pi0 versus H1: pi > pi0 at a given fixed sample size. This is useful
 #' when researchers already know their sample size and want to assess the
 #' power they can expect from their study.
 #'
 #' @param N.sim Integer. Number of Monte Carlo simulations.
 #'   Larger values provide more stable power estimates but increase computation time.
 #' @param sample Integer. The fixed sample size (number of respondents) to evaluate.
-#' @param pi.null Numeric. Prevalence rate under the null hypothesis (π0).
+#' @param pi.null Numeric. Prevalence rate under the null hypothesis (pi0).
 #'   Can be 0 or a value from direct questioning.
-#' @param pi.alt Numeric. True prevalence rate under the alternative hypothesis (π1).
+#' @param pi.alt Numeric. True prevalence rate under the alternative hypothesis (pi1).
 #'   Must be greater than pi.null.
 #' @param p Numeric. Probability for the randomization item in the sensitive question.
 #'   Values between 0.1 and 0.3 are typical.
@@ -33,12 +33,12 @@
 #'         under H0 and H1 respectively
 #' }
 #'
-#' The function runs \code{sim_cwdata()} twice — once under H0 using \code{pi.null}
-#' and once under H1 using \code{pi.alt} — to estimate the sampling distributions
+#' The function runs \code{sim_cwdata()} twice: once under H0 using \code{pi.null}
+#' and once under H1 using \code{pi.alt}, to estimate the sampling distributions
 #' at the specified sample size.
 #'
 #' @note This function can take considerable time to run depending on N.sim and
-#' sample size. For quick exploration, use smaller N.sim values (e.g., 100–500).
+#' sample size. For quick exploration, use smaller N.sim values (for example, 100 to 500).
 #' For publication-quality results, use N.sim >= 2000.
 #'
 #' @examples
@@ -61,7 +61,7 @@
 #'
 #' @references
 #' Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
-#' and Parameter Selection.
+#' and Parameter Selection. \doi{10.1017/pan.2021.43}.
 #'
 #' @export
 sim_power <- function(N.sim, sample, pi.null, pi.alt, p, p.prime, gamma, direct) {

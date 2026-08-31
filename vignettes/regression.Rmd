@@ -1,0 +1,80 @@
+---
+title: "Regression with a latent sensitive trait"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Regression with a latent sensitive trait}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{cWise}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+```{r setup}
+library(cWise)
+```
+
+The sensitive trait in a crosswise survey is latent: we observe crosswise and
+anchor responses, not each respondent's trait status. `cmreg()` and
+`cmreg_p()` fit likelihood-based models that account for this measurement
+structure.
+
+## The latent trait as an outcome
+
+`cmreg()` models the probability of possessing the sensitive trait as a
+function of covariates. The formula contains the primary crosswise response on
+the left; supply the anchor response separately.
+
+```{r trait-outcome}
+outcome_fit <- cmreg(
+  Y ~ female + age,
+  anchor = A, p = 0.10, p.prime = 0.15,
+  data = cmdata2, n.start = 1L
+)
+summary(outcome_fit)
+```
+
+The first coefficient block describes the latent trait. The auxiliary block
+describes the probability of attentive responding. Predict trait prevalence at
+specific covariate combinations with uncertainty from a parametric bootstrap.
+
+```{r trait-prediction}
+cmpredict(
+  outcome_fit,
+  newdata = data.frame(female = c(0, 1), age = c(30, 30)),
+  nsim = 300, seed = 20260825
+)
+```
+
+## The latent trait as a predictor
+
+`cmreg_p()` models a continuous observed outcome while treating the sensitive
+trait as a latent predictor. The formula now contains the observed outcome;
+the crosswise and anchor responses are supplied by name.
+
+```{r trait-predictor}
+predictor_fit <- cmreg_p(
+  V ~ age + female,
+  crosswise = Y, anchor = A, p = 0.10, p.prime = 0.15,
+  data = cmdata3, n.start = 1L
+)
+summary(predictor_fit)
+```
+
+Predictions are returned for both latent-trait states. Each supplied covariate
+scenario therefore produces an “absent” and a “present” row.
+
+```{r outcome-prediction}
+cmpredict_p(
+  predictor_fit,
+  newdata = data.frame(age = 30, female = 1),
+  nsim = 300, seed = 20260825
+)
+```
+
+The uncertainty intervals reflect sampling uncertainty in the fitted
+parameters. They do not turn an individual respondent's latent trait into an
+observed value; instead, they compare model-implied outcomes under the two
+trait scenarios.

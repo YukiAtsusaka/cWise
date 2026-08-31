@@ -1,0 +1,92 @@
+---
+title: "Getting started with cWise"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with cWise}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{cWise}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+```{r setup}
+library(cWise)
+```
+
+## The crosswise model
+
+Crosswise questions let respondents answer a sensitive question without
+revealing their answer directly. A respondent is shown a sensitive statement
+and a second statement whose prevalence is known (`p`). They report only
+whether their answers to the two statements are the same or different. The
+crosswise response is therefore not itself the sensitive-trait indicator.
+
+The design protects privacy, but it also makes inattentive responses important:
+respondents who answer at random pull the observed crosswise proportion toward
+one half. `cWise` uses an *anchor* crosswise question with known sensitive-item
+prevalence to estimate attentiveness and correct that bias.
+
+The package includes simulated data from this design. `Y` is the primary
+crosswise response, `A` is the anchor response, and `p` and `p.prime` are the
+known randomization probabilities.
+
+```{r data}
+head(cmdata)
+```
+
+## Estimate prevalence
+
+Use `bc_est()` to obtain both the naive and bias-corrected prevalence estimates.
+Here, the anchor makes it possible to estimate the share of attentive
+respondents as well.
+
+```{r prevalence}
+estimate <- bc_est(Y = Y, A = A, p = 0.15, p.prime = 0.15, data = cmdata)
+estimate
+```
+
+`Results` contains point estimates, standard errors, and confidence intervals.
+`Stats` reports the estimated attentive-response rate and the analysis sample
+size. The bias-corrected row is usually the estimand of interest when the
+anchor-question assumptions are credible.
+
+## Sensitivity analysis without an anchor
+
+When no anchor question was fielded, `cmBound()` shows how the estimate changes
+over a plausible range of inattentive-response rates. The following calculation
+uses only the observed primary-question proportion, its randomization
+probability, and the sample size.
+
+```{r bounds, fig.width = 7, fig.height = 4}
+cmBound(lambda.hat = mean(cmdata$Y), p = 0.15, N = nrow(cmdata))
+```
+
+An optional direct-question estimate can be supplied with `dq` and `N.dq`; it
+is then drawn as a reference line with its uncertainty interval.
+
+## Simulation and power planning
+
+Power-analysis functions are deliberately not evaluated while this vignette is
+built: they run nested bootstrap simulations. Start with a small exploratory
+run and increase `N.sim` for a study-planning analysis.
+
+```{r power, eval = FALSE}
+simulation <- sim_cwdata(
+  N.sim = 200, sample = 500, pi = 0.10, p = 0.15, p.prime = 0.15,
+  gamma = 0.80, direct = 0.05
+)
+simulation$Results
+
+sim_power(
+  N.sim = 500, sample = 1000, pi.null = 0.05, pi.alt = 0.10,
+  p = 0.15, p.prime = 0.15, gamma = 0.80, direct = 0.05
+)
+```
+
+`sim_estimates()` plots the simulated estimates, while `sim_power_N()` compares
+the package's standard sample-size grid. These functions are intended for
+interactive study planning rather than a package build.
+

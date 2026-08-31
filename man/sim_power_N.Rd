@@ -91,7 +91,7 @@ plot(result$SampleSize, result$CoverageZero,
 }
 \references{
 Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
-and Parameter Selection.
+and Parameter Selection. \doi{10.1017/pan.2021.43}.
 }
 \seealso{
 \code{\link{sim_power}} for the underlying simulation function

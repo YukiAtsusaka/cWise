@@ -23,7 +23,13 @@ bc.est(...)
 \item{data}{a data frame containing information from the crosswise model (Y, A, weight).}
 }
 \value{
-A list containing main results ($Results) and related statistics ($Stats).
+A list with:
+\describe{
+  \item{Results}{A two-row matrix of naive and bias-corrected prevalence
+  estimates, standard errors, and 95 percent confidence intervals.}
+  \item{Stats}{A matrix containing the estimated attentive-response rate and
+  the number of complete observations.}
+}
 }
 \description{
 \code{bc_est} is used to apply a bias-corrected crosswise estimator to survey data.
@@ -31,4 +37,11 @@ A list containing main results ($Results) and related statistics ($Stats).
 \examples{
 bc_est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
 bc_est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
+}
+\references{
+Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+for sensitive survey questions. \doi{10.1017/pan.2021.43}.
+}
+\seealso{
+[cmBound()] for a sensitivity analysis of naive crosswise estimates.
 }
