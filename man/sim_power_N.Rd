@@ -5,7 +5,7 @@
 \alias{sim.power.N}
 \title{Determine Sample Size for Desired Coverage Properties}
 \usage{
-sim_power_N(N.sim = 50, pi, p, p.prime, gamma, direct)
+sim_power_N(N.sim = 50, prevalence, p, p.prime, gamma, direct, verbose = TRUE)
 
 sim.power.N(...)
 }
@@ -14,7 +14,8 @@ sim.power.N(...)
 Default is 50. Larger values provide more stable estimates but increase
 computation time.}
 
-\item{pi}{Numeric. True prevalence rate of the sensitive attribute (between 0 and 1).}
+\item{prevalence}{Numeric. True prevalence rate of the sensitive attribute
+(between 0 and 1).}
 
 \item{p}{Numeric. Probability for the randomization item in sensitive question.}
 
@@ -23,6 +24,11 @@ computation time.}
 \item{gamma}{Numeric. Proportion of attentive respondents (between 0 and 1).}
 
 \item{direct}{Numeric. Direct questioning estimate for comparison purposes.}
+
+\item{verbose}{Logical. If \code{TRUE} (the default), display a progress bar
+while sample sizes are evaluated.}
+
+\item{...}{Arguments passed to \code{sim_power_N()}.}
 }
 \value{
 A data frame with three columns:
@@ -72,7 +78,7 @@ A progress bar displays simulation progress.
 \dontrun{
 result <- sim_power_N(
   N.sim = 50,
-  pi = 0.1,
+  prevalence = 0.1,
   p = 0.1,
   p.prime = 0.1,
   gamma = 0.8,

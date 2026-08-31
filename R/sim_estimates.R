@@ -7,7 +7,7 @@
 #'
 #' @param N.sim Integer. Number of Monte Carlo simulations. Default is 100.
 #' @param sample Integer. Sample size per simulation.
-#' @param pi Numeric. True prevalence rate of the sensitive attribute.
+#' @param prevalence Numeric. True prevalence rate of the sensitive attribute.
 #' @param p Numeric. Randomization probability for the sensitive question.
 #' @param p.prime Numeric. Randomization probability for the anchor question.
 #' @param gamma Numeric. Proportion of attentive respondents (between 0 and 1).
@@ -15,6 +15,8 @@
 #' @param txcol Character. Color for annotation text. Default: \code{"dimgray"}.
 #' @param sim.results Optional list. Pre-computed output from \code{\link{sim_cwdata}}.
 #'   If \code{NULL} (default), the simulation is run internally.
+#' @param verbose Logical. Passed to \code{sim_cwdata()} when a new simulation is
+#'   needed. If \code{TRUE} (the default), a progress bar is displayed.
 #'
 #' @return Invisibly returns the simulation results list from \code{\link{sim_cwdata}},
 #'   containing \code{BiasCorrectEst}, \code{BiasCorrectLow},
@@ -26,7 +28,7 @@
 #'   \item Sorted bias-corrected point estimates as filled circles
 #'   \item Bootstrap 95\% confidence intervals as vertical line segments
 #'   \item A horizontal reference line at 0
-#'   \item A horizontal reference line at the true prevalence \code{pi} (red)
+#'   \item A horizontal reference line at the true prevalence \code{prevalence} (red)
 #' }
 #' Estimates are sorted in ascending order, creating a characteristic
 #' "fan" shape that reveals the distribution of estimates across simulations.
@@ -44,7 +46,7 @@
 #' sim_estimates(
 #'   N.sim   = 100,
 #'   sample  = 1000,
-#'   pi      = 0.1,
+#'   prevalence = 0.1,
 #'   p       = 0.1,
 #'   p.prime = 0.1,
 #'   gamma   = 0.8,
@@ -52,9 +54,9 @@
 #' )
 #'
 #' # Re-use pre-computed simulation results
-#' res <- sim_cwdata(N.sim = 100, sample = 1000, pi = 0.1,
+#' res <- sim_cwdata(N.sim = 100, sample = 1000, prevalence = 0.1,
 #'                   p = 0.1, p.prime = 0.1, gamma = 0.8, direct = 0.1)
-#' sim_estimates(sample = 1000, pi = 0.1, p = 0.1, p.prime = 0.1,
+#' sim_estimates(sample = 1000, prevalence = 0.1, p = 0.1, p.prime = 0.1,
 #'               gamma = 0.8, direct = 0.1, sim.results = res)
 #' }
 #'
@@ -65,19 +67,21 @@
 #' \doi{10.1017/pan.2021.43}.
 #'
 #' @export
-sim_estimates <- function(N.sim = 100, sample, pi, p, p.prime, gamma, direct,
-                          txcol = "dimgray", sim.results = NULL) {
+sim_estimates <- function(N.sim = 100, sample, prevalence, p, p.prime, gamma,
+                          direct, txcol = "dimgray", sim.results = NULL,
+                          verbose = TRUE) {
 
   # Run simulation if pre-computed results are not supplied
   if (is.null(sim.results)) {
     sim.results <- sim_cwdata(
       N.sim   = N.sim,
       sample  = sample,
-      pi      = pi,
+      prevalence = prevalence,
       p       = p,
       p.prime = p.prime,
       gamma   = gamma,
-      direct  = direct
+      direct  = direct,
+      verbose = verbose
     )
   }
 
@@ -98,7 +102,7 @@ sim_estimates <- function(N.sim = 100, sample, pi, p, p.prime, gamma, direct,
     length = 0, col = scales::alpha("gray60", 0.9)
   )
   abline(h = 0,  col = "dimgray",    lwd = 1.5)
-  abline(h = pi, col = "firebrick4", lty = 1, lwd = 1.5)
+  abline(h = prevalence, col = "firebrick4", lty = 1, lwd = 1.5)
 
   # legend(
   #   x = 0, y = 0.42,
@@ -125,8 +129,17 @@ sim_estimates <- function(N.sim = 100, sample, pi, p, p.prime, gamma, direct,
 }
 
 #' @rdname sim_estimates
+#' @param ... Arguments passed to \code{sim_estimates()}.
 #' @export
 sim.estimates <- function(...) {
   .Deprecated("sim_estimates")
-  sim_estimates(...)
+  arguments <- list(...)
+  if ("pi" %in% names(arguments)) {
+    if ("prevalence" %in% names(arguments)) {
+      stop("Supply only one of `pi` and `prevalence`.", call. = FALSE)
+    }
+    arguments$prevalence <- arguments$pi
+    arguments$pi <- NULL
+  }
+  do.call(sim_estimates, arguments)
 }

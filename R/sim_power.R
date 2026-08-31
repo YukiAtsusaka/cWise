@@ -18,6 +18,8 @@
 #' @param gamma Numeric. Proportion of attentive respondents (between 0 and 1).
 #'   For example, 0.8 means 80\% of respondents are attentive.
 #' @param direct Numeric. Direct questioning estimate for comparison purposes.
+#' @param verbose Logical. If \code{TRUE} (the default), report progress messages
+#'   and show progress bars for the two underlying simulations.
 #'
 #' @return A numeric scalar representing the estimated statistical power
 #'   (probability of correctly rejecting H0 when H1 is true) at the given sample size.
@@ -64,36 +66,43 @@
 #' and Parameter Selection. \doi{10.1017/pan.2021.43}.
 #'
 #' @export
-sim_power <- function(N.sim, sample, pi.null, pi.alt, p, p.prime, gamma, direct) {
+sim_power <- function(N.sim, sample, pi.null, pi.alt, p, p.prime, gamma, direct,
+                      verbose = TRUE) {
 
   alpha <- 0.05
   mu0   <- pi.null
   mu1   <- pi.alt
 
-  cat(sprintf("Simulating under H0 (pi = %.3f, n = %d)...\n", mu0, sample))
+  if (isTRUE(verbose)) {
+    message(sprintf("Simulating under H0 (prevalence = %.3f, n = %d)...", mu0, sample))
+  }
 
   # Simulate under H0 (null hypothesis)
   H0 <- sim_cwdata(
     N.sim   = N.sim,
     sample  = sample,
-    pi      = pi.null,
+    prevalence = pi.null,
     p       = p,
     p.prime = p.prime,
     gamma   = gamma,
-    direct  = direct
+    direct  = direct,
+    verbose = verbose
   )
 
-  cat(sprintf("Simulating under H1 (pi = %.3f, n = %d)...\n", mu1, sample))
+  if (isTRUE(verbose)) {
+    message(sprintf("Simulating under H1 (prevalence = %.3f, n = %d)...", mu1, sample))
+  }
 
   # Simulate under H1 (alternative hypothesis)
   H1 <- sim_cwdata(
     N.sim   = N.sim,
     sample  = sample,
-    pi      = pi.alt,
+    prevalence = pi.alt,
     p       = p,
     p.prime = p.prime,
     gamma   = gamma,
-    direct  = direct
+    direct  = direct,
+    verbose = verbose
   )
 
   # Simulated standard errors
@@ -113,6 +122,7 @@ sim_power <- function(N.sim, sample, pi.null, pi.alt, p, p.prime, gamma, direct)
 }
 
 #' @rdname sim_power
+#' @param ... Arguments passed to \code{sim_power()}.
 #' @export
 sim.power <- function(...) {
   .Deprecated("sim_power")

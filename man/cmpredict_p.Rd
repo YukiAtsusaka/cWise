@@ -42,6 +42,8 @@ the caller's RNG state is restored before returning.}
 
 \item{draws}{If `TRUE`, attach the raw bootstrap draw matrix as a `"draws"`
 attribute on the returned data frame.}
+
+\item{...}{Arguments passed to \code{cmpredict_p()}.}
 }
 \value{
 A data frame with `estimate`, `conf.low`, and `conf.high` columns.

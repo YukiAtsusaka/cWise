@@ -8,13 +8,14 @@
 sim_estimates(
   N.sim = 100,
   sample,
-  pi,
+  prevalence,
   p,
   p.prime,
   gamma,
   direct,
   txcol = "dimgray",
-  sim.results = NULL
+  sim.results = NULL,
+  verbose = TRUE
 )
 
 sim.estimates(...)
@@ -24,7 +25,7 @@ sim.estimates(...)
 
 \item{sample}{Integer. Sample size per simulation.}
 
-\item{pi}{Numeric. True prevalence rate of the sensitive attribute.}
+\item{prevalence}{Numeric. True prevalence rate of the sensitive attribute.}
 
 \item{p}{Numeric. Randomization probability for the sensitive question.}
 
@@ -38,6 +39,11 @@ sim.estimates(...)
 
 \item{sim.results}{Optional list. Pre-computed output from \code{\link{sim_cwdata}}.
 If \code{NULL} (default), the simulation is run internally.}
+
+\item{verbose}{Logical. Passed to \code{sim_cwdata()} when a new simulation is
+needed. If \code{TRUE} (the default), a progress bar is displayed.}
+
+\item{...}{Arguments passed to \code{sim_estimates()}.}
 }
 \value{
 Invisibly returns the simulation results list from \code{\link{sim_cwdata}},
@@ -56,7 +62,7 @@ The plot displays:
   \item Sorted bias-corrected point estimates as filled circles
   \item Bootstrap 95\% confidence intervals as vertical line segments
   \item A horizontal reference line at 0
-  \item A horizontal reference line at the true prevalence \code{pi} (red)
+  \item A horizontal reference line at the true prevalence \code{prevalence} (red)
 }
 Estimates are sorted in ascending order, creating a characteristic
 "fan" shape that reveals the distribution of estimates across simulations.
@@ -74,7 +80,7 @@ still used for the annotations, but no new simulation is run.
 sim_estimates(
   N.sim   = 100,
   sample  = 1000,
-  pi      = 0.1,
+  prevalence = 0.1,
   p       = 0.1,
   p.prime = 0.1,
   gamma   = 0.8,
@@ -82,9 +88,9 @@ sim_estimates(
 )
 
 # Re-use pre-computed simulation results
-res <- sim_cwdata(N.sim = 100, sample = 1000, pi = 0.1,
+res <- sim_cwdata(N.sim = 100, sample = 1000, prevalence = 0.1,
                   p = 0.1, p.prime = 0.1, gamma = 0.8, direct = 0.1)
-sim_estimates(sample = 1000, pi = 0.1, p = 0.1, p.prime = 0.1,
+sim_estimates(sample = 1000, prevalence = 0.1, p = 0.1, p.prime = 0.1,
               gamma = 0.8, direct = 0.1, sim.results = res)
 }
 

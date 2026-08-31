@@ -90,9 +90,9 @@ cmpredict_p <- function(out, newdata = NULL, zval = NULL, typical = NULL,
 }
 
 #' @rdname cmpredict_p
+#' @param ... Arguments passed to \code{cmpredict_p()}.
 #' @export
 cmpredict.p <- function(...) {
   .Deprecated("cmpredict_p")
   cmpredict_p(...)
 }
-

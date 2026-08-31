@@ -197,6 +197,7 @@ return(Mlist)
 }
 
 #' @rdname cmreg_p
+#' @param ... Arguments passed to \code{cmreg_p()}.
 #' @export
 cmreg.p <- function(...) {
   .Deprecated("cmreg_p")

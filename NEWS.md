@@ -10,6 +10,9 @@
 - Underscore names are now canonical: `bc_est`, `cmreg_p`, `cmpredict_p`,
   `sim_cwdata`, `sim_estimates`, `sim_power`, and `sim_power_N`. The former
   dotted names remain as deprecated wrappers for one release.
+- The canonical simulation functions now use `prevalence` rather than `pi`.
+  Deprecated dotted wrappers translate their former `pi =` argument during the
+  transition.
 
 ## CRAN submission preparation
 
@@ -22,3 +25,10 @@
 - Revised the package title and description for CRAN metadata requirements.
 - Removed legacy duplicate power-analysis code. The undocumented internal
   `sim.curve()` helper was already broken and is no longer included.
+- `bc_est()` now accepts an optional `seed` for reproducible bootstrapping and
+  restores the caller's random-number state afterward.
+- Simulation functions now accept `verbose` to silence progress bars and
+  messages. `cmBound()` examples are runnable without attaching `ggplot2`, and
+  use current ggplot2 line-width syntax.
+- Excluded development-only files from source builds and moved the Appendix C5
+  reference PDF to `inst/doc_ref/` so it ships as a package reference.

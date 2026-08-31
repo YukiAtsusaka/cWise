@@ -8,6 +8,9 @@
 #' @param p.prime an auxiliary probability for the anchor question.
 #' @param weight an optional vector specifying sample weights in data.
 #' @param data a data frame containing information from the crosswise model (Y, A, weight).
+#' @param seed Optional integer used to reproduce the bootstrap uncertainty
+#'   estimate. When supplied, the caller's random-number state is restored after
+#'   the function returns.
 #'
 #' @return A list with:
 #' \describe{
@@ -26,7 +29,7 @@
 #' @importFrom dplyr "%>%" "select" "pull"
 #'             tibble "as_tibble"
 
-bc_est <- function(Y, A, p, p.prime, weight, data){
+bc_est <- function(Y, A, p, p.prime, weight, data, seed = NULL){
 
 Yquo <- dplyr::enquo(Y)        # QUoting variable name for Y
 Aquo <- dplyr::enquo(A)        # Quoting variable name for A
@@ -69,9 +72,9 @@ weight = data %>% dplyr::select(!!Wquo) %>% pull()
 
 
 # BOOTSTRAPPING FOR UNCERTAINTY ESTIMATE (200 TIMES)
- set.seed(123456)
- bs <- NA
-  for(i in 1:200){
+  bootstrap_estimates <- function() {
+    bs <- numeric(200L)
+    for(i in 1:200){
     index <- sample(1:nrow(data), size=dim(data)[1], replace=TRUE)   # RESAMPLE WITH REPLACEMENT
     bs.dat <- data[index,]                                        # BOOTSTRAPPED DATA
     N.bs = dim(data)[1]
@@ -92,9 +95,12 @@ weight = data %>% dplyr::select(!!Wquo) %>% pull()
     bs.gamma.hat = (sum(w.bs*A.bs)/sum(w.bs)-0.5)/(0.5-p.prime)      # Estimated level of inattentiveness
     bs.bias.hat = (1/2)*((bs.lambda.hat-0.5)/(p-0.5)) - (1/(2*bs.gamma.hat))*((bs.lambda.hat-0.5)/(p-0.5))
 
-    bs[i] = bs.pi.hat.naive - bs.bias.hat         # Bias Correction within Bootstrapping
-    bs[i] = min(1, max(bs[i], 0))                 # Logical bound restrain
-} # END OF BOOTSTRAPPING
+      bs[i] = bs.pi.hat.naive - bs.bias.hat         # Bias Correction within Bootstrapping
+      bs[i] = min(1, max(bs[i], 0))                 # Logical bound restrain
+    } # END OF BOOTSTRAPPING
+    bs
+  }
+  bs <- cm_with_seed(seed, bootstrap_estimates)
 
 
   pi.hat.bc.var = var(bs)
@@ -123,6 +129,7 @@ return(result)
 }
 
 #' @rdname bc_est
+#' @param ... Arguments passed to \code{bc_est()}.
 #' @export
 bc.est <- function(...) {
   .Deprecated("bc_est")
