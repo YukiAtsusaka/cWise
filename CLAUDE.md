@@ -6,7 +6,7 @@ you go. The Phase 0 check output was verified against the package as of commit `
 
 **Target:** `cWise 0.1.0` on CRAN, with two vignettes.
 
-**Progress through 2026-08-30:**
+**Progress through 2026-08-31:**
 
 - Completed 1.1: migrated `DESCRIPTION` to `Authors@R`; Yuki Atsusaka is `aut`/`cre`,
   and Kolbe Dumas and Randy T. Stevenson are `aut`. Kolbe's package email is
@@ -50,6 +50,22 @@ you go. The Phase 0 check output was verified against the package as of commit `
   expected notes: new submission and an external inability to verify the clock.
 - Updated the README and simulation references from the pre-publication year to 2023.
 - Added the two-person ownership map under "Suggested sequencing for two people."
+- **Repository integration status (2026-08-31):** `master` has diverged from
+  `origin/master` by one local commit (`507e5b6`, `update`) and one remote commit
+  (`c6b72ae`, `Complete Part 1 CRAN compliance`); a merge is in progress. The
+  content conflicts in `.Rbuildignore`, `R/cmBound.R`, and `man/cmBound.Rd` have
+  been resolved in the working tree, but must be staged by the repository owner
+  before creating the merge commit. Use
+  `git add .Rbuildignore R/cmBound.R man/cmBound.Rd`, review `git status`, then
+  commit and push manually. Do not add the untracked `.claude/` directory unless it
+  is intentionally part of the repository.
+- **Merge choices to preserve:** `.Rbuildignore` keeps both the `^Meta$` rule and
+  the upstream development-file exclusions. `cmBound()` retains the local
+  `plot_object` implementation, which validates and adds direct-questioning lines
+  only when `dq` is supplied; this preserves the documented `dq = NULL` default.
+  Its Rd file retains the matching runnable example plus the reference and see-also
+  sections. No conflict markers remain, and the affected R sources parse under R
+  4.5.1; rerun the full package gates before release.
 
 **Owner column:** put initials in the `Who` cell when you pick a task up. `YA` = Yuki,
 `KD` = Kolbe, `?` = unassigned.
@@ -65,6 +81,11 @@ devtools::load_all()                      # quick interactive reload
 devtools::test()                          # testthat
 devtools::check(args = "--as-cran")       # the gate that matters
 ```
+
+After the 2026-08-31 merge commit, rerun all three commands. Syntax parsing alone
+does not exercise package examples, tests, declared dependencies, or source-package
+contents; any check ERROR or WARNING is a release blocker. A `New submission` NOTE
+is expected and should be documented in `cran-comments.md`.
 
 Two extra gates required before submission:
 
