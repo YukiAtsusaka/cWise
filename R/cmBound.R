@@ -1,11 +1,14 @@
 #' @title cmBound
 #'
-#' @description \code{cmBound} is used to apply a sensitivity analysis and visualize the sensitivity bounds for naive crosswise estimates.
+#' @description \code{cmBound} is used to apply a sensitivity analysis and
+#' visualize the sensitivity bounds for naive crosswise estimates. The
+#' sensitivity analysis assumes that inattentive respondents choose either
+#' response option with equal probability.
 #'
 #' @param lambda.hat a value for the observed crosswise proportion: Prop(TRUE-TRUE or FALSE-FALSE).
-#' @param p an auxiliary probability for the crosswise question.
+#' @param p an auxiliary probability for the crosswise question. It must be a
+#' single finite value strictly between 0 and 1, excluding 0.5.
 #' @param N a value for the number of survey respondents in the crosswise (and anchor) question.
-#' @param kappa an optional value specifying the probability with which inattentive respondents choose the crosswise item in both the crosswise and anchor questions (default is 0.5.
 #' @param dq a value for a point estimate from direct questioning (if available).
 #' @param N.dq a value for the number of survey respondents in direct questioning (if available).
 #'
@@ -23,7 +26,14 @@
 #' @import ggplot2
 
 
-cmBound = function(lambda.hat, p, N, kappa=0.5, dq=NULL, N.dq=NULL){
+cmBound = function(lambda.hat, p, N, dq=NULL, N.dq=NULL){
+
+  if (length(p) != 1L || !is.finite(p) || p <= 0 || p >= 1 || p == 0.5) {
+    stop(
+      "`p` must be a single finite probability strictly between 0 and 1, excluding 0.5.",
+      call. = FALSE
+    )
+  }
 
   pi.hat.naive = (lambda.hat+p-1)/(2*p-1)
   pi.hat.naive.var = (pi.hat.naive*(1-pi.hat.naive))/(N-1) + (p*(1-p))/((N-1)*((2*p-1)^2))

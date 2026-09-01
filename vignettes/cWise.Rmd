@@ -75,7 +75,7 @@ run and increase `N.sim` for a study-planning analysis.
 
 ```{r power, eval = FALSE}
 simulation <- sim_cwdata(
-  N.sim = 200, sample = 500, pi = 0.10, p = 0.15, p.prime = 0.15,
+  N.sim = 200, sample = 500, prevalence = 0.10, p = 0.15, p.prime = 0.15,
   gamma = 0.80, direct = 0.05
 )
 simulation$Results
@@ -89,4 +89,3 @@ sim_power(
 `sim_estimates()` plots the simulated estimates, while `sim_power_N()` compares
 the package's standard sample-size grid. These functions are intended for
 interactive study planning rather than a package build.
-

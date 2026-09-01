@@ -321,7 +321,7 @@ alongside Phase 2 rather than after.
 | 3.2 | `test-bc-est.R`: known-input snapshot; weighted vs unweighted; `NA` handling; that `weight` missing and `weight = rep(1,n)` agree. | ? | ☐ |
 | 3.3 | `test-cmreg.R`, `test-cmreg-p.R`: the Phase 2c gates. | ? | ☐ |
 | 3.4 | `test-cmpredict.R`: named-argument matching; informative error on wrong `typical` length; that predictions lie in `[0,1]`; that `seed` makes results reproducible and *does not* perturb the caller's RNG stream. | ? | ☐ |
-| 3.5 | `test-cmbound.R`: returns a `ggplot` object; `kappa`/`dq`/`N.dq` variants; `p = 0.5` guarded. | ? | ☐ |
+| 3.5 | `test-cmbound.R`: returns a `ggplot` object; direct-question variants; fixed balanced random-response assumption (no `kappa` input); `p = 0.5` guarded. | KD | ☑ |
 | 3.6 | `test-sim.R`: smoke tests at tiny `N.sim` so they run in seconds. Wrap anything slow in `skip_on_cran()`. | ? | ☐ |
 | 3.7 | Keep total check time well under CRAN's 10-minute-per-platform budget. The `sim.*` functions are the risk — `skip_on_cran()` liberally and use `\donttest{}` in their examples. | ? | ☐ |
 
