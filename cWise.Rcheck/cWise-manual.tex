@@ -1,0 +1,1152 @@
+\nonstopmode{}
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\makeatletter\@ifl@t@r\fmtversion{2018/04/01}{}{\usepackage[utf8]{inputenc}}\makeatother
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `cWise'}}
+\par\bigskip{\large \today}
+\end{center}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {cWise: Crosswise Models for Sensitive Survey Questions}}}{}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdfauthor = {Yuki Atsusaka; Kolbe Dumas}}}{}
+\begin{description}
+\raggedright{}
+\item[Type]\AsIs{Package}
+\item[Title]\AsIs{Crosswise Models for Sensitive Survey Questions}
+\item[Version]\AsIs{0.1.0}
+\item[Description]\AsIs{Implements the bias-corrected crosswise estimator and its extensions
+for sensitive survey questions. The methods are described in Atsusaka and
+Stevenson (2023) <}\Rhref{https://doi.org/10.1017/pan.2021.43}{doi:10.1017/pan.2021.43}\AsIs{>.}
+\item[License]\AsIs{GPL-3}
+\item[URL]\AsIs{}\url{https://github.com/YukiAtsusaka/cWise}\AsIs{,
+}\url{https://www.atsusaka.org/cwise/}\AsIs{}
+\item[BugReports]\AsIs{}\url{https://github.com/YukiAtsusaka/cWise/issues}\AsIs{}
+\item[Depends]\AsIs{R (>= 3.5.0)}
+\item[Imports]\AsIs{dplyr, ggplot2, mvtnorm (>= 1.1-1), scales}
+\item[Suggests]\AsIs{knitr, rmarkdown, testthat}
+\item[VignetteBuilder]\AsIs{knitr}
+\item[Encoding]\AsIs{UTF-8}
+\item[Language]\AsIs{en-US}
+\item[LazyData]\AsIs{true}
+\item[RoxygenNote]\AsIs{7.3.3}
+\item[NeedsCompilation]\AsIs{no}
+\item[Author]\AsIs{Yuki Atsusaka [aut, cre],
+Kolbe Dumas [aut]}
+\item[Maintainer]\AsIs{Yuki Atsusaka }\email{atsusaka@uh.edu}\AsIs{}
+\end{description}
+\Rdcontents{Contents}
+\HeaderA{cWise-package}{cWise: Crosswise Models for Sensitive Survey Questions}{cWise.Rdash.package}
+\aliasA{cWise}{cWise-package}{cWise}
+\keyword{internal}{cWise-package}
+%
+\begin{Description}
+Supporting tools for analyzing sensitive survey questions with crosswise
+models.
+\end{Description}
+%
+\begin{Author}
+\strong{Maintainer}: Yuki Atsusaka \email{atsusaka@uh.edu}
+
+Authors:
+\begin{itemize}
+
+\item{} Kolbe Dumas \email{kdumas@uh.edu}
+
+\end{itemize}
+
+
+\end{Author}
+%
+\begin{SeeAlso}
+Useful links:
+\begin{itemize}
+
+\item{} \url{https://github.com/YukiAtsusaka/cWise}
+\item{} \url{https://www.atsusaka.org/cwise/}
+\item{} Report bugs at \url{https://github.com/YukiAtsusaka/cWise/issues}
+
+\end{itemize}
+
+
+\end{SeeAlso}
+\HeaderA{bc\_est}{bc\_est}{bc.Rul.est}
+\aliasA{bc.est}{bc\_est}{bc.est}
+%
+\begin{Description}
+\code{bc\_est} is used to apply a bias-corrected crosswise estimator to survey data.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bc_est(Y, A, p, p.prime, weight, data, seed = NULL)
+
+bc.est(...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{Y}] a vector of binary responses in the crosswise question (Y=1 if TRUE-TRUE or FALSE-FALSE, Y=0 otherwise).
+
+\item[\code{A}] a vector of binary responses in the anchor question (A=1 if TRUE-TRUE or FALSE-FALSE, A=0 otherwise).
+
+\item[\code{p}] an auxiliary probability for the crosswise question.
+
+\item[\code{p.prime}] an auxiliary probability for the anchor question.
+
+\item[\code{weight}] an optional vector specifying sample weights in data.
+
+\item[\code{data}] a data frame containing information from the crosswise model (Y, A, weight).
+
+\item[\code{seed}] Optional integer used to reproduce the bootstrap uncertainty
+estimate. When supplied, the caller's random-number state is restored after
+the function returns.
+
+\item[\code{...}] Arguments passed to \code{bc\_est()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A list with:
+\begin{description}
+
+\item[Results] A two-row matrix of naive and bias-corrected prevalence
+estimates, standard errors, and 95 percent confidence intervals.
+\item[Stats] A matrix containing the estimated attentive-response rate and
+the number of complete observations.
+
+\end{description}
+
+\end{Value}
+%
+\begin{References}
+Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+for sensitive survey questions. \Rhref{https://doi.org/10.1017/pan.2021.43}{doi:10.1017\slash{}pan.2021.43}.
+\end{References}
+%
+\begin{SeeAlso}
+[cmBound()] for a sensitivity analysis of naive crosswise estimates.
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+bc_est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
+bc_est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{cmBound}{cmBound}{cmBound}
+%
+\begin{Description}
+\code{cmBound} is used to apply a sensitivity analysis and
+visualize the sensitivity bounds for naive crosswise estimates. The
+sensitivity analysis assumes that inattentive respondents choose either
+response option with equal probability.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+cmBound(lambda.hat, p, N, dq = NULL, N.dq = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{lambda.hat}] a value for the observed crosswise proportion: Prop(TRUE-TRUE or FALSE-FALSE).
+
+\item[\code{p}] an auxiliary probability for the crosswise question. It must be a
+single finite value strictly between 0 and 1, excluding 0.5.
+
+\item[\code{N}] a value for the number of survey respondents in the crosswise (and anchor) question.
+
+\item[\code{dq}] a value for a point estimate from direct questioning (if available).
+
+\item[\code{N.dq}] a value for the number of survey respondents in direct questioning (if available).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A ggplot object visualizing the result of sensitivity analysis.
+\end{Value}
+%
+\begin{References}
+Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+for sensitive survey questions. \Rhref{https://doi.org/10.1017/pan.2021.43}{doi:10.1017\slash{}pan.2021.43}.
+\end{References}
+%
+\begin{SeeAlso}
+[bc\_est()] for bias-corrected prevalence estimation.
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073, N.dq=310)
+p
+
+p <- p + ggplot2::ggtitle("Sensitivity Analysis") +
+         ggplot2::theme(plot.title = ggplot2::element_text(size=20, face="bold"))
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{cmdata}{Simulated Crosswise Survey Data I}{cmdata}
+\keyword{datasets}{cmdata}
+%
+\begin{Description}
+Typical, artificially generated toy data set that comes with the binary response in the crosswise question (Y=1 if TRUE-TRUE or FALSE-FALSE, Y=0 otherwise),
+the binary response in the anchor question, sample weights, and auxiliary probabilities in the crosswise and anchor questions, respectively (these columns are only included here for an illustrative purpose).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+data(cmdata)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Format}
+an object of class \code{"data.frame"}
+\begin{description}
+
+\item[Y] a binary indicator for the crosswise item (TRUE-TRUE or FALSE-FALSE) in the crosswise question
+\item[A] a binary indicator for the crosswise item (TRUE-TRUE or FALSE-FALSE) in the anchor question
+\item[p] an auxiliary probability in the crosswise question
+\item[p.prime] an auxiliary probability in the anchor question
+
+\end{description}
+
+\end{Format}
+%
+\begin{References}
+This data set was artificially created for the cWise package.
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+data(cmdata)
+head(cmdata)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{cmdata2}{Simulated Crosswise Survey Data II}{cmdata2}
+\keyword{datasets}{cmdata2}
+%
+\begin{Description}
+Typical, artificially generated toy data set that comes with the binary response in the crosswise question (Y=1 if TRUE-TRUE or FALSE-FALSE, Y=0 otherwise),
+the binary response in the anchor question, two covariates, and auxiliary probabilities in the crosswise and anchor questions, respectively (these columns are only included here for an illustrative purpose).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+data(cmdata2)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Format}
+an object of class \code{"data.frame"}
+\begin{description}
+
+\item[Y] a binary indicator for the crosswise item (TRUE-TRUE or FALSE-FALSE) in the crosswise question
+\item[female] A binary covariate representing being a female
+\item[age] A discrete covariate representing age
+\item[A] a binary indicator for the crosswise item (TRUE-TRUE or FALSE-FALSE) in the anchor question
+\item[p] an auxiliary probability in the crosswise question
+\item[p.prime] an auxiliary probability in the anchor question
+
+\end{description}
+
+\end{Format}
+%
+\begin{References}
+This data set was artificially created for the cWise package.
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+data(cmdata2)
+head(cmdata2)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{cmdata3}{Simulated Crosswise Survey Data III}{cmdata3}
+\keyword{datasets}{cmdata3}
+%
+\begin{Description}
+Typical, artificially generated toy data set that comes with the binary response in the crosswise question (Y=1 if TRUE-TRUE or FALSE-FALSE, Y=0 otherwise),
+the binary response in the anchor question, the outcome variable, two covariates, and auxiliary probabilities in the crosswise and anchor questions, respectively (these columns are only included here for an illustrative purpose).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+data(cmdata3)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Format}
+an object of class \code{"data.frame"}
+\begin{description}
+
+\item[V] an outcome variable
+\item[female] A binary covariate representing being a female
+\item[age] A discrete covariate representing age
+\item[Y] a binary indicator for the crosswise item (TRUE-TRUE or FALSE-FALSE) in the crosswise question
+\item[A] a binary indicator for the crosswise item (TRUE-TRUE or FALSE-FALSE) in the anchor question
+\item[p] an auxiliary probability in the crosswise question
+\item[p.prime] an auxiliary probability in the anchor question
+
+\end{description}
+
+\end{Format}
+%
+\begin{References}
+This data set was artificially created for the cWise package.
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+data(cmdata3)
+head(cmdata3)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{cmpredict}{cmpredict}{cmpredict}
+%
+\begin{Description}
+Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+cmpredict(
+  out,
+  newdata = NULL,
+  zval = NULL,
+  typical = NULL,
+  nsim = 1000L,
+  seed = NULL,
+  draws = FALSE
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{out}] An output of \code{cmreg}.
+
+\item[\code{newdata}] A named data frame, list, or vector supplying values for every
+covariate in the fitted formula. A data frame returns one prediction row per
+row of `newdata`.
+
+\item[\code{zval}] Optional named vector for one covariate to vary. Its name must
+match a formula variable; all remaining covariates are supplied through
+`newdata` or `typical`.
+
+\item[\code{typical}] Optional named vector or list of fixed covariate values. This
+is a convenience alternative to `newdata` when used with `zval`.
+
+\item[\code{nsim}] Number of parametric-bootstrap draws.
+
+\item[\code{seed}] Optional integer seed for reproducible bootstrap draws. When set,
+the caller's RNG state is restored before returning.
+
+\item[\code{draws}] If `TRUE`, attach the raw bootstrap draw matrix as a `"draws"`
+attribute on the returned data frame.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A data frame with `estimate`, `conf.low`, and `conf.high` columns,
+with one row for each prediction scenario. When `draws = TRUE`, its `"draws"`
+attribute contains the raw parametric-bootstrap matrix.
+\end{Value}
+%
+\begin{References}
+Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+for sensitive survey questions. \Rhref{https://doi.org/10.1017/pan.2021.43}{doi:10.1017\slash{}pan.2021.43}.
+\end{References}
+%
+\begin{SeeAlso}
+[cmreg()] to fit the required outcome-model object and
+[cmpredict\_p()] for predictions from a predictor model.
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+m <- cmreg(Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15,
+           data = cmdata2)
+predictions <- cmpredict(m, typical = c(age = 30),
+                          zval = c(female = 0, female = 1))
+predictions
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{cmpredict\_p}{cmpredict\_p}{cmpredict.Rul.p}
+\aliasA{cmpredict.p}{cmpredict\_p}{cmpredict.p}
+%
+\begin{Description}
+Perform a post-estimation prediction with uncertainty quantification via parametric bootstrap
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+cmpredict_p(
+  out,
+  newdata = NULL,
+  zval = NULL,
+  typical = NULL,
+  type = c("response", "link"),
+  nsim = 1000L,
+  seed = NULL,
+  draws = FALSE
+)
+
+cmpredict.p(...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{out}] An output of \code{cmreg\_p}.
+
+\item[\code{newdata}] A named data frame, list, or vector supplying values for every
+covariate in the fitted formula. A data frame returns absent/present latent-
+trait scenarios for every row.
+
+\item[\code{zval}] Optional named vector for one covariate to vary. Its name must
+match a formula variable; all remaining covariates are supplied through
+`newdata` or `typical`.
+
+\item[\code{typical}] Optional named vector or list of fixed covariate values. This
+is a convenience alternative to `newdata` when used with `zval`.
+
+\item[\code{type}] Prediction scale: `"response"` (default) or `"link"`. The
+Gaussian outcome model has an identity link, so these are currently equal.
+
+\item[\code{nsim}] Number of parametric-bootstrap draws.
+
+\item[\code{seed}] Optional integer seed for reproducible bootstrap draws. When set,
+the caller's RNG state is restored before returning.
+
+\item[\code{draws}] If `TRUE`, attach the raw bootstrap draw matrix as a `"draws"`
+attribute on the returned data frame.
+
+\item[\code{...}] Arguments passed to \code{cmpredict\_p()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A data frame with `estimate`, `conf.low`, and `conf.high` columns.
+Each input scenario contributes an absent-trait row followed by a present-
+trait row. When `draws = TRUE`, its `"draws"` attribute contains the raw
+parametric-bootstrap matrix.
+\end{Value}
+%
+\begin{References}
+Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+for sensitive survey questions. \Rhref{https://doi.org/10.1017/pan.2021.43}{doi:10.1017\slash{}pan.2021.43}.
+\end{References}
+%
+\begin{SeeAlso}
+[cmreg\_p()] to fit the required predictor-model object and
+[cmpredict()] for predictions from an outcome model.
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
+              p.prime = 0.15, data = cmdata3)
+predictions <- cmpredict_p(m2, newdata = data.frame(age = 30, female = 1))
+predictions
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{cmreg}{cmreg}{cmreg}
+%
+\begin{Description}
+\code{cmreg} is used to run a regression with the latent sensitive trait as an outcome.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+cmreg(
+  formula,
+  anchor,
+  p,
+  p.prime,
+  data,
+  start = NULL,
+  n.start = 3L,
+  control = list()
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{formula}] an object of class "formula":
+a symbolic description of the model to be fitted.
+Ex. Crosswise response \textasciitilde{} Covariates. The anchor response is supplied
+separately through `anchor`.
+
+\item[\code{anchor}] Unquoted column name (or a single character column name) for the
+anchor response.
+
+\item[\code{p}] an auxiliary probability for the crosswise question.
+
+\item[\code{p.prime}] an auxiliary probability for the anchor question.
+
+\item[\code{data}] a data frame containing information from the crosswise model and covariates.
+
+\item[\code{start}] Optional numeric vector of starting values for the beta and theta
+parameters. By default, starts are derived from binomial GLMs for the observed
+crosswise and anchor responses.
+
+\item[\code{n.start}] Number of optimization starts, including the data-informed start.
+
+\item[\code{control}] A list of control settings passed to [stats::optim()]. `fnscale`
+is fixed internally because the log-likelihood is maximized.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+An object of class `cmreg`, a list with:
+\begin{description}
+
+\item[Call] The matched model call.
+\item[Coefficients] A coefficient table for the latent-trait outcome model.
+\item[AuxiliaryCoef] A coefficient table for the anchor-response model.
+\item[VCV] The estimated variance-covariance matrix of all parameters.
+\item[estimates, std.errors] Named full-precision parameter estimates and
+standard errors.
+\item[logLik, n, convergence] The optimized log-likelihood, number of
+complete observations, and optimizer convergence code.
+
+\end{description}
+
+\end{Value}
+%
+\begin{References}
+Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+for sensitive survey questions. \Rhref{https://doi.org/10.1017/pan.2021.43}{doi:10.1017\slash{}pan.2021.43}.
+\end{References}
+%
+\begin{SeeAlso}
+[cmpredict()] for predicted latent-trait probabilities and
+[cmreg\_p()] for a model with the latent trait as a predictor.
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+m <- cmreg(Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15,
+           data = cmdata2)
+m
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{cmreg-methods}{Print and summarise crosswise regression fits}{cmreg.Rdash.methods}
+\aliasA{print.cmreg}{cmreg-methods}{print.cmreg}
+\aliasA{print.summary.cmreg}{cmreg-methods}{print.summary.cmreg}
+\aliasA{summary.cmreg}{cmreg-methods}{summary.cmreg}
+%
+\begin{Description}
+Print and summarise crosswise regression fits
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'cmreg'
+print(x, digits = max(3L, getOption("digits") - 3L), ...)
+
+## S3 method for class 'cmreg'
+summary(object, ...)
+
+## S3 method for class 'summary.cmreg'
+print(x, digits = max(3L, getOption("digits") - 3L), ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A `cmreg` or `cmreg\_p` fit object.
+
+\item[\code{digits}] Number of significant digits to display.
+
+\item[\code{...}] Additional arguments, currently ignored.
+
+\item[\code{object}] A `cmreg` or `cmreg\_p` fit object.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+`summary.cmreg()` returns a list containing the fit call, coefficient
+tables, log-likelihood, sample size, convergence code, and model type.
+\end{Value}
+\HeaderA{cmreg\_p}{cmreg\_p}{cmreg.Rul.p}
+\aliasA{cmreg.p}{cmreg\_p}{cmreg.p}
+%
+\begin{Description}
+\code{cmreg} is used to run a regression with the latent sensitive trait as a predictor.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+cmreg_p(
+  formula,
+  crosswise,
+  anchor,
+  p,
+  p.prime,
+  data,
+  start = NULL,
+  n.start = 3L,
+  control = list()
+)
+
+cmreg.p(...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{formula}] an object of class "formula":
+a symbolic description of the model to be fitted.
+Ex. Outcome \textasciitilde{} Covariates. The crosswise and anchor responses are supplied
+separately through `crosswise` and `anchor`.
+
+\item[\code{crosswise}] Unquoted column name (or a single character column name) for
+the crosswise response.
+
+\item[\code{anchor}] Unquoted column name (or a single character column name) for the
+anchor response.
+
+\item[\code{p}] an auxiliary probability for the crosswise question.
+
+\item[\code{p.prime}] an auxiliary probability for the anchor question.
+
+\item[\code{data}] a data frame containing information from the crosswise model, the outcome variable, and covariates.
+
+\item[\code{start}] Optional numeric vector of starting values on the reporting scale:
+beta, theta, gamma, crosswise effect, and a positive sigma. By default, starts
+are derived from GLM and least-squares fits to observed responses.
+
+\item[\code{n.start}] Number of optimization starts, including the data-informed start.
+
+\item[\code{control}] A list of control settings passed to [stats::optim()]. `fnscale`
+is fixed internally because the log-likelihood is maximized.
+
+\item[\code{...}] Arguments passed to \code{cmreg\_p()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+An object of class `cmreg\_p` (and `cmreg`), a list with:
+\begin{description}
+
+\item[Call] The matched model call.
+\item[Coefficients] A coefficient table for the Gaussian outcome model,
+including the latent-trait effect.
+\item[AuxiliaryCoef, AuxiliaryCoef2] Coefficient tables for the crosswise
+and anchor-response models, with the residual standard deviation.
+\item[VCV] The estimated variance-covariance matrix of all parameters.
+\item[estimates, std.errors] Named full-precision parameter estimates and
+standard errors.
+\item[logLik, n, convergence] The optimized log-likelihood, number of
+complete observations, and optimizer convergence code.
+
+\end{description}
+
+\end{Value}
+%
+\begin{References}
+Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
+for sensitive survey questions. \Rhref{https://doi.org/10.1017/pan.2021.43}{doi:10.1017\slash{}pan.2021.43}.
+\end{References}
+%
+\begin{SeeAlso}
+[cmpredict\_p()] for predictions conditional on latent-trait status
+and [cmreg()] for a model with the latent trait as the outcome.
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
+              p.prime = 0.15, data = cmdata3)
+m2
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{sim\_cwdata}{Simulate Survey Data and Compute Bias-Corrected Estimates}{sim.Rul.cwdata}
+\aliasA{sim.cwdata}{sim\_cwdata}{sim.cwdata}
+%
+\begin{Description}
+Core simulation function that generates crosswise model data with inattentive
+respondents and computes bias-corrected prevalence estimates with bootstrap
+confidence intervals. This implements the methodology described in Appendix C5
+for power analysis of the crosswise model.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+sim_cwdata(
+  N.sim = 500,
+  sample,
+  prevalence,
+  p,
+  p.prime,
+  gamma,
+  direct,
+  verbose = TRUE
+)
+
+sim.cwdata(...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{N.sim}] Integer. Number of Monte Carlo simulations to run. Default is 500.
+
+\item[\code{sample}] Integer. Sample size per simulation (number of respondents).
+
+\item[\code{prevalence}] Numeric. True prevalence rate of the sensitive attribute
+(between 0 and 1).
+
+\item[\code{p}] Numeric. Probability for the randomization item in sensitive question (between 0 and 1).
+
+\item[\code{p.prime}] Numeric. Probability for the anchor question (non-sensitive, between 0 and 1).
+
+\item[\code{gamma}] Numeric. Proportion of attentive respondents (between 0 and 1).
+
+\item[\code{direct}] Numeric. Direct questioning estimate for comparison purposes (between 0 and 1).
+
+\item[\code{verbose}] Logical. If `TRUE` (the default), display a progress bar while
+simulations run.
+
+\item[\code{...}] Arguments passed to \code{sim\_cwdata()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+The function implements the crosswise model with bias correction for inattentive
+respondents. For each simulation:
+\begin{itemize}
+
+\item{} Generates attentive/inattentive status based on gamma
+\item{} Simulates responses to sensitive question (crosswise format)
+\item{} Simulates responses to anchor question (for estimating attention rate)
+\item{} Computes naive crosswise estimate
+\item{} Applies bias correction based on estimated inattention
+\item{} Uses bootstrap (500 iterations) to compute 95\% confidence intervals
+
+\end{itemize}
+
+
+The bias correction formula is:
+\deqn{\hat{\pi}_{BC} = \hat{\pi}_{naive} - \hat{Bias}}{}
+where the bias is estimated using the anchor question responses.
+\end{Details}
+%
+\begin{Value}
+A list containing:
+\begin{description}
+
+\item[Results] Named vector with summary statistics including average bias,
+RMSE, and coverage rates for both naive and bias-corrected estimators
+\item[BiasCorrectEst] Numeric vector of bias-corrected point estimates (sorted)
+\item[BiasCorrectLow] Numeric vector of lower bounds of 95\% bootstrap CIs (sorted)
+\item[BiasCorrectHigh] Numeric vector of upper bounds of 95\% bootstrap CIs (sorted)
+\item[EstimatedBias] Numeric vector of estimated bias values for each simulation
+\item[RelativeLengthCI] Numeric vector of relative CI lengths (bias-corrected vs naive)
+
+\end{description}
+
+\end{Value}
+%
+\begin{References}
+Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
+and Parameter Selection. \Rhref{https://doi.org/10.1017/pan.2021.43}{doi:10.1017\slash{}pan.2021.43}.
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# Basic usage
+result <- sim_cwdata(
+  N.sim = 100,
+  sample = 500,
+  prevalence = 0.1,
+  p = 0.1,
+  p.prime = 0.1,
+  gamma = 0.8,
+  direct = 0.05
+)
+print(result$Results)
+
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{sim\_estimates}{Simulate and Plot Panel C of Figure C7}{sim.Rul.estimates}
+\aliasA{sim.estimates}{sim\_estimates}{sim.estimates}
+%
+\begin{Description}
+Runs Monte Carlo simulations using the bias-corrected crosswise model and
+creates a caterpillar plot showing sorted point estimates with bootstrap
+confidence intervals, replicating Panel C of Figure C7 in Atsusaka and
+Stevenson (2023).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+sim_estimates(
+  N.sim = 100,
+  sample,
+  prevalence,
+  p,
+  p.prime,
+  gamma,
+  direct,
+  txcol = "dimgray",
+  sim.results = NULL,
+  verbose = TRUE
+)
+
+sim.estimates(...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{N.sim}] Integer. Number of Monte Carlo simulations. Default is 100.
+
+\item[\code{sample}] Integer. Sample size per simulation.
+
+\item[\code{prevalence}] Numeric. True prevalence rate of the sensitive attribute.
+
+\item[\code{p}] Numeric. Randomization probability for the sensitive question.
+
+\item[\code{p.prime}] Numeric. Randomization probability for the anchor question.
+
+\item[\code{gamma}] Numeric. Proportion of attentive respondents (between 0 and 1).
+
+\item[\code{direct}] Numeric. Direct questioning estimate for comparison.
+
+\item[\code{txcol}] Character. Color for annotation text. Default: \code{"dimgray"}.
+
+\item[\code{sim.results}] Optional list. Pre-computed output from \code{\LinkA{sim\_cwdata}{sim.Rul.cwdata}}.
+If \code{NULL} (default), the simulation is run internally.
+
+\item[\code{verbose}] Logical. Passed to \code{sim\_cwdata()} when a new simulation is
+needed. If \code{TRUE} (the default), a progress bar is displayed.
+
+\item[\code{...}] Arguments passed to \code{sim\_estimates()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+The plot displays:
+\begin{itemize}
+
+\item{} Sorted bias-corrected point estimates as filled circles
+\item{} Bootstrap 95\% confidence intervals as vertical line segments
+\item{} A horizontal reference line at 0
+\item{} A horizontal reference line at the true prevalence \code{prevalence} (red)
+
+\end{itemize}
+
+Estimates are sorted in ascending order, creating a characteristic
+"fan" shape that reveals the distribution of estimates across simulations.
+
+Text annotation positions are calibrated to \code{N.sim = 100} and scale
+proportionally for other values.
+
+If \code{sim.results} is supplied, all simulation parameters (\code{N.sim},
+\code{sample}, \code{p}, \code{p.prime}, \code{gamma}, \code{direct}) are
+still used for the annotations, but no new simulation is run.
+\end{Details}
+%
+\begin{Value}
+Invisibly returns the simulation results list from \code{\LinkA{sim\_cwdata}{sim.Rul.cwdata}},
+containing \code{BiasCorrectEst}, \code{BiasCorrectLow},
+\code{BiasCorrectHigh}, and summary \code{Results}.
+\end{Value}
+%
+\begin{References}
+Atsusaka and Stevenson (2023). Figure C7, Panel C.
+\Rhref{https://doi.org/10.1017/pan.2021.43}{doi:10.1017\slash{}pan.2021.43}.
+\end{References}
+%
+\begin{SeeAlso}
+\code{\LinkA{sim\_cwdata}{sim.Rul.cwdata}} for the underlying simulation function
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+# Replicate Panel C of Figure C7
+sim_estimates(
+  N.sim   = 100,
+  sample  = 1000,
+  prevalence = 0.1,
+  p       = 0.1,
+  p.prime = 0.1,
+  gamma   = 0.8,
+  direct  = 0.1
+)
+
+# Re-use pre-computed simulation results
+res <- sim_cwdata(N.sim = 100, sample = 1000, prevalence = 0.1,
+                  p = 0.1, p.prime = 0.1, gamma = 0.8, direct = 0.1)
+sim_estimates(sample = 1000, prevalence = 0.1, p = 0.1, p.prime = 0.1,
+              gamma = 0.8, direct = 0.1, sim.results = res)
+
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{sim\_power}{Compute Statistical Power for a Fixed Sample Size}{sim.Rul.power}
+\aliasA{sim.power}{sim\_power}{sim.power}
+%
+\begin{Description}
+Computes statistical power for a one-sided hypothesis test of
+H0: pi <= pi0 versus H1: pi > pi0 at a given fixed sample size. This is useful
+when researchers already know their sample size and want to assess the
+power they can expect from their study.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+sim_power(
+  N.sim,
+  sample,
+  pi.null,
+  pi.alt,
+  p,
+  p.prime,
+  gamma,
+  direct,
+  verbose = TRUE
+)
+
+sim.power(...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{N.sim}] Integer. Number of Monte Carlo simulations.
+Larger values provide more stable power estimates but increase computation time.
+
+\item[\code{sample}] Integer. The fixed sample size (number of respondents) to evaluate.
+
+\item[\code{pi.null}] Numeric. Prevalence rate under the null hypothesis (pi0).
+Can be 0 or a value from direct questioning.
+
+\item[\code{pi.alt}] Numeric. True prevalence rate under the alternative hypothesis (pi1).
+Must be greater than pi.null.
+
+\item[\code{p}] Numeric. Probability for the randomization item in the sensitive question.
+Values between 0.1 and 0.3 are typical.
+
+\item[\code{p.prime}] Numeric. Probability for the anchor question (non-sensitive).
+
+\item[\code{gamma}] Numeric. Proportion of attentive respondents (between 0 and 1).
+For example, 0.8 means 80\% of respondents are attentive.
+
+\item[\code{direct}] Numeric. Direct questioning estimate for comparison purposes.
+
+\item[\code{verbose}] Logical. If \code{TRUE} (the default), report progress messages
+and show progress bars for the two underlying simulations.
+
+\item[\code{...}] Arguments passed to \code{sim\_power()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+The function implements the power calculation based on the Wald test:
+\deqn{Power = \Phi\left(\frac{\pi_1 - \pi_0 + z_\alpha \tilde{\sigma}_0}{\tilde{\sigma}_1}\right)}{}
+where:
+\begin{itemize}
+
+\item{} \eqn{\Phi}{} is the cumulative distribution function of the standard normal
+\item{} \eqn{z_\alpha}{} is derived from the simulated null distribution
+\item{} \eqn{\tilde{\sigma}_0}{} and \eqn{\tilde{\sigma}_1}{} are simulated standard errors
+under H0 and H1 respectively
+
+\end{itemize}
+
+
+The function runs \code{sim\_cwdata()} twice: once under H0 using \code{pi.null}
+and once under H1 using \code{pi.alt}, to estimate the sampling distributions
+at the specified sample size.
+\end{Details}
+%
+\begin{Value}
+A numeric scalar representing the estimated statistical power
+(probability of correctly rejecting H0 when H1 is true) at the given sample size.
+\end{Value}
+%
+\begin{Note}
+This function can take considerable time to run depending on N.sim and
+sample size. For quick exploration, use smaller N.sim values (for example, 100 to 500).
+For publication-quality results, use N.sim >= 2000.
+\end{Note}
+%
+\begin{References}
+Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
+and Parameter Selection. \Rhref{https://doi.org/10.1017/pan.2021.43}{doi:10.1017\slash{}pan.2021.43}.
+\end{References}
+%
+\begin{SeeAlso}
+\code{\LinkA{sim\_cwdata}{sim.Rul.cwdata}} for the underlying simulation function
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# Compute power at a fixed sample size of 1000
+## Not run: 
+pwr <- sim_power(
+  N.sim  = 500,
+  sample = 1000,
+  pi.null = 0,
+  pi.alt  = 0.1,
+  p       = 0.1,
+  p.prime = 0.1,
+  gamma   = 0.8,
+  direct  = 0.02
+)
+cat(sprintf("Estimated power: %.3f\n", pwr))
+
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{sim\_power\_N}{Determine Sample Size for Desired Coverage Properties}{sim.Rul.power.Rul.N}
+\aliasA{sim.power.N}{sim\_power\_N}{sim.power.N}
+%
+\begin{Description}
+Tests multiple sample sizes to determine which achieves desired confidence
+interval coverage properties. Specifically, it calculates what percentage of
+95\% confidence intervals (1) exclude zero and (2) include the direct estimate.
+This helps researchers choose a sample size that provides sufficient precision.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+sim_power_N(N.sim = 50, prevalence, p, p.prime, gamma, direct, verbose = TRUE)
+
+sim.power.N(...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{N.sim}] Integer. Number of Monte Carlo simulations per sample size.
+Default is 50. Larger values provide more stable estimates but increase
+computation time.
+
+\item[\code{prevalence}] Numeric. True prevalence rate of the sensitive attribute
+(between 0 and 1).
+
+\item[\code{p}] Numeric. Probability for the randomization item in sensitive question.
+
+\item[\code{p.prime}] Numeric. Probability for the anchor question (non-sensitive).
+
+\item[\code{gamma}] Numeric. Proportion of attentive respondents (between 0 and 1).
+
+\item[\code{direct}] Numeric. Direct questioning estimate for comparison purposes.
+
+\item[\code{verbose}] Logical. If \code{TRUE} (the default), display a progress bar
+while sample sizes are evaluated.
+
+\item[\code{...}] Arguments passed to \code{sim\_power\_N()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+This function is useful for planning studies where researchers want to:
+\begin{enumerate}
+
+\item{} Distinguish the estimated prevalence from zero with high confidence
+\item{} Obtain narrow confidence intervals for precise estimation
+\item{} Compare crosswise estimates with direct questioning estimates
+
+\end{enumerate}
+
+
+For each sample size, the function:
+\begin{itemize}
+
+\item{} Simulates N.sim datasets using the crosswise model
+\item{} Computes bias-corrected estimates with bootstrap 95\% CIs
+\item{} Calculates what percentage of CIs contain zero
+\item{} Calculates what percentage of CIs contain the direct estimate
+
+\end{itemize}
+
+
+A progress bar displays simulation progress.
+\end{Details}
+%
+\begin{Value}
+A data frame with three columns:
+\begin{description}
+
+\item[SampleSize] Sample sizes tested: 100, 500, 1000, 1500, 2000, 2500, 3000
+\item[CoverageZero] Percentage of 95\% CIs that include zero.
+Lower values indicate better precision (CIs exclude zero).
+\item[CoverageDirect] Percentage of 95\% CIs that include the direct estimate.
+Values near 95\% suggest good agreement with direct questioning.
+
+\end{description}
+
+\end{Value}
+%
+\begin{Note}
+\begin{itemize}
+
+\item{} Low CoverageZero values indicate CIs that reliably exclude zero
+(good for establishing that prevalence is non-zero)
+\item{} CoverageDirect near 95\% suggests consistency between crosswise and
+direct questioning approaches
+\item{} This function uses 500 bootstrap iterations per simulation
+
+\end{itemize}
+
+\end{Note}
+%
+\begin{References}
+Atsusaka and Stevenson (2023). Appendix C5: Sample Size Determination
+and Parameter Selection. \Rhref{https://doi.org/10.1017/pan.2021.43}{doi:10.1017\slash{}pan.2021.43}.
+\end{References}
+%
+\begin{SeeAlso}
+\code{\LinkA{sim\_power}{sim.Rul.power}} for the underlying simulation function
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# Find sample size needed to reliably exclude zero
+## Not run: 
+result <- sim_power_N(
+  N.sim = 50,
+  prevalence = 0.1,
+  p = 0.1,
+  p.prime = 0.1,
+  gamma = 0.8,
+  direct = 0.05
+)
+
+print(result)
+
+# Visualize results
+plot(result$SampleSize, result$CoverageZero,
+     type = "b", xlab = "Sample Size",
+     ylab = "% of CIs Including Zero",
+     main = "Precision vs Sample Size")
+
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\printindex{}
+\end{document}

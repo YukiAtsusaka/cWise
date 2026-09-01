@@ -1,0 +1,480 @@
+
+R version 4.4.3 (2025-02-28 ucrt) -- "Trophy Case"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "cWise"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> options(pager = "console")
+> base::assign(".ExTimings", "cWise-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+> 
+> ### * </HEADER>
+> library('cWise')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("bc_est")
+> ### * bc_est
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: bc_est
+> ### Title: bc_est
+> ### Aliases: bc_est bc.est
+> 
+> ### ** Examples
+> 
+> bc_est(Y=Y, A=A, p=0.15, p.prime=0.15, data=cmdata)
+$Results
+                Estimate Std. Error 95%CI(Low) 95%CI(Up)
+Naive Crosswise   0.1950     0.0144     0.1667    0.2233
+Bias-Corrected    0.1054     0.0226     0.0624    0.1492
+
+$Stats
+ Attentive Rate Sample Size
+         0.7729        2000
+
+> bc_est(Y=Y, A=A, weight=weight, p=0.15, p.prime=0.15, data=cmdata)
+$Results
+                Estimate Std. Error 95%CI(Low) 95%CI(Up)
+Naive Crosswise   0.1921     0.0144     0.1639    0.2204
+Bias-Corrected    0.1097     0.0284     0.0475    0.1605
+
+$Stats
+ Attentive Rate Sample Size
+         0.7888        2000
+
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("bc_est", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("cmBound")
+> ### * cmBound
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: cmBound
+> ### Title: cmBound
+> ### Aliases: cmBound
+> 
+> ### ** Examples
+> 
+> p <- cmBound(lambda.hat=0.6385, p=0.25, N=310, dq=0.073, N.dq=310)
+> p
+> 
+> p <- p + ggplot2::ggtitle("Sensitivity Analysis") +
++          ggplot2::theme(plot.title = ggplot2::element_text(size=20, face="bold"))
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("cmBound", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("cmdata")
+> ### * cmdata
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: cmdata
+> ### Title: Simulated Crosswise Survey Data I
+> ### Aliases: cmdata
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> 
+> data(cmdata)
+> head(cmdata)
+  Y A weight    p p.prime
+1 1 1   1.25 0.15    0.15
+2 0 0   1.25 0.15    0.15
+3 0 0   1.25 0.15    0.15
+4 1 0   5.00 0.15    0.15
+5 0 1   1.25 0.15    0.15
+6 1 1   1.25 0.15    0.15
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("cmdata", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("cmdata2")
+> ### * cmdata2
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: cmdata2
+> ### Title: Simulated Crosswise Survey Data II
+> ### Aliases: cmdata2
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> 
+> data(cmdata2)
+> head(cmdata2)
+  Y female age A   p p.prime
+1 1      0  23 1 0.1    0.15
+2 1      1  31 1 0.1    0.15
+3 0      1  32 1 0.1    0.15
+4 1      1  19 0 0.1    0.15
+5 0      1  19 1 0.1    0.15
+6 0      1  25 1 0.1    0.15
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("cmdata2", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("cmdata3")
+> ### * cmdata3
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: cmdata3
+> ### Title: Simulated Crosswise Survey Data III
+> ### Aliases: cmdata3
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> 
+> data(cmdata3)
+> head(cmdata3)
+            V female age Y A   p p.prime
+1 -0.38350925      0  23 1 1 0.1    0.15
+2 -0.05965305      1  31 1 1 0.1    0.15
+3  0.72655660      1  32 0 1 0.1    0.15
+4  0.79845870      1  19 1 0 0.1    0.15
+5 -0.19410532      1  19 0 1 0.1    0.15
+6 -0.34926673      1  25 0 1 0.1    0.15
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("cmdata3", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("cmpredict")
+> ### * cmpredict
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: cmpredict
+> ### Title: cmpredict
+> ### Aliases: cmpredict
+> 
+> ### ** Examples
+> 
+> m <- cmreg(Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15,
++            data = cmdata2)
+> predictions <- cmpredict(m, typical = c(age = 30),
++                           zval = c(female = 0, female = 1))
+> predictions
+   estimate  conf.low conf.high
+1 0.3381928 0.2921586 0.3863970
+2 0.4037005 0.3555934 0.4533274
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("cmpredict", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("cmpredict_p")
+> ### * cmpredict_p
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: cmpredict_p
+> ### Title: cmpredict_p
+> ### Aliases: cmpredict_p cmpredict.p
+> 
+> ### ** Examples
+> 
+> m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
++               p.prime = 0.15, data = cmdata3)
+> predictions <- cmpredict_p(m2, newdata = data.frame(age = 30, female = 1))
+> predictions
+                  estimate  conf.low conf.high
+1: trait absent  0.5600254 0.4605706 0.6575102
+1: trait present 1.5459544 1.4265080 1.6640910
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("cmpredict_p", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("cmreg")
+> ### * cmreg
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: cmreg
+> ### Title: cmreg
+> ### Aliases: cmreg
+> 
+> ### ** Examples
+> 
+> m <- cmreg(Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15,
++            data = cmdata2)
+> m
+Call:
+cmreg(formula = Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15, 
+    data = cmdata2)
+
+Crosswise regression with the latent trait as an outcome.
+n = 2000, log-likelihood = -2352
+
+Coefficients:
+            Estimate Std. Error z score Pr(>|z|)
+(Intercept)  -1.6501     0.4266 -3.8684   0.0001
+female        0.2813     0.1427  1.9717   0.0486
+age           0.0326     0.0133  2.4505   0.0143
+
+Auxiliary coefficients:
+            Estimate Std. Error z score Pr(>|z|)
+(Intercept)   0.1405     1.1363  0.1237   0.9016
+female       -0.2059     0.4121 -0.4995   0.6174
+age           0.0594     0.0394  1.5074   0.1317
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("cmreg", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("cmreg_p")
+> ### * cmreg_p
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: cmreg_p
+> ### Title: cmreg_p
+> ### Aliases: cmreg_p cmreg.p
+> 
+> ### ** Examples
+> 
+> m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
++               p.prime = 0.15, data = cmdata3)
+> m2
+Call:
+cmreg_p(formula = V ~ age + female, crosswise = Y, anchor = A, 
+    p = 0.1, p.prime = 0.15, data = cmdata3)
+
+Crosswise regression with the latent trait as a predictor.
+n = 2000, log-likelihood = -5378
+
+Coefficients:
+            Estimate Std. Error Z score Pr(>|z|)
+(Intercept)   0.0236     0.1478  0.1595   0.8733
+age           0.0096     0.0048  2.0054   0.0449
+female        0.2473     0.0520  4.7517   0.0000
+Y             0.9859     0.0756 13.0368   0.0000
+
+Auxiliary coefficients:
+            Estimate Std. Error Z score Pr(>|z|)
+(Intercept)  -1.7342     0.4010 -4.3253   0.0000
+age           0.0352     0.0126  2.7948   0.0052
+female        0.2880     0.1356  2.1235   0.0337
+
+Additional auxiliary coefficients:
+            Estimate Std. Error Z score Pr(>|z|)
+(Intercept)   0.2468     1.0680  0.2311   0.8172
+age           0.0548     0.0370  1.4821   0.1383
+female       -0.1076     0.3779 -0.2849   0.7758
+sigma         1.0438     0.0206 50.7779   0.0000
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("cmreg_p", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("sim_cwdata")
+> ### * sim_cwdata
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: sim_cwdata
+> ### Title: Simulate Survey Data and Compute Bias-Corrected Estimates
+> ### Aliases: sim_cwdata sim.cwdata
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # Basic usage
+> ##D result <- sim_cwdata(
+> ##D   N.sim = 100,
+> ##D   sample = 500,
+> ##D   prevalence = 0.1,
+> ##D   p = 0.1,
+> ##D   p.prime = 0.1,
+> ##D   gamma = 0.8,
+> ##D   direct = 0.05
+> ##D )
+> ##D print(result$Results)
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("sim_cwdata", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("sim_estimates")
+> ### * sim_estimates
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: sim_estimates
+> ### Title: Simulate and Plot Panel C of Figure C7
+> ### Aliases: sim_estimates sim.estimates
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D # Replicate Panel C of Figure C7
+> ##D sim_estimates(
+> ##D   N.sim   = 100,
+> ##D   sample  = 1000,
+> ##D   prevalence = 0.1,
+> ##D   p       = 0.1,
+> ##D   p.prime = 0.1,
+> ##D   gamma   = 0.8,
+> ##D   direct  = 0.1
+> ##D )
+> ##D 
+> ##D # Re-use pre-computed simulation results
+> ##D res <- sim_cwdata(N.sim = 100, sample = 1000, prevalence = 0.1,
+> ##D                   p = 0.1, p.prime = 0.1, gamma = 0.8, direct = 0.1)
+> ##D sim_estimates(sample = 1000, prevalence = 0.1, p = 0.1, p.prime = 0.1,
+> ##D               gamma = 0.8, direct = 0.1, sim.results = res)
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("sim_estimates", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("sim_power")
+> ### * sim_power
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: sim_power
+> ### Title: Compute Statistical Power for a Fixed Sample Size
+> ### Aliases: sim_power sim.power
+> 
+> ### ** Examples
+> 
+> # Compute power at a fixed sample size of 1000
+> ## Not run: 
+> ##D pwr <- sim_power(
+> ##D   N.sim  = 500,
+> ##D   sample = 1000,
+> ##D   pi.null = 0,
+> ##D   pi.alt  = 0.1,
+> ##D   p       = 0.1,
+> ##D   p.prime = 0.1,
+> ##D   gamma   = 0.8,
+> ##D   direct  = 0.02
+> ##D )
+> ##D cat(sprintf("Estimated power: %.3f\n", pwr))
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("sim_power", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("sim_power_N")
+> ### * sim_power_N
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: sim_power_N
+> ### Title: Determine Sample Size for Desired Coverage Properties
+> ### Aliases: sim_power_N sim.power.N
+> 
+> ### ** Examples
+> 
+> # Find sample size needed to reliably exclude zero
+> ## Not run: 
+> ##D result <- sim_power_N(
+> ##D   N.sim = 50,
+> ##D   prevalence = 0.1,
+> ##D   p = 0.1,
+> ##D   p.prime = 0.1,
+> ##D   gamma = 0.8,
+> ##D   direct = 0.05
+> ##D )
+> ##D 
+> ##D print(result)
+> ##D 
+> ##D # Visualize results
+> ##D plot(result$SampleSize, result$CoverageZero,
+> ##D      type = "b", xlab = "Sample Size",
+> ##D      ylab = "% of CIs Including Zero",
+> ##D      main = "Precision vs Sample Size")
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("sim_power_N", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  21.11 0.94 22.42 NA NA 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

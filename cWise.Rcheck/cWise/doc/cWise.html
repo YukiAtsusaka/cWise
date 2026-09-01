@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Getting started with cWise</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Getting started with cWise</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(cWise)</span></code></pre></div>
+<div id="the-crosswise-model" class="section level2">
+<h2>The crosswise model</h2>
+<p>Crosswise questions let respondents answer a sensitive question
+without revealing their answer directly. A respondent is shown a
+sensitive statement and a second statement whose prevalence is known
+(<code>p</code>). They report only whether their answers to the two
+statements are the same or different. The crosswise response is
+therefore not itself the sensitive-trait indicator.</p>
+<p>The design protects privacy, but it also makes inattentive responses
+important: respondents who answer at random pull the observed crosswise
+proportion toward one half. <code>cWise</code> uses an <em>anchor</em>
+crosswise question with known sensitive-item prevalence to estimate
+attentiveness and correct that bias.</p>
+<p>The package includes simulated data from this design. <code>Y</code>
+is the primary crosswise response, <code>A</code> is the anchor
+response, and <code>p</code> and <code>p.prime</code> are the known
+randomization probabilities.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">head</span>(cmdata)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt;   Y A weight    p p.prime</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; 1 1 1   1.25 0.15    0.15</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; 2 0 0   1.25 0.15    0.15</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; 3 0 0   1.25 0.15    0.15</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; 4 1 0   5.00 0.15    0.15</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 5 0 1   1.25 0.15    0.15</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 6 1 1   1.25 0.15    0.15</span></span></code></pre></div>
+</div>
+<div id="estimate-prevalence" class="section level2">
+<h2>Estimate prevalence</h2>
+<p>Use <code>bc_est()</code> to obtain both the naive and bias-corrected
+prevalence estimates. Here, the anchor makes it possible to estimate the
+share of attentive respondents as well.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>estimate <span class="ot">&lt;-</span> <span class="fu">bc_est</span>(<span class="at">Y =</span> Y, <span class="at">A =</span> A, <span class="at">p =</span> <span class="fl">0.15</span>, <span class="at">p.prime =</span> <span class="fl">0.15</span>, <span class="at">data =</span> cmdata)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>estimate</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; $Results</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;                 Estimate Std. Error 95%CI(Low) 95%CI(Up)</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; Naive Crosswise   0.1950     0.0144     0.1667    0.2233</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; Bias-Corrected    0.1054     0.0231     0.0585    0.1472</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; $Stats</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;  Attentive Rate Sample Size</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;          0.7729        2000</span></span></code></pre></div>
+<p><code>Results</code> contains point estimates, standard errors, and
+confidence intervals. <code>Stats</code> reports the estimated
+attentive-response rate and the analysis sample size. The bias-corrected
+row is usually the estimand of interest when the anchor-question
+assumptions are credible.</p>
+</div>
+<div id="sensitivity-analysis-without-an-anchor" class="section level2">
+<h2>Sensitivity analysis without an anchor</h2>
+<p>When no anchor question was fielded, <code>cmBound()</code> shows how
+the estimate changes over a plausible range of inattentive-response
+rates. The following calculation uses only the observed primary-question
+proportion, its randomization probability, and the sample size.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">cmBound</span>(<span class="at">lambda.hat =</span> <span class="fu">mean</span>(cmdata<span class="sc">$</span>Y), <span class="at">p =</span> <span class="fl">0.15</span>, <span class="at">N =</span> <span class="fu">nrow</span>(cmdata))</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<p>An optional direct-question estimate can be supplied with
+<code>dq</code> and <code>N.dq</code>; it is then drawn as a reference
+line with its uncertainty interval.</p>
+</div>
+<div id="simulation-and-power-planning" class="section level2">
+<h2>Simulation and power planning</h2>
+<p>Power-analysis functions are deliberately not evaluated while this
+vignette is built: they run nested bootstrap simulations. Start with a
+small exploratory run and increase <code>N.sim</code> for a
+study-planning analysis.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>simulation <span class="ot">&lt;-</span> <span class="fu">sim_cwdata</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">N.sim =</span> <span class="dv">200</span>, <span class="at">sample =</span> <span class="dv">500</span>, <span class="at">prevalence =</span> <span class="fl">0.10</span>, <span class="at">p =</span> <span class="fl">0.15</span>, <span class="at">p.prime =</span> <span class="fl">0.15</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="fl">0.80</span>, <span class="at">direct =</span> <span class="fl">0.05</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>)</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>simulation<span class="sc">$</span>Results</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="fu">sim_power</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="at">N.sim =</span> <span class="dv">500</span>, <span class="at">sample =</span> <span class="dv">1000</span>, <span class="at">pi.null =</span> <span class="fl">0.05</span>, <span class="at">pi.alt =</span> <span class="fl">0.10</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="at">p =</span> <span class="fl">0.15</span>, <span class="at">p.prime =</span> <span class="fl">0.15</span>, <span class="at">gamma =</span> <span class="fl">0.80</span>, <span class="at">direct =</span> <span class="fl">0.05</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>)</span></code></pre></div>
+<p><code>sim_estimates()</code> plots the simulated estimates, while
+<code>sim_power_N()</code> compares the package’s standard sample-size
+grid. These functions are intended for interactive study planning rather
+than a package build.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

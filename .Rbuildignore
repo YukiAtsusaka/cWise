@@ -7,3 +7,11 @@
 ^cran-comments\.md$
 ^CLAUDE\.md$
 ^Rplots\.pdf$
+^\.claude$
+^docs$
+^pkgdown-cache$
+^pkgdown-lib$
+^pkgdown-tmp$
+^_pkgdown\.yml$
+^cWise\.Rcheck$
+^cWise_.*\.tar\.gz$

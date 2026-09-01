@@ -312,18 +312,18 @@ incorrect one. Add the evidence before declaring it fixed.
 
 ## Phase 3 — Tests
 
-`tests/testthat/` does not exist yet, so the suite currently ERRORs. Build it out
-alongside Phase 2 rather than after.
+**Completed (2026-09-01):** Kolbe completed the full test suite. The tests now
+run successfully as part of the local CRAN-style check.
 
 | # | Task | Who | Done |
 |---|---|---|---|
-| 3.1 | `usethis::use_testthat(3)`; confirm `DESCRIPTION` gains `Config/testthat/edition: 3`. | ? | ☐ |
-| 3.2 | `test-bc-est.R`: known-input snapshot; weighted vs unweighted; `NA` handling; that `weight` missing and `weight = rep(1,n)` agree. | ? | ☐ |
-| 3.3 | `test-cmreg.R`, `test-cmreg-p.R`: the Phase 2c gates. | ? | ☐ |
-| 3.4 | `test-cmpredict.R`: named-argument matching; informative error on wrong `typical` length; that predictions lie in `[0,1]`; that `seed` makes results reproducible and *does not* perturb the caller's RNG stream. | ? | ☐ |
+| 3.1 | `usethis::use_testthat(3)`; confirm `DESCRIPTION` gains `Config/testthat/edition: 3`. | KD | ☑ |
+| 3.2 | `test-bc-est.R`: known-input snapshot; weighted vs unweighted; `NA` handling; that `weight` missing and `weight = rep(1,n)` agree. | KD | ☑ |
+| 3.3 | `test-cmreg.R`, `test-cmreg-p.R`: the Phase 2c gates. | KD | ☑ |
+| 3.4 | `test-cmpredict.R`: named-argument matching; informative error on wrong `typical` length; that predictions lie in `[0,1]`; that `seed` makes results reproducible and *does not* perturb the caller's RNG stream. | KD | ☑ |
 | 3.5 | `test-cmbound.R`: returns a `ggplot` object; direct-question variants; fixed balanced random-response assumption (no `kappa` input); `p = 0.5` guarded. | KD | ☑ |
-| 3.6 | `test-sim.R`: smoke tests at tiny `N.sim` so they run in seconds. Wrap anything slow in `skip_on_cran()`. | ? | ☐ |
-| 3.7 | Keep total check time well under CRAN's 10-minute-per-platform budget. The `sim.*` functions are the risk — `skip_on_cran()` liberally and use `\donttest{}` in their examples. | ? | ☐ |
+| 3.6 | `test-sim.R`: smoke tests at tiny `N.sim` so they run in seconds. Wrap anything slow in `skip_on_cran()`. | KD | ☑ |
+| 3.7 | Keep total check time well under CRAN's 10-minute-per-platform budget. The `sim.*` functions are the risk — `skip_on_cran()` liberally and use `\donttest{}` in their examples. | KD | ☑ |
 
 ---
 
@@ -361,6 +361,17 @@ study" are different audiences arriving with different questions:
 ---
 
 ## Phase 6 — Submission
+
+> **6.1 local-check progress (2026-09-01):** The rebuilt source tarball excludes
+> generated pkgdown output and local tooling. All package source, installation,
+> tests, examples, Rd checks, and vignette rebuild checks pass under
+> `R CMD check --as-cran`. The remaining non-clean results are host-only:
+> this Windows session cannot make TLS connections (so CRAN and URL checks cannot
+> run), cannot verify the system clock, and TinyTeX fails when R creates its
+> temporary manual under the AppData path. The same generated manual compiles
+> directly with TinyTeX, so this is not an Rd error. Re-run 6.1 from a machine
+> with working TLS, a usable clock, and a normal TeX temporary path before
+> marking it complete.
 
 | # | Task | Who | Done |
 |---|---|---|---|

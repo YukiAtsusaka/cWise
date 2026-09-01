@@ -1,0 +1,20 @@
+url: https://www.atsusaka.org/cwise/
+
+template:
+  bootstrap: 3
+
+home:
+  title: cWise
+  description: Crosswise models for sensitive survey questions.
+  sidebar:
+    structure: [license, citation, authors, dev, toc]
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [github]
+  components:
+    github:
+      icon: fa-github
+      href: https://github.com/YukiAtsusaka/cWise
+      aria-label: Browse cWise on GitHub

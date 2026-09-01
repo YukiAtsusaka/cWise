@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Regression with a latent sensitive trait</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Regression with a latent sensitive
+trait</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(cWise)</span></code></pre></div>
+<p>The sensitive trait in a crosswise survey is latent: we observe
+crosswise and anchor responses, not each respondent’s trait status.
+<code>cmreg()</code> and <code>cmreg_p()</code> fit likelihood-based
+models that account for this measurement structure.</p>
+<div id="the-latent-trait-as-an-outcome" class="section level2">
+<h2>The latent trait as an outcome</h2>
+<p><code>cmreg()</code> models the probability of possessing the
+sensitive trait as a function of covariates. The formula contains the
+primary crosswise response on the left; supply the anchor response
+separately.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>outcome_fit <span class="ot">&lt;-</span> <span class="fu">cmreg</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  Y <span class="sc">~</span> female <span class="sc">+</span> age,</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="at">anchor =</span> A, <span class="at">p =</span> <span class="fl">0.10</span>, <span class="at">p.prime =</span> <span class="fl">0.15</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="at">data =</span> cmdata2, <span class="at">n.start =</span> <span class="dv">1</span><span class="dt">L</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="fu">summary</span>(outcome_fit)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt;             Estimate Std. Error z score Pr(&gt;|z|)</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; (Intercept)  -1.6501     0.4266 -3.8684   0.0001</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; female        0.2813     0.1427  1.9717   0.0486</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; age           0.0326     0.0133  2.4505   0.0143</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; Auxiliary coefficients:</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt;             Estimate Std. Error z score Pr(&gt;|z|)</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; (Intercept)   0.1405     1.1363  0.1237   0.9016</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; female       -0.2059     0.4121 -0.4995   0.6174</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; age           0.0594     0.0394  1.5074   0.1317</span></span></code></pre></div>
+<p>The first coefficient block describes the latent trait. The auxiliary
+block describes the probability of attentive responding. Predict trait
+prevalence at specific covariate combinations with uncertainty from a
+parametric bootstrap.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>trait_predictions <span class="ot">&lt;-</span> <span class="fu">cmpredict</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  outcome_fit,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">female =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">30</span>)),</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">nsim =</span> <span class="dv">300</span>, <span class="at">seed =</span> <span class="dv">20260825</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>trait_predictions</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt;    estimate  conf.low conf.high</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 1 0.3381928 0.3046601 0.3790037</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 2 0.4037005 0.3565547 0.4515935</span></span></code></pre></div>
+<p>The plot shows the estimated prevalence and its 95%
+parametric-bootstrap interval for each covariate scenario.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>trait_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Female = 0&quot;</span>, <span class="st">&quot;Female = 1&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="fu">seq_len</span>(<span class="fu">nrow</span>(trait_predictions)), trait_predictions<span class="sc">$</span>estimate,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.75</span>, <span class="fl">2.25</span>), <span class="at">xaxt =</span> <span class="st">&quot;n&quot;</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Covariate scenario&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Predicted trait prevalence&quot;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">&quot;#1B6CA8&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq_along</span>(trait_labels), <span class="at">labels =</span> trait_labels)</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="fu">arrows</span>(</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  <span class="at">x0 =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(trait_predictions)), <span class="at">y0 =</span> trait_predictions<span class="sc">$</span>conf.low,</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="at">x1 =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(trait_predictions)), <span class="at">y1 =</span> trait_predictions<span class="sc">$</span>conf.high,</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">code =</span> <span class="dv">3</span>, <span class="at">length =</span> <span class="fl">0.05</span>, <span class="at">col =</span> <span class="st">&quot;#1B6CA8&quot;</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="the-latent-trait-as-a-predictor" class="section level2">
+<h2>The latent trait as a predictor</h2>
+<p><code>cmreg_p()</code> models a continuous observed outcome while
+treating the sensitive trait as a latent predictor. The formula now
+contains the observed outcome; the crosswise and anchor responses are
+supplied by name.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>predictor_fit <span class="ot">&lt;-</span> <span class="fu">cmreg_p</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  V <span class="sc">~</span> age <span class="sc">+</span> female,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">crosswise =</span> Y, <span class="at">anchor =</span> A, <span class="at">p =</span> <span class="fl">0.10</span>, <span class="at">p.prime =</span> <span class="fl">0.15</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">data =</span> cmdata3, <span class="at">n.start =</span> <span class="dv">1</span><span class="dt">L</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="fu">summary</span>(predictor_fit)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt;             Estimate Std. Error Z score Pr(&gt;|z|)</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; (Intercept)   0.0236     0.1478  0.1595   0.8733</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; age           0.0096     0.0048  2.0054   0.0449</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; female        0.2473     0.0520  4.7517   0.0000</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; Y             0.9859     0.0756 13.0368   0.0000</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; Auxiliary coefficients:</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt;             Estimate Std. Error Z score Pr(&gt;|z|)</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; (Intercept)  -1.7342     0.4010 -4.3253   0.0000</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; age           0.0352     0.0126  2.7948   0.0052</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; female        0.2880     0.1356  2.1235   0.0337</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; Additional auxiliary coefficients:</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt;             Estimate Std. Error Z score Pr(&gt;|z|)</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; (Intercept)   0.2468     1.0680  0.2311   0.8172</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; age           0.0548     0.0370  1.4821   0.1383</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; female       -0.1076     0.3779 -0.2849   0.7758</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; sigma         1.0438     0.0206 50.7779   0.0000</span></span></code></pre></div>
+<p>Predictions are returned for both latent-trait states. Each supplied
+covariate scenario therefore produces an “absent” and a “present”
+row.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>outcome_predictions <span class="ot">&lt;-</span> <span class="fu">cmpredict_p</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  predictor_fit,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">age =</span> <span class="dv">30</span>, <span class="at">female =</span> <span class="dv">1</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">nsim =</span> <span class="dv">300</span>, <span class="at">seed =</span> <span class="dv">20260825</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>outcome_predictions</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt;                   estimate  conf.low conf.high</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; 1: trait absent  0.5600254 0.4581331 0.6481188</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; 1: trait present 1.5459544 1.4128550 1.6627413</span></span></code></pre></div>
+<p>This plot compares the model-implied observed outcome when the latent
+trait is absent versus present, with 95% parametric-bootstrap
+intervals.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>state_labels <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">&quot;^[0-9]+: &quot;</span>, <span class="st">&quot;&quot;</span>, <span class="fu">rownames</span>(outcome_predictions))</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>ylim <span class="ot">&lt;-</span> <span class="fu">range</span>(outcome_predictions<span class="sc">$</span>conf.low, outcome_predictions<span class="sc">$</span>conf.high)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">seq_len</span>(<span class="fu">nrow</span>(outcome_predictions)), outcome_predictions<span class="sc">$</span>estimate,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">ylim =</span> ylim <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.05</span>, <span class="fl">0.05</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.75</span>, <span class="fl">2.25</span>), <span class="at">xaxt =</span> <span class="st">&quot;n&quot;</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Latent-trait scenario&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Predicted observed outcome&quot;</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">&quot;#A23A2E&quot;</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>)</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq_along</span>(state_labels), <span class="at">labels =</span> state_labels)</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="fu">arrows</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  <span class="at">x0 =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(outcome_predictions)), <span class="at">y0 =</span> outcome_predictions<span class="sc">$</span>conf.low,</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  <span class="at">x1 =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(outcome_predictions)), <span class="at">y1 =</span> outcome_predictions<span class="sc">$</span>conf.high,</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>  <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">code =</span> <span class="dv">3</span>, <span class="at">length =</span> <span class="fl">0.05</span>, <span class="at">col =</span> <span class="st">&quot;#A23A2E&quot;</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<p>The uncertainty intervals reflect sampling uncertainty in the fitted
+parameters. They do not turn an individual respondent’s latent trait
+into an observed value; instead, they compare model-implied outcomes
+under the two trait scenarios.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

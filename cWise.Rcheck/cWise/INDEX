@@ -1,0 +1,17 @@
+bc_est                  bc_est
+cmBound                 cmBound
+cmdata                  Simulated Crosswise Survey Data I
+cmdata2                 Simulated Crosswise Survey Data II
+cmdata3                 Simulated Crosswise Survey Data III
+cmpredict               cmpredict
+cmpredict_p             cmpredict_p
+cmreg                   cmreg
+cmreg-methods           Print and summarise crosswise regression fits
+cmreg_p                 cmreg_p
+sim_cwdata              Simulate Survey Data and Compute Bias-Corrected
+                        Estimates
+sim_estimates           Simulate and Plot Panel C of Figure C7
+sim_power               Compute Statistical Power for a Fixed Sample
+                        Size
+sim_power_N             Determine Sample Size for Desired Coverage
+                        Properties
