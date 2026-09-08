@@ -28,7 +28,9 @@
 #' @references Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
 #' for sensitive survey questions. \doi{10.1017/pan.2021.43}.
 #' @examples
-#' example_data <- cmdata3[seq_len(100L), ]
+#' # Keep the fitted example small: this likelihood is deliberately
+#' # computationally intensive and package examples run during CRAN checks.
+#' example_data <- cmdata3[seq_len(30L), ]
 #' m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
 #'               p.prime = 0.15, data = example_data, n.start = 1L)
 #' predictions <- cmpredict_p(

@@ -67,7 +67,9 @@ An object of class `cmreg_p` (and `cmreg`), a list with:
 \code{cmreg} is used to run a regression with the latent sensitive trait as a predictor.
 }
 \examples{
-example_data <- cmdata3[seq_len(100L), ]
+# Keep the fitted example small: this likelihood is deliberately
+# computationally intensive and package examples run during CRAN checks.
+example_data <- cmdata3[seq_len(30L), ]
 m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
               p.prime = 0.15, data = example_data, n.start = 1L)
 m2
