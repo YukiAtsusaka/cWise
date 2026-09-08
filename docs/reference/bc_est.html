@@ -28,16 +28,6 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/regression.html">Regression with a latent sensitive trait</a>
-    </li>
-  </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -135,9 +125,25 @@ for sensitive survey questions. <a href="https://doi.org/10.1017/pan.2021.43" cl
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">bc_est</span><span class="op">(</span>Y<span class="op">=</span><span class="va">Y</span>, A<span class="op">=</span><span class="va">A</span>, p<span class="op">=</span><span class="fl">0.15</span>, p.prime<span class="op">=</span><span class="fl">0.15</span>, data<span class="op">=</span><span class="va">cmdata</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in bc_est(Y = Y, A = A, p = 0.15, p.prime = 0.15, data = cmdata):</span> could not find function "bc_est"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Results</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 Estimate Std. Error 95%CI(Low) 95%CI(Up)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Naive Crosswise   0.1950     0.0144     0.1667    0.2233</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bias-Corrected    0.1054     0.0214     0.0679    0.1529</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Stats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Attentive Rate Sample Size</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          0.7729        2000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">bc_est</span><span class="op">(</span>Y<span class="op">=</span><span class="va">Y</span>, A<span class="op">=</span><span class="va">A</span>, weight<span class="op">=</span><span class="va">weight</span>, p<span class="op">=</span><span class="fl">0.15</span>, p.prime<span class="op">=</span><span class="fl">0.15</span>, data<span class="op">=</span><span class="va">cmdata</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in bc_est(Y = Y, A = A, weight = weight, p = 0.15, p.prime = 0.15,     data = cmdata):</span> could not find function "bc_est"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Results</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 Estimate Std. Error 95%CI(Low) 95%CI(Up)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Naive Crosswise   0.1921     0.0144     0.1639    0.2204</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bias-Corrected    0.1097     0.0260     0.0567    0.1572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Stats</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Attentive Rate Sample Size</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          0.7888        2000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </div>

@@ -28,16 +28,6 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/regression.html">Regression with a latent sensitive trait</a>
-    </li>
-  </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -138,12 +128,12 @@ for sensitive survey questions. <a href="https://doi.org/10.1017/pan.2021.43" cl
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="cmreg.html">cmreg</a></span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">female</span> <span class="op">+</span> <span class="va">age</span>, anchor <span class="op">=</span> <span class="va">A</span>, p <span class="op">=</span> <span class="fl">0.1</span>, p.prime <span class="op">=</span> <span class="fl">0.15</span>,</span></span>
 <span class="r-in"><span>           data <span class="op">=</span> <span class="va">cmdata2</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in cmreg(Y ~ female + age, anchor = A, p = 0.1, p.prime = 0.15,     data = cmdata2):</span> unused argument (anchor = A)</span>
 <span class="r-in"><span><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu">cmpredict</span><span class="op">(</span><span class="va">m</span>, typical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>age <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                          zval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>female <span class="op">=</span> <span class="fl">0</span>, female <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'm' not found</span>
 <span class="r-in"><span><span class="va">predictions</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'predictions' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    estimate  conf.low conf.high</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.3381601 0.2951779 0.3833926</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4037116 0.3598563 0.4515946</span>
 </code></pre></div>
     </div>
   </div>
