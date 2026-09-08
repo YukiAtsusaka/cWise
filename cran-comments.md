@@ -4,8 +4,9 @@
   `R CMD check --as-cran --no-manual`.
 * Windows r-devel: submitted to win-builder.r-project.org on 2026-09-08;
   report pending at `atsusaka@uh.edu`.
-* Linux and macOS: R-hub check pending. The local R installation cannot reach
-  CRAN over HTTPS to install the `rhub` client.
+* Linux and macOS: R-hub check pending. The official GitHub Actions workflow
+  (`.github/workflows/rhub.yaml`) is prepared locally and must be committed and
+  pushed before R-hub can dispatch the checks.
 
 ## R CMD check results
 
