@@ -377,7 +377,7 @@ study" are different audiences arriving with different questions:
 | 6.2 | `devtools::check_win_devel()` submitted to win-builder.r-project.org on 2026-09-08; await the report at `atsusaka@uh.edu`. | KD | ☐ |
 | 6.3 | Added the official `.github/workflows/rhub.yaml` workflow and installed the R-hub client from GitHub. Commit and push the workflow, then dispatch `rhub::rhub_check()` for Linux and macOS; this host cannot dispatch because its R Git library rejects the repository ownership metadata. | KD | ☐ |
 | 6.4 | Drafted `cran-comments.md` with the local platform, R version, and every current NOTE. Add the win-builder and R-hub results before submission; `.Rbuildignore` already excludes it. | KD | ☐ |
-| 6.5 | Awaiting YA confirmation that `atsusaka@uh.edu` is a durable, monitored maintainer address. This cannot be inferred from package metadata. | YA | ☐ |
+| 6.5 | Confirmed 2026-09-08: `atsusaka@uh.edu` is a durable, monitored maintainer address. | YA | ☑ |
 | 6.6 | Do not tag `v0.1.0` until 6.2 and 6.3 are clean and YA confirms 6.5. `.claude/`, `cWise.Rcheck/`, and `cWise_*.tar.gz` are now ignored for future runs, but generated check artifacts remain tracked. Codex could not untrack them because Git cannot create `.git/index.lock`; once writable, run `git rm -r --cached cWise.Rcheck cWise_0.1.0.tar.gz`, verify that the files remain locally, and commit those removals before tagging. | YA | ☐ |
 | 6.7 | `devtools::release()` — walks the final checklist and submits. Yuki must confirm from the maintainer address. | ? | ☐ |
 | 6.8 | Expect a human reviewer round. Reply on the same email thread, bump to `0.1.1`, resubmit. Budget 1–3 weeks. | ? | ☐ |
