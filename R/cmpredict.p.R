@@ -28,9 +28,12 @@
 #' @references Atsusaka, Y. and Stevenson, R. T. (2023). The crosswise model
 #' for sensitive survey questions. \doi{10.1017/pan.2021.43}.
 #' @examples
+#' example_data <- cmdata3[seq_len(100L), ]
 #' m2 <- cmreg_p(V ~ age + female, crosswise = Y, anchor = A, p = 0.1,
-#'               p.prime = 0.15, data = cmdata3)
-#' predictions <- cmpredict_p(m2, newdata = data.frame(age = 30, female = 1))
+#'               p.prime = 0.15, data = example_data, n.start = 1L)
+#' predictions <- cmpredict_p(
+#'   m2, newdata = data.frame(age = 30, female = 1), nsim = 20L, seed = 1L
+#' )
 #' predictions
 #' @export
 #' @importFrom mvtnorm "rmvnorm"
