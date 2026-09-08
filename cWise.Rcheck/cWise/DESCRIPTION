@@ -24,8 +24,8 @@ Language: en-US
 LazyData: true
 RoxygenNote: 7.3.3
 NeedsCompilation: no
-Packaged: 2026-09-01 23:06:43 UTC; CodexSandboxOnline
+Packaged: 2026-09-08 14:45:54 UTC; CodexSandboxOnline
 Author: Yuki Atsusaka [aut, cre],
   Kolbe Dumas [aut]
 Maintainer: Yuki Atsusaka <atsusaka@uh.edu>
-Built: R 4.4.3; ; 2026-09-01 23:19:19 UTC; windows
+Built: R 4.4.3; ; 2026-09-08 14:46:01 UTC; windows

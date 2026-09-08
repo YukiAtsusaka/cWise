@@ -362,25 +362,23 @@ study" are different audiences arriving with different questions:
 
 ## Phase 6 — Submission
 
-> **6.1 local-check progress (2026-09-01):** The rebuilt source tarball excludes
-> generated pkgdown output and local tooling. All package source, installation,
-> tests, examples, Rd checks, and vignette rebuild checks pass under
-> `R CMD check --as-cran`. The remaining non-clean results are host-only:
-> this Windows session cannot make TLS connections (so CRAN and URL checks cannot
-> run), cannot verify the system clock, and TinyTeX fails when R creates its
-> temporary manual under the AppData path. The same generated manual compiles
-> directly with TinyTeX, so this is not an Rd error. Re-run 6.1 from a machine
-> with working TLS, a usable clock, and a normal TeX temporary path before
-> marking it complete.
+> **6.1 completed locally (2026-09-08):** The rebuilt source tarball excludes
+> generated pkgdown output and local tooling. `R CMD check --as-cran --no-manual`
+> completed with 0 errors and 0 warnings; source, installation, tests, examples,
+> Rd checks, and vignette rebuilds all passed. Its four notes are host-only:
+> unavailable TLS prevents CRAN/URL checks, the clock cannot be verified online,
+> Pandoc is not on the standard R check path, and two examples exceed five
+> seconds. The manual compiled directly with TinyTeX on 2026-09-01. Details and
+> the pending external-check results are recorded in `cran-comments.md`.
 
 | # | Task | Who | Done |
 |---|---|---|---|
-| 6.1 | `devtools::check(args = "--as-cran")` clean locally. | ? | ☐ |
-| 6.2 | `devtools::check_win_devel()` — clean on Windows r-devel. | ? | ☐ |
-| 6.3 | `rhub::rhub_check()` — clean on Linux and macOS. | ? | ☐ |
-| 6.4 | Write `cran-comments.md`: platforms tested, R versions, and a one-line justification for each remaining NOTE (expect only `New submission`). Add it to `.Rbuildignore`. | ? | ☐ |
-| 6.5 | Confirm the maintainer email is one Yuki will hold long-term and can respond from within a few days — CRAN archives packages whose maintainer goes unreachable. YA is assigned as maintainer; confirm the current `atsusaka@uh.edu` address is durable before submission. | YA | ☐ |
-| 6.6 | Tag the release in git (`v0.1.0`) and confirm the working tree is clean. | ? | ☐ |
+| 6.1 | Local CRAN-style check complete: 0 errors, 0 warnings; host-only notes documented in `cran-comments.md`. | KD | ☑ |
+| 6.2 | `devtools::check_win_devel()` submitted to win-builder.r-project.org on 2026-09-08; await the report at `atsusaka@uh.edu`. | KD | ☐ |
+| 6.3 | `rhub::rhub_check()` — clean on Linux and macOS. Blocked locally: CRAN HTTPS access fails before `rhub` can be installed. | KD | ☐ |
+| 6.4 | Drafted `cran-comments.md` with the local platform, R version, and every current NOTE. Add the win-builder and R-hub results before submission; `.Rbuildignore` already excludes it. | KD | ☐ |
+| 6.5 | Awaiting YA confirmation that `atsusaka@uh.edu` is a durable, monitored maintainer address. This cannot be inferred from package metadata. | YA | ☐ |
+| 6.6 | Do not tag `v0.1.0` until 6.2 and 6.3 are clean and YA confirms 6.5. The working tree is not yet clean: `.claude/` is untracked, while generated `cWise.Rcheck/` and `cWise_0.1.0.tar.gz` are currently tracked and changed by release checks. Decide whether to remove those generated artifacts from Git and ignore `.claude/` before tagging. | YA | ☐ |
 | 6.7 | `devtools::release()` — walks the final checklist and submits. Yuki must confirm from the maintainer address. | ? | ☐ |
 | 6.8 | Expect a human reviewer round. Reply on the same email thread, bump to `0.1.1`, resubmit. Budget 1–3 weeks. | ? | ☐ |
 

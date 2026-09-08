@@ -6,7 +6,7 @@
     GNU Fortran (GCC) 13.3.0
 * running under: Windows 11 x64 (build 26200)
 * using session charset: ASCII
-* using option '--as-cran'
+* using options '--no-manual --as-cran'
 * checking for file 'cWise/DESCRIPTION' ... OK
 * checking extension type ... Package
 * this is package 'cWise' version '0.1.0'
@@ -54,8 +54,6 @@ unable to verify current time
 * checking DESCRIPTION meta-information ... OK
 * checking top-level files ... NOTE
 Files 'README.md' or 'NEWS.md' cannot be checked without 'pandoc' being installed.
-Non-standard file/directory found at top level:
-  '_pkgdown.yml'
 * checking for left-over files ... OK
 * checking index information ... OK
 * checking package subdirectories ... OK
@@ -88,27 +86,18 @@ Non-standard file/directory found at top level:
 * checking data for ASCII and uncompressed saves ... OK
 * checking installed files from 'inst/doc' ... OK
 * checking files in 'vignettes' ... OK
-* checking examples ... [23s] NOTE
+* checking examples ... [17s] NOTE
 Examples with CPU (user + system) or elapsed time > 5s
             user system elapsed
-cmpredict_p 9.58   0.25    9.95
-cmreg_p     7.50   0.17    7.77
+cmreg_p     6.04   0.17    6.28
+cmpredict_p 5.97   0.20    6.31
 * checking for unstated dependencies in 'tests' ... OK
-* checking tests ... [24s] OK
-  Running 'testthat.R' [23s]
+* checking tests ... [18s] OK
+  Running 'testthat.R' [18s]
 * checking for unstated dependencies in vignettes ... OK
 * checking package vignettes ... OK
 * checking re-building of vignette outputs ... OK
-* checking PDF version of manual ... WARNING
-LaTeX errors when creating PDF version.
-This typically indicates Rd problems.
-LaTeX errors found:
-* checking PDF version of manual without index ... ERROR
-* checking HTML version of manual ... NOTE
-Skipping checking math rendering: package 'V8' unavailable
-* checking for non-standard things in the check directory ... NOTE
-Found the following files/directories:
-  'cWise-manual.tex'
+* checking for non-standard things in the check directory ... OK
 * checking for detritus in the temp directory ... OK
 * DONE
-Status: 1 ERROR, 1 WARNING, 6 NOTEs
+Status: 4 NOTEs

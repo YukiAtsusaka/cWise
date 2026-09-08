@@ -3,6 +3,9 @@
 .RData
 .Ruserdata
 Rplots.pdf
+.claude/
+cWise.Rcheck/
+cWise_*.tar.gz
 inst/doc
 /doc/
 /Meta/
