@@ -14,5 +14,6 @@
 ^pkgdown-lib$
 ^pkgdown-tmp$
 ^_pkgdown\.yml$
+^vignettes/.*\.html$
 ^cWise\.Rcheck$
 ^cWise_.*\.tar\.gz$
