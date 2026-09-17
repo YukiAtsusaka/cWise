@@ -10,7 +10,7 @@ Authors@R: c(
     )
 Description: Implements a bias-corrected crosswise estimator and its extensions
     for sensitive survey questions. The methods are described in
-    Atsusaka, Y., & Stevenson, R. T. (2023). "A bias-corrected estimator for the crosswise model with inattentive respondents" Political Analysis, 31(1), 134-148. <doi:10.1017/pan.2021.43>.
+    Atsusaka and Stevenson (2023). "A bias-corrected estimator for the crosswise model with inattentive respondents" <doi:10.1017/pan.2021.43>.
 License: GPL-3
 URL: https://github.com/YukiAtsusaka/cWise,
     https://www.atsusaka.org/cwise/
