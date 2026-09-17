@@ -78,7 +78,7 @@ For publication-quality results, use N.sim >= 2000.
 }
 \examples{
 # Compute power at a fixed sample size of 1000
-\dontrun{
+\donttest{
 pwr <- sim_power(
   N.sim  = 500,
   sample = 1000,

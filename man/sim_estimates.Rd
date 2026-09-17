@@ -75,7 +75,7 @@ If \code{sim.results} is supplied, all simulation parameters (\code{N.sim},
 still used for the annotations, but no new simulation is run.
 }
 \examples{
-\dontrun{
+\donttest{
 # Replicate Panel C of Figure C7
 sim_estimates(
   N.sim   = 100,

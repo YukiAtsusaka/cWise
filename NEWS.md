@@ -16,6 +16,8 @@
 
 ## CRAN submission preparation
 
+- Replaced `dontrun` with `donttest` for the four lengthy simulation examples
+  in response to CRAN's first review. Short examples remain runnable.
 - Updated package authorship metadata so that Yuki Atsusaka is the maintainer and
   Kolbe Dumas and Randy T. Stevenson are authors.
 - Replaced the pre-publication citation with Atsusaka and Stevenson (2023),

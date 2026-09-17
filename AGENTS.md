@@ -4,7 +4,27 @@ Working document for **Yuki Atsusaka** and **Kolbe Dumas**. Update the status bo
 you go. The Phase 0 check output was verified against the package as of commit `a27f64f`
 (R 4.4.1, Windows) — the check output in Phase 0 is real, not hypothetical.
 
-**Target:** `cWise 0.1.0` on CRAN, with two vignettes.
+**Target:** `cWise 0.1.0` on CRAN, with the current combined introductory and regression vignette.
+
+## Current status: 2026-09-17 CRAN review response
+
+- Updated the clean local checkout to Yuki's current `master` at `b04da47`.
+- Confirmed the author-year-DOI reference requested by CRAN is already in the
+  current DESCRIPTION and the newly built 0.1.0 archive.
+- Replaced all four simulation `dontrun` wrappers with `donttest` in roxygen
+  source and generated Rd files. All four examples exceed five seconds.
+- The current combined `vignettes/cWise.Rmd` builds and is included in the archive;
+  no vignette source was edited.
+- Extended `--as-cran --run-donttest --no-manual` source-package validation
+  completed with 0 errors, 0 warnings, and one local time-verification note.
+  Every example passed, all 52 test assertions passed without warnings or skips,
+  and the vignette rebuilt successfully. Local devtools disabled incoming and
+  remote incoming checks. The default PDF manual remains blocked by missing
+  `inconsolata.sty`.
+- Next gate: review current external-platform and default PDF manual reports,
+  and have Yuki reply on the existing CRAN thread and resubmit the rebuilt archive.
+  KD authorized pushing these changes to `origin/master` on 2026-09-17.
+  Yuki retains responsibility for the reviewer reply and CRAN resubmission.
 
 **Progress through 2026-08-31:**
 

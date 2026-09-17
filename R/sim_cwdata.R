@@ -44,7 +44,7 @@
 #' where the bias is estimated using the anchor question responses.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Basic usage
 #' result <- sim_cwdata(
 #'   N.sim = 100,

@@ -55,7 +55,7 @@
 #'
 #' @examples
 #' # Find sample size needed to reliably exclude zero
-#' \dontrun{
+#' \donttest{
 #' result <- sim_power_N(
 #'   N.sim = 50,
 #'   prevalence = 0.1,
